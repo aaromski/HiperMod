@@ -123,13 +123,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="Clientes.cpp" />
     <ClCompile Include="conexion.cpp" />
     <ClCompile Include="Inventario.cpp" />
     <ClCompile Include="MenuPrincipal.cpp" />
+    <ClCompile Include="Productos.cpp" />
     <ClCompile Include="Reportes.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cliente.h" />
     <ClInclude Include="Clientes.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -140,6 +143,7 @@
     <ClInclude Include="MenuPrincipal.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Productos.h" />
     <ClInclude Include="Reportes.h">
       <FileType>CppForm</FileType>
     </ClInclude>

@@ -135,7 +135,7 @@ public:
 
 	int randomNumero() {
 		std::srand(static_cast<unsigned>(std::time(nullptr))); // Generar un número aleatorio entre 1 y 5 
-		int cantidad = (std::rand() % 5) + 3;
+		int cantidad = (std::rand() % 5) + 1;
 		return cantidad;
 	}
 	int randomNumeroid() {
@@ -143,4 +143,35 @@ public:
 		int cantidad = (std::rand() % 3) + 1;
 		return cantidad;
 	}
+
+	void mostrarProductos(int id, Label^ nombreP, Label^ izqui, Label^ dere, int cantidad,  double& montoTotal ) {
+
+		String^ sentencia = "SELECT descripcion, precio FROM datos WHERE ID = @ID";
+		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
+		ejecutar->Parameters->AddWithValue("@ID", id);
+		this->st->Open();
+		MySqlDataReader^ lector = ejecutar->ExecuteReader();
+
+		if (lector->Read()) {
+
+			String^ producto = lector["descripcion"]->ToString();
+			nombreP->Text = producto;
+
+			String^ precioP = lector["precio"]->ToString();
+			izqui->Text = cantidad + "x" + precioP;
+
+			double precioNumerico = Convert::ToDouble(precioP);
+			double resultado = cantidad * precioNumerico;
+			dere->Text = "Bs " + resultado.ToString("F2");
+
+			montoTotal += resultado;
+		}
+		else {
+			nombreP->Text = "Producto no encontrado";
+		}
+
+		lector->Close();
+		this->st->Close();
+	}
+
 };

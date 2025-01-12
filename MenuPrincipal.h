@@ -5,15 +5,16 @@
 #include <algorithm>
 #include "conexion.h"
 #include "Reportes.h"
+#include "Cliente.h"
 namespace HiperMod {
 	using namespace System;
 	using namespace System::ComponentModel;
-
+	using namespace System::Collections::Generic;
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-
+	using namespace System::Text::RegularExpressions;
 	/// <summary>
 	/// Resumen de MenuPrincipal
 	/// </summary>
@@ -91,7 +92,8 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label19;
 	private: System::Windows::Forms::Label^ label42;
-	private: System::Windows::Forms::ComboBox^ comboBox1;
+	private: System::Windows::Forms::ComboBox^ clientesEnCola;
+
 	private: System::Windows::Forms::SplitContainer^ splitCaja;
 	private: System::Windows::Forms::Label^ label38;
 	private: System::Windows::Forms::Label^ label22;
@@ -127,12 +129,14 @@ private: System::Windows::Forms::Panel^ panel2FacturaD;
 private: System::Windows::Forms::Timer^ Mover;
 private: System::Windows::Forms::Label^ LabelMontoTotal;
 private: System::Windows::Forms::Label^ montoTotal;
-private: System::Windows::Forms::Label^ montoTotalCaja;
+
 private: System::Windows::Forms::Label^ nombrefac;
 private: System::Windows::Forms::Label^ tlfac;
 private: System::Windows::Forms::Label^ cedulafac;
 private: System::Windows::Forms::Label^ cant_Caja;
 private: System::Windows::Forms::Label^ cant_Cola;
+private: Cliente^ clientes;
+
 
 	private:
 		bool UseImage = true;
@@ -188,7 +192,7 @@ private: System::Windows::Forms::Label^ cant_Cola;
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label19 = (gcnew System::Windows::Forms::Label());
 			this->label42 = (gcnew System::Windows::Forms::Label());
-			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->clientesEnCola = (gcnew System::Windows::Forms::ComboBox());
 			this->splitCaja = (gcnew System::Windows::Forms::SplitContainer());
 			this->label38 = (gcnew System::Windows::Forms::Label());
 			this->cant_Caja = (gcnew System::Windows::Forms::Label());
@@ -205,7 +209,6 @@ private: System::Windows::Forms::Label^ cant_Cola;
 			this->TIEMPOCAU = (gcnew System::Windows::Forms::Label());
 			this->label25 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->montoTotalCaja = (gcnew System::Windows::Forms::Label());
 			this->panel2FacturaD = (gcnew System::Windows::Forms::Panel());
 			this->splitCola = (gcnew System::Windows::Forms::SplitContainer());
 			this->cant_Cola = (gcnew System::Windows::Forms::Label());
@@ -676,20 +679,21 @@ private: System::Windows::Forms::Label^ cant_Cola;
 			this->label42->TabIndex = 5;
 			this->label42->Text = L"CLIENTE EN COLA";
 			// 
-			// comboBox1
+			// clientesEnCola
 			// 
-			this->comboBox1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(33)), static_cast<System::Int32>(static_cast<System::Byte>(154)),
+			this->clientesEnCola->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(33)), static_cast<System::Int32>(static_cast<System::Byte>(154)),
 				static_cast<System::Int32>(static_cast<System::Byte>(255)));
-			this->comboBox1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->comboBox1->Font = (gcnew System::Drawing::Font(L"Arial Black", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->clientesEnCola->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->clientesEnCola->Font = (gcnew System::Drawing::Font(L"Arial Black", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->comboBox1->ForeColor = System::Drawing::SystemColors::Window;
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(576, 545);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(201, 26);
-			this->comboBox1->TabIndex = 8;
-			this->comboBox1->Text = L"SELECCIONAR CLIENTE";
+			this->clientesEnCola->ForeColor = System::Drawing::SystemColors::Window;
+			this->clientesEnCola->FormattingEnabled = true;
+			this->clientesEnCola->Location = System::Drawing::Point(576, 545);
+			this->clientesEnCola->Name = L"clientesEnCola";
+			this->clientesEnCola->Size = System::Drawing::Size(201, 26);
+			this->clientesEnCola->TabIndex = 8;
+			this->clientesEnCola->Text = L"SELECCIONAR CLIENTE";
+			this->clientesEnCola->SelectedIndexChanged += gcnew System::EventHandler(this, &MenuPrincipal::clientesEnCola_SelectedIndexChanged);
 			// 
 			// splitCaja
 			// 
@@ -859,11 +863,10 @@ private: System::Windows::Forms::Label^ cant_Cola;
 			// 
 			// panel1
 			// 
-			this->panel1->Controls->Add(this->montoTotalCaja);
 			this->panel1->Controls->Add(this->panel2FacturaD);
 			this->panel1->Controls->Add(this->splitCola);
 			this->panel1->Controls->Add(this->splitCaja);
-			this->panel1->Controls->Add(this->comboBox1);
+			this->panel1->Controls->Add(this->clientesEnCola);
 			this->panel1->Controls->Add(this->label42);
 			this->panel1->Controls->Add(this->label19);
 			this->panel1->Controls->Add(this->panelFacturaD);
@@ -872,15 +875,6 @@ private: System::Windows::Forms::Label^ cant_Cola;
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(799, 594);
 			this->panel1->TabIndex = 7;
-			// 
-			// montoTotalCaja
-			// 
-			this->montoTotalCaja->AutoSize = true;
-			this->montoTotalCaja->Location = System::Drawing::Point(404, 62);
-			this->montoTotalCaja->Name = L"montoTotalCaja";
-			this->montoTotalCaja->Size = System::Drawing::Size(13, 13);
-			this->montoTotalCaja->TabIndex = 20;
-			this->montoTotalCaja->Text = L"0";
 			// 
 			// panel2FacturaD
 			// 
@@ -1068,7 +1062,7 @@ private: System::Windows::Forms::Label^ cant_Cola;
 			this->Controls->Add(this->button_Fac);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"MenuPrincipal";
-			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::Manual;
 			this->Text = L"MenuPrincipal";
 			this->Load += gcnew System::EventHandler(this, &MenuPrincipal::MenuPrincipal_Load);
 			this->toolStrip1->ResumeLayout(false);
@@ -1091,21 +1085,16 @@ private: System::Windows::Forms::Label^ cant_Cola;
 		}
 #pragma endregion
 		public: 
-			int T1 = 0;
+			int T1 = 16;
 			int T2 = 0;
-			int contador = 1;
-			int contador2 = 1;
-			int cantidadMax_10Caja = 0;
-			int cantidadMax_10Cola = 0;
 			TableLayoutPanel^ tableCola;           // Los tablelayoutpanel son las tablas que contienen toda la informacion de los productos
 			TableLayoutPanel^ tablaCaja;
 			TableLayoutPanel^ tablaFactura;
+			List<Cliente^>^ listClient = gcnew List<Cliente^>();
 
-			void crearnumeros() {
-				int numero[10] = { 1,2,3,4,5,6,7,8,9,10 };
-			}
+			
 
-			void agregarProductos(TableLayoutPanel^ panel, int id, int ref) {    // Este metodo agrega los productos a la tabla, id es  la id del producto y ref:1 si es caja, 2 si es cola.
+			/* void agregarProductos(TableLayoutPanel^ panel, int id, int ref) {    // Este metodo agrega los productos a la tabla, id es  la id del producto y ref:1 si es caja, 2 si es cola.
 				bool Max_Productos = true;
 				Label^ nombreP = gcnew Label(); 
 				Label^ precioIz = gcnew Label(); 
@@ -1145,115 +1134,194 @@ private: System::Windows::Forms::Label^ cant_Cola;
 				else {
 					Facturacion();
 				}
+	} */
+
+	void TransferirDato(TableLayoutPanel^ source, TableLayoutPanel^ destination) { // Copia y elimina los datos de las tabla 
+		// Copiar los controles de la tabla de origen a la tabla de destino 
+		while (source->Controls->Count > 0) {
+			Control^ control = source->Controls[0];
+			source->Controls->Remove(control);
+			destination->Controls->Add(control);
+		}
+		
 	}
 
-			void Facturacion() {              // Aqui si en la caja el cliente en caja tiene los 30 o menos productos pasa la informacion de la caja hacia la facturacion
-				if (panel2FacturaD->Controls->Count == 0) {
-					tablaFactura = AgregarTabla(panel2FacturaD);
-				}
-				else {
-					this->panel2FacturaD->Controls->Clear();
-					tablaFactura = AgregarTabla(panel2FacturaD);
-				}
-				TransferirDato(tablaCaja, tablaFactura);
-				TransferirDato(tableCola, tablaCaja);
-				this->splitCola->Panel2->Controls->Remove(this->splitCola->Panel2->Controls[0]);
-				this->montoTotal->Visible = true;
-				this->LabelMontoTotal->Visible = true;
-				//Datos Factura
-				this->cedulafac->Text = this->cedula->Text;
-				this->cedulafac->Visible = true;
-				this->nombrefac->Text = this->nombreA->Text;
-				this->nombrefac->Visible = true;
-				this->tlfac->Text = this->tlf->Text;
-				this->tlfac->Visible = true;
-				this->cantidad->Text = this->cant_Caja->Text;
-				this->cantidad->Visible = true;
-				// Datos Caja
-				this->nombreA->Text = this->nombre_Cola->Text;
-				this->tlf->Text = this->cedula_Cola->Text;
-				this->cedula->Text = this->tlf_Cola->Text;
-				//Datos Cola
-				this->nombre_Cola->Visible = false;
-				this->cedula_Cola->Visible = false;
-				this->tlf_Cola->Visible = false;
-				this->cant_Caja->Text = "0";
-				this->cant_Cola->Text = "0";
-				cantidadMax_10Caja = 0;
-				cantidadMax_10Cola = 0;
-				contador = 1;
-				contador2 = 1;
-			}
+	void informacionFactura(int totalMonto){
+		this->nombrefac->Text = nombreA->Text;
+		this->cedulafac->Text = cedula->Text;
+		this->tlfac->Text = tlf->Text;
+		this->nombrefac->Visible = true;
+		this->cedulafac->Visible = true;
+		this->tlfac->Visible = true;
+		this->LabelMontoTotal->Visible = true;
+		this->montoTotal->Text = Convert::ToString(totalMonto);
+		this->montoTotal->Visible = true;
+		this->hora->Text = DateTime::Now.ToString("HH:mm:ss");
+	}
 
-			void TransferirDato(TableLayoutPanel^ source, TableLayoutPanel^ destination) { // Copia y elimina los datos de las tabla 
-				// Copiar los controles de la tabla de origen a la tabla de destino 
-				while (source->Controls->Count > 0) { 
-					Control^ control = source->Controls[0]; 
-					source->Controls->Remove(control); 
-					destination->Controls->Add(control); 
-				} 
+
+	void pasarAFactura(int totalMonto) {
+		int index = clientesEnCola->SelectedIndex;
+
+		if (panel2FacturaD->Controls->Count == 0) {
+			tablaFactura = AgregarTabla(panel2FacturaD);
+		}
+		else {
+			this->panel2FacturaD->Controls->Clear();
+			tablaFactura = AgregarTabla(panel2FacturaD);
+		}
+
+		TransferirDato(tablaCaja, tablaFactura);
+		informacionFactura(totalMonto);
+
+		// Remover el primer cliente de `listClient`
+		if (listClient->Count > 0) {
+			listClient->RemoveAt(0);
+		}
+
+		// Manejar eliminación del primer item
+		if (index == 0 && clientesEnCola->Items->Count > 0) {
+			clientesEnCola->Items->RemoveAt(0);
+
+			// Seleccionar el nuevo primer item si hay más elementos
+			if (clientesEnCola->Items->Count > 0) {
+				clientesEnCola->SelectedIndex = 0;
 			}
-			
+			mostrarEnCola(listClient, 0); // Mostrar el nuevo primer cliente
+
+		}
+		else {
+			// Remover el ítem actual
+			if (clientesEnCola->Items->Count > 0) {
+				clientesEnCola->Items->RemoveAt(0);
+
+				// Ajustar el índice seleccionado
+				if (clientesEnCola->Items->Count > 0) {
+					clientesEnCola->SelectedIndex = (index - 1 < clientesEnCola->Items->Count ? index - 1 : clientesEnCola->Items->Count - 1);
+				}
+				mostrarEnCola(listClient, clientesEnCola->SelectedIndex); // Mostrar el cliente en la nueva posición
+			}
+		}
+
+		mostrarEnCaja(listClient);
+	}
+
+
+	void ProcesarTabla(List<Cliente^>^ listClient, TableLayoutPanel^ tabla, int id, double& total) {
+		if (listClient->Count > 0 && listClient[id]->Productos->Count > 0) {
+			int cant = 0;
+
+			for (int i = 0; i < listClient[id]->Productos->Count; i++) {
+				Label^ nombre = gcnew Label();
+				Label^ precioIz = gcnew Label();
+				Label^ precioDe = gcnew Label();
+				data->mostrarProductos(listClient[id]->Productos[i], nombre, precioIz, precioDe, listClient[id]->Cantidad[i], total);
+				cant += listClient[id]->Cantidad[i];
+
+				nombre->AutoSize = true;
+				precioIz->AutoSize = true;
+				precioDe->AutoSize = true;
+				precioDe->Anchor = System::Windows::Forms::AnchorStyles::Top;
+				precioIz->Anchor = System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left;
+
+				int row = tabla->RowCount++;
+				tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
+				tabla->Controls->Add(nombre, 0, row);
+
+				row = tabla->RowCount++;
+				tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
+				tabla->Controls->Add(precioIz, 0, row);
+				tabla->Controls->Add(precioDe, 1, row);
+			}
+		}
+	}
+
+
 	void timer1_Tick(Object^ sender, EventArgs^ e) {          //Este es el metodo para la simulacion, esta funcion el programa la llama cada 1 seg
+			static int generarClientes = 1;
 			TimeSpan contadorTiempo = DateTime::Now - this->startTime;
 			int segundos = static_cast<int>(contadorTiempo.TotalSeconds);
 			TimeSpan elapsed = DateTime::Now - this->startTime; 
 			this->toolStripTextBox1->Text = String::Format("{0:D2}:{1:D2}:{2:D2}", elapsed.Hours,elapsed.Minutes, elapsed.Seconds);
-			if ((T1 <= segundos) && (cantidadMax_10Caja < 10)) {   //If para agregrar los productos a la tablelayout de la persona en caja
-				T1 = segundos ;
-				if (splitCaja->Panel2->Controls->Count == 0) {
-					personaEnCaja(splitCaja, 1);
+			if (segundos > T2) {
+				T2 += 15;
+				CrearCliente();
+				if (generarClientes > 1) {
+					clientesEnCola->Items->Add("Cliente " + generarClientes);
 				}
-				else {
-					tablaCaja = dynamic_cast<TableLayoutPanel^>(splitCaja->Panel2->Controls[0]);
-					agregarProductos(tablaCaja, contador, 1);  //contador es la id del producto, contador = 1   en la base de datos 1=id es la manzana ejemplo
-					contador++;
-					cantidadMax_10Caja++;
+				generarClientes++;
+			}
+			if (segundos >= T1) {
+				T1 += 11;
+				mostrarEnCaja(listClient);
+				if (splitCola->Panel2->Controls->Count > 0) {
+					mostrarEnCola(listClient, clientesEnCola->SelectedIndex+1);
 				}
 			}
-			if ((T2 < segundos) && (cantidadMax_10Cola < 10)) {   //If para agregrar los productos a la tablelayout de la persona en cola
-				T2 = segundos ;
-				if (splitCola->Panel2->Controls->Count == 0) {
-					int id = data->randomNumeroid();  //Aqui un numero entre 1 y 3, Por que en mi base de datos clientes solo tengo a tres personas
-					personaEnCola(splitCola, id);
-				}
-				else {
-					tableCola = dynamic_cast<TableLayoutPanel^>(splitCola->Panel2->Controls[0]);
-					agregarProductos(tableCola, contador2, 2);
-					contador2++;
-					cantidadMax_10Cola++;
-				}
-			}
+
 		}
 
-	void personaEnCaja(SplitContainer^ splitcaja, int id) { //Metodo para actualizar y mostrar la informacion, nombre apellido ect, de la persona en caja
-		System::Windows::Forms::Label^ lblNombre = safe_cast<System::Windows::Forms::Label^>(splitcaja->Panel1->Controls["nombreA"]);
-		if (lblNombre->Visible == false) {
-			System::Windows::Forms::Label^ lblCedula = safe_cast<System::Windows::Forms::Label^>(splitcaja->Panel1->Controls["cedula"]);
-			System::Windows::Forms::Label^ lblTelefono = safe_cast<System::Windows::Forms::Label^>(splitcaja->Panel1->Controls["tlf"]);
-			data->datos(id, lblNombre, lblCedula, lblTelefono);
-			lblCedula->Visible = true;
-			lblTelefono->Visible = true;
-			lblNombre->Visible = true;
+	void CrearCliente() { 
+		static int clienteID = 1; 
+		Cliente^ nuevoCliente = gcnew Cliente(clienteID++); 
+		listClient->Add(nuevoCliente);
+	}
+
+	void mostrarEnCaja(List<Cliente^>^ listClient) {
+		double totalMonto = 0;
+		int id = listClient[0]->GetId();
+		data->datos(id, nombreA, cedula, tlf);
+		MostrarInformacionCliente(nombreA, cedula, tlf);
+
+		if (EsNuevaTabla(splitCaja->Panel2)) {
+			tablaCaja = AgregarTabla(splitCaja->Panel2);
 		}
-		if (splitcaja->Panel2->Controls->Count == 0) {  
-			 AgregarTabla(splitcaja->Panel2);
+		else {
+			LimpiarYPreparaTabla(tablaCaja);
+		}
+
+		ProcesarTabla(listClient, tablaCaja, 0, totalMonto);
+		if (!listClient[0]->GetSeguir()) {
+			pasarAFactura(totalMonto);
 		}
 	}
-	void personaEnCola(SplitContainer^ splitcola, int id) { //Metodo para actualizar y mostrar la informacion, nombre apellido ect, de la persona en cola
-		System::Windows::Forms::Label^ lblNombre = safe_cast<System::Windows::Forms::Label^>(splitcola->Panel1->Controls["nombre_Cola"]);
-		if (lblNombre->Visible == false) {
-			System::Windows::Forms::Label^ lblCedula = safe_cast<System::Windows::Forms::Label^>(splitcola->Panel1->Controls["cedula_Cola"]);
-			System::Windows::Forms::Label^ lblTelefono = safe_cast<System::Windows::Forms::Label^>(splitcola->Panel1->Controls["tlf_Cola"]);
-			data->datos(id, lblNombre, lblCedula, lblTelefono);
-			lblCedula->Visible = true;
-			lblTelefono->Visible = true;
-			lblNombre->Visible = true;
+
+	void mostrarEnCola(List<Cliente^>^ listClient, int posCola) {
+		PrepararInformacionCola(posCola);
+		if (EsNuevaTabla(splitCola->Panel2)) {
+			tableCola = AgregarTabla(splitCola->Panel2);
 		}
-		if (splitcola->Panel2->Controls->Count == 0) {    //Si el splitcontainer->panel2 no tiene tablelayoutpanel este lo crea
-			AgregarTabla(splitcola->Panel2);
-		}
+
+		LimpiarYPreparaTabla(tableCola);
+
+		double totalCola = 0;
+		ProcesarTabla(listClient, tableCola, posCola, totalCola);
 	}
+
+	bool EsNuevaTabla(Panel^ panel) {
+		return panel->Controls->Count == 0;
+	}
+
+	void LimpiarYPreparaTabla(TableLayoutPanel^ table) {
+		table->Controls->Clear();
+		table->RowCount = 1;
+		table->RowStyles->Clear();
+	}
+
+	void MostrarInformacionCliente(Label^ nombre, Label^ cedula, Label^ tlf) {
+		nombre->Visible = true;
+		cedula->Visible = true;
+		tlf->Visible = true;
+	}
+
+	void PrepararInformacionCola(int posCola) {
+		int number = listClient[posCola]->GetId();
+		data->datos(number, nombre_Cola, cedula_Cola, tlf_Cola);
+		MostrarInformacionCliente(nombre_Cola, cedula_Cola, tlf_Cola);
+	}
+
+	
+	
 
 		void AsignarColoresABotones(void) { // Definir el color deseado, metodo para cambiar el color de los botones
 			System::Drawing::Color colorDeseado = System::Drawing::Color::FromArgb(
@@ -1304,7 +1372,6 @@ private: System::Void MenuPrincipal_Load(System::Object^ sender, System::EventAr
 	this->panel2FacturaD->Controls->Add(tablaFactura);
 		this->button_Fac->BackColor = Normal;
 		this->fecha->Text = DateTime::Now.ToString("dd/MM/yyyy");
-		this->hora->Text = DateTime::Now.ToString("HH:mm:ss");
 		this->button_Fac->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
 		this->button_Inv->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click); 
 		this->button_Rep->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click); 
@@ -1325,14 +1392,37 @@ private: System::Void splitCaja_Panel2_Paint(System::Object^ sender, System::Win
 private: System::Void Mover_Tick(System::Object^ sender, System::EventArgs^ e) {
 }
 
-private: System::Void toolStripButton1_Click(System::Object^ sender, System::EventArgs^ e) {        //Pausar simulacion
+private: System::Void toolStripButton1_Click(System::Object^ sender, System::EventArgs^ e) {
+	// Pausar el timer principal
 	this->timer1->Stop();
+
+	// Iterar a través de cada cliente en `listClient` y pausar sus timers
+	for each (Cliente ^ cliente in listClient) {
+		cliente->PausarTimer(); // Asegúrate de tener este método en la clase `Cliente`
+	}
 }
-private: System::Void toolStripButton3_Click(System::Object^ sender, System::EventArgs^ e) {       //Continuar simulacion
+
+private: System::Void toolStripButton3_Click(System::Object^ sender, System::EventArgs^ e) {
+	// Continuar el timer principal
 	this->timer1->Start();
+
+	// Iterar a través de cada cliente en `listClient` y continuar sus timers
+	for each (Cliente ^ cliente in listClient) {
+		cliente->ContinuarTimer(); // Reanudar el Timer del cliente
+	}
+}
+
+private: System::Void clientesEnCola_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+	int selectedIndex = clientesEnCola->SelectedIndex;
+	if (splitCola->Panel2->Controls->Contains(tableCola)) { 
+		splitCola->Panel2->Controls->Remove(tableCola); 
+	}
+	mostrarEnCola(listClient, selectedIndex+1);
 }
 };
 
 
 
 }
+
+ 
