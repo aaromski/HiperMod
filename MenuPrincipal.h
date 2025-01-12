@@ -126,7 +126,7 @@ private: System::Windows::Forms::Label^ Fecha_Cola;
 	private: Reportes^ reportes;
 private: System::Windows::Forms::Label^ cantidad;
 private: System::Windows::Forms::Panel^ panel2FacturaD;
-private: System::Windows::Forms::Timer^ Mover;
+private: System::Windows::Forms::Timer^ Mover; static bool finalizo = false;
 private: System::Windows::Forms::Label^ LabelMontoTotal;
 private: System::Windows::Forms::Label^ montoTotal;
 
@@ -375,6 +375,9 @@ private: Cliente^ clientes;
 			this->toolStripButton2->Size = System::Drawing::Size(23, 22);
 			this->toolStripButton2->Text = L"toolStripButton2";
 			this->toolStripButton2->Click += gcnew System::EventHandler(this, &MenuPrincipal::toolStripButton2_Click);
+			// 
+			// timer1
+			// 
 			// 
 			// label1
 			// 
@@ -1159,21 +1162,8 @@ private: Cliente^ clientes;
 		this->hora->Text = DateTime::Now.ToString("HH:mm:ss");
 	}
 
-
-	void pasarAFactura(int totalMonto) {
+	void finalizarTransferencia() {
 		int index = clientesEnCola->SelectedIndex;
-
-		if (panel2FacturaD->Controls->Count == 0) {
-			tablaFactura = AgregarTabla(panel2FacturaD);
-		}
-		else {
-			this->panel2FacturaD->Controls->Clear();
-			tablaFactura = AgregarTabla(panel2FacturaD);
-		}
-
-		TransferirDato(tablaCaja, tablaFactura);
-		informacionFactura(totalMonto);
-
 		// Remover el primer cliente de `listClient`
 		if (listClient->Count > 0) {
 			listClient->RemoveAt(0);
@@ -1204,7 +1194,26 @@ private: Cliente^ clientes;
 		}
 
 		mostrarEnCaja(listClient);
+
+	
 	}
+
+	void pasarAFactura(int totalMonto) {
+		
+
+		if (panel2FacturaD->Controls->Count == 0) {
+			tablaFactura = AgregarTabla(panel2FacturaD);
+		}
+		else {
+			this->panel2FacturaD->Controls->Clear();
+			tablaFactura = AgregarTabla(panel2FacturaD);
+		}
+
+
+		informacionFactura(totalMonto);
+		InicializarMoverTimer();
+	}
+			
 
 
 	void ProcesarTabla(List<Cliente^>^ listClient, TableLayoutPanel^ tabla, int id, double& total) {
@@ -1244,7 +1253,7 @@ private: Cliente^ clientes;
 			TimeSpan elapsed = DateTime::Now - this->startTime; 
 			this->toolStripTextBox1->Text = String::Format("{0:D2}:{1:D2}:{2:D2}", elapsed.Hours,elapsed.Minutes, elapsed.Seconds);
 			if (segundos > T2) {
-				T2 += 15;
+				T2 += 30;
 				CrearCliente();
 				if (generarClientes > 1) {
 					clientesEnCola->Items->Add("Cliente " + generarClientes);
@@ -1389,7 +1398,23 @@ private: System::Void toolStripButton2_Click(System::Object^ sender, System::Eve
 }
 private: System::Void splitCaja_Panel2_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 }
+
+void InicializarMoverTimer() {
+	Mover = gcnew Timer(); Mover->Interval = 250; // Intervalo de 1 segundo 
+	Mover->Tick += gcnew EventHandler(this, &MenuPrincipal::Mover_Tick);
+	Mover->Start(); // Iniciar el Timer 
+}
 private: System::Void Mover_Tick(System::Object^ sender, System::EventArgs^ e) {
+	if (tablaCaja->Controls->Count > 0) {
+		Control^ control = tablaCaja->Controls[0];
+		tablaCaja->Controls->Remove(control);
+		tablaFactura->Controls->Add(control);
+	}
+	else {
+		finalizo = true;
+		Mover->Stop();
+		finalizarTransferencia();
+	}
 }
 
 private: System::Void toolStripButton1_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -1419,6 +1444,7 @@ private: System::Void clientesEnCola_SelectedIndexChanged(System::Object^ sender
 	}
 	mostrarEnCola(listClient, selectedIndex+1);
 }
+
 };
 
 
