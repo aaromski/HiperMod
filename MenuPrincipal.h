@@ -6,6 +6,7 @@
 #include "conexion.h"
 #include "Reportes.h"
 #include "Cliente.h"
+#include "gestorTempo.h"
 namespace HiperMod {
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -36,6 +37,7 @@ namespace HiperMod {
 			this->timer1->Start(); 
 			this->startTime = DateTime::Now;
 			this->data = gcnew Conexion();
+			this->tempo = gcnew gestorTempo();
 			
 		}
 
@@ -103,7 +105,8 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ label20;
 	private: System::Windows::Forms::Label^ nombreA;
 	private: System::Windows::Forms::Label^ label28;
-	private: System::Windows::Forms::Label^ label23;
+	private: System::Windows::Forms::Label^ tiempoCaja;
+
 	private: System::Windows::Forms::Label^ label27;
 	private: System::Windows::Forms::Label^ Fecha_Caja;
 	private: System::Windows::Forms::Label^ TIEMPOCAU;
@@ -118,7 +121,8 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ label48;
 	private: System::Windows::Forms::Label^ nombre_Cola;
 	private: System::Windows::Forms::Label^ label50;
-	private: System::Windows::Forms::Label^ label51;
+private: System::Windows::Forms::Label^ tiempoCola;
+
 	private: System::Windows::Forms::Label^ label52;
 private: System::Windows::Forms::Label^ Fecha_Cola;
 	private: System::Windows::Forms::Label^ label54;
@@ -136,6 +140,11 @@ private: System::Windows::Forms::Label^ cedulafac;
 private: System::Windows::Forms::Label^ cant_Caja;
 private: System::Windows::Forms::Label^ cant_Cola;
 private: Cliente^ clientes;
+private: gestorTempo^ tempo;
+private: System::Windows::Forms::Label^ label24;
+private: System::Windows::Forms::Label^ pausa;
+private: System::Windows::Forms::Timer^ tiempoCC;
+private: System::Windows::Forms::Timer^ tiempo;
 
 
 	private:
@@ -203,12 +212,14 @@ private: Cliente^ clientes;
 			this->label20 = (gcnew System::Windows::Forms::Label());
 			this->nombreA = (gcnew System::Windows::Forms::Label());
 			this->label28 = (gcnew System::Windows::Forms::Label());
-			this->label23 = (gcnew System::Windows::Forms::Label());
+			this->tiempoCaja = (gcnew System::Windows::Forms::Label());
 			this->label27 = (gcnew System::Windows::Forms::Label());
 			this->Fecha_Caja = (gcnew System::Windows::Forms::Label());
 			this->TIEMPOCAU = (gcnew System::Windows::Forms::Label());
 			this->label25 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->label24 = (gcnew System::Windows::Forms::Label());
+			this->pausa = (gcnew System::Windows::Forms::Label());
 			this->panel2FacturaD = (gcnew System::Windows::Forms::Panel());
 			this->splitCola = (gcnew System::Windows::Forms::SplitContainer());
 			this->cant_Cola = (gcnew System::Windows::Forms::Label());
@@ -220,12 +231,14 @@ private: Cliente^ clientes;
 			this->label48 = (gcnew System::Windows::Forms::Label());
 			this->nombre_Cola = (gcnew System::Windows::Forms::Label());
 			this->label50 = (gcnew System::Windows::Forms::Label());
-			this->label51 = (gcnew System::Windows::Forms::Label());
+			this->tiempoCola = (gcnew System::Windows::Forms::Label());
 			this->label52 = (gcnew System::Windows::Forms::Label());
 			this->Fecha_Cola = (gcnew System::Windows::Forms::Label());
 			this->label54 = (gcnew System::Windows::Forms::Label());
 			this->label55 = (gcnew System::Windows::Forms::Label());
 			this->Mover = (gcnew System::Windows::Forms::Timer(this->components));
+			this->tiempoCC = (gcnew System::Windows::Forms::Timer(this->components));
+			this->tiempo = (gcnew System::Windows::Forms::Timer(this->components));
 			this->toolStrip1->SuspendLayout();
 			this->panelFacturaD->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitCaja))->BeginInit();
@@ -376,9 +389,6 @@ private: Cliente^ clientes;
 			this->toolStripButton2->Text = L"toolStripButton2";
 			this->toolStripButton2->Click += gcnew System::EventHandler(this, &MenuPrincipal::toolStripButton2_Click);
 			// 
-			// timer1
-			// 
-			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
@@ -421,7 +431,7 @@ private: Cliente^ clientes;
 				static_cast<System::Byte>(0)));
 			this->panelFacturaD->Location = System::Drawing::Point(12, 57);
 			this->panelFacturaD->Name = L"panelFacturaD";
-			this->panelFacturaD->Size = System::Drawing::Size(245, 495);
+			this->panelFacturaD->Size = System::Drawing::Size(245, 514);
 			this->panelFacturaD->TabIndex = 1;
 			// 
 			// tlfac
@@ -465,7 +475,7 @@ private: Cliente^ clientes;
 			this->montoTotal->AutoSize = true;
 			this->montoTotal->Font = (gcnew System::Drawing::Font(L"Arial", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->montoTotal->Location = System::Drawing::Point(190, 477);
+			this->montoTotal->Location = System::Drawing::Point(179, 491);
 			this->montoTotal->Name = L"montoTotal";
 			this->montoTotal->Size = System::Drawing::Size(14, 16);
 			this->montoTotal->TabIndex = 20;
@@ -480,14 +490,13 @@ private: Cliente^ clientes;
 			this->cantidad->Size = System::Drawing::Size(14, 15);
 			this->cantidad->TabIndex = 13;
 			this->cantidad->Text = L"0";
-			this->cantidad->Visible = false;
 			// 
 			// LabelMontoTotal
 			// 
 			this->LabelMontoTotal->AutoSize = true;
 			this->LabelMontoTotal->Font = (gcnew System::Drawing::Font(L"Arial", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->LabelMontoTotal->Location = System::Drawing::Point(3, 477);
+			this->LabelMontoTotal->Location = System::Drawing::Point(3, 491);
 			this->LabelMontoTotal->Name = L"LabelMontoTotal";
 			this->LabelMontoTotal->Size = System::Drawing::Size(101, 16);
 			this->LabelMontoTotal->TabIndex = 19;
@@ -718,7 +727,7 @@ private: Cliente^ clientes;
 			this->splitCaja->Panel1->Controls->Add(this->label20);
 			this->splitCaja->Panel1->Controls->Add(this->nombreA);
 			this->splitCaja->Panel1->Controls->Add(this->label28);
-			this->splitCaja->Panel1->Controls->Add(this->label23);
+			this->splitCaja->Panel1->Controls->Add(this->tiempoCaja);
 			this->splitCaja->Panel1->Controls->Add(this->label27);
 			this->splitCaja->Panel1->Controls->Add(this->Fecha_Caja);
 			this->splitCaja->Panel1->Controls->Add(this->TIEMPOCAU);
@@ -728,8 +737,8 @@ private: Cliente^ clientes;
 			// 
 			this->splitCaja->Panel2->AutoScroll = true;
 			this->splitCaja->Panel2->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MenuPrincipal::splitCaja_Panel2_Paint);
-			this->splitCaja->Size = System::Drawing::Size(253, 335);
-			this->splitCaja->SplitterDistance = 95;
+			this->splitCaja->Size = System::Drawing::Size(253, 360);
+			this->splitCaja->SplitterDistance = 101;
 			this->splitCaja->SplitterWidth = 1;
 			this->splitCaja->TabIndex = 10;
 			// 
@@ -817,14 +826,14 @@ private: Cliente^ clientes;
 			this->label28->TabIndex = 19;
 			this->label28->Text = L"FACTURA:";
 			// 
-			// label23
+			// tiempoCaja
 			// 
-			this->label23->AutoSize = true;
-			this->label23->Location = System::Drawing::Point(194, 68);
-			this->label23->Name = L"label23";
-			this->label23->Size = System::Drawing::Size(51, 13);
-			this->label23->TabIndex = 24;
-			this->label23->Text = L"aqui hora";
+			this->tiempoCaja->AutoSize = true;
+			this->tiempoCaja->Location = System::Drawing::Point(194, 68);
+			this->tiempoCaja->Name = L"tiempoCaja";
+			this->tiempoCaja->Size = System::Drawing::Size(51, 13);
+			this->tiempoCaja->TabIndex = 24;
+			this->tiempoCaja->Text = L"aqui hora";
 			// 
 			// label27
 			// 
@@ -866,6 +875,8 @@ private: Cliente^ clientes;
 			// 
 			// panel1
 			// 
+			this->panel1->Controls->Add(this->label24);
+			this->panel1->Controls->Add(this->pausa);
 			this->panel1->Controls->Add(this->panel2FacturaD);
 			this->panel1->Controls->Add(this->splitCola);
 			this->panel1->Controls->Add(this->splitCaja);
@@ -879,11 +890,29 @@ private: Cliente^ clientes;
 			this->panel1->Size = System::Drawing::Size(799, 594);
 			this->panel1->TabIndex = 7;
 			// 
+			// label24
+			// 
+			this->label24->AutoSize = true;
+			this->label24->Location = System::Drawing::Point(557, 51);
+			this->label24->Name = L"label24";
+			this->label24->Size = System::Drawing::Size(34, 13);
+			this->label24->TabIndex = 21;
+			this->label24->Text = L"iniciar";
+			// 
+			// pausa
+			// 
+			this->pausa->AutoSize = true;
+			this->pausa->Location = System::Drawing::Point(354, 39);
+			this->pausa->Name = L"pausa";
+			this->pausa->Size = System::Drawing::Size(36, 13);
+			this->pausa->TabIndex = 20;
+			this->pausa->Text = L"pausa";
+			// 
 			// panel2FacturaD
 			// 
 			this->panel2FacturaD->Location = System::Drawing::Point(20, 285);
 			this->panel2FacturaD->Name = L"panel2FacturaD";
-			this->panel2FacturaD->Size = System::Drawing::Size(233, 247);
+			this->panel2FacturaD->Size = System::Drawing::Size(233, 260);
 			this->panel2FacturaD->TabIndex = 19;
 			// 
 			// splitCola
@@ -906,13 +935,13 @@ private: Cliente^ clientes;
 			this->splitCola->Panel1->Controls->Add(this->label48);
 			this->splitCola->Panel1->Controls->Add(this->nombre_Cola);
 			this->splitCola->Panel1->Controls->Add(this->label50);
-			this->splitCola->Panel1->Controls->Add(this->label51);
+			this->splitCola->Panel1->Controls->Add(this->tiempoCola);
 			this->splitCola->Panel1->Controls->Add(this->label52);
 			this->splitCola->Panel1->Controls->Add(this->Fecha_Cola);
 			this->splitCola->Panel1->Controls->Add(this->label54);
 			this->splitCola->Panel1->Controls->Add(this->label55);
-			this->splitCola->Size = System::Drawing::Size(255, 335);
-			this->splitCola->SplitterDistance = 95;
+			this->splitCola->Size = System::Drawing::Size(255, 360);
+			this->splitCola->SplitterDistance = 101;
 			this->splitCola->SplitterWidth = 1;
 			this->splitCola->TabIndex = 10;
 			// 
@@ -1000,14 +1029,15 @@ private: Cliente^ clientes;
 			this->label50->TabIndex = 19;
 			this->label50->Text = L"FACTURA:";
 			// 
-			// label51
+			// tiempoCola
 			// 
-			this->label51->AutoSize = true;
-			this->label51->Location = System::Drawing::Point(193, 68);
-			this->label51->Name = L"label51";
-			this->label51->Size = System::Drawing::Size(51, 13);
-			this->label51->TabIndex = 24;
-			this->label51->Text = L"aqui hora";
+			this->tiempoCola->AutoSize = true;
+			this->tiempoCola->Location = System::Drawing::Point(193, 68);
+			this->tiempoCola->Name = L"tiempoCola";
+			this->tiempoCola->Size = System::Drawing::Size(51, 13);
+			this->tiempoCola->TabIndex = 24;
+			this->tiempoCola->Text = L"aqui hora";
+			this->tiempoCola->Visible = false;
 			// 
 			// label52
 			// 
@@ -1051,6 +1081,18 @@ private: Cliente^ clientes;
 			// 
 			this->Mover->Tick += gcnew System::EventHandler(this, &MenuPrincipal::Mover_Tick);
 			// 
+			// tiempoCC
+			// 
+			this->tiempoCC->Enabled = true;
+			this->tiempoCC->Interval = 1000;
+			this->tiempoCC->Tick += gcnew System::EventHandler(this, &MenuPrincipal::tiempoCC_Tick);
+			// 
+			// tiempo
+			// 
+			this->tiempo->Enabled = true;
+			this->tiempo->Interval = 1000;
+			this->tiempo->Tick += gcnew System::EventHandler(this, &MenuPrincipal::tiempo_Tick);
+			// 
 			// MenuPrincipal
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -1088,8 +1130,6 @@ private: Cliente^ clientes;
 		}
 #pragma endregion
 		public: 
-			int T1 = 16;
-			int T2 = 0;
 			TableLayoutPanel^ tableCola;           // Los tablelayoutpanel son las tablas que contienen toda la informacion de los productos
 			TableLayoutPanel^ tablaCaja;
 			TableLayoutPanel^ tablaFactura;
@@ -1139,17 +1179,8 @@ private: Cliente^ clientes;
 				}
 	} */
 
-	void TransferirDato(TableLayoutPanel^ source, TableLayoutPanel^ destination) { // Copia y elimina los datos de las tabla 
-		// Copiar los controles de la tabla de origen a la tabla de destino 
-		while (source->Controls->Count > 0) {
-			Control^ control = source->Controls[0];
-			source->Controls->Remove(control);
-			destination->Controls->Add(control);
-		}
-		
-	}
 
-	void informacionFactura(int totalMonto){
+	void informacionFactura(double totalMonto){
 		this->nombrefac->Text = nombreA->Text;
 		this->cedulafac->Text = cedula->Text;
 		this->tlfac->Text = tlf->Text;
@@ -1157,48 +1188,43 @@ private: Cliente^ clientes;
 		this->cedulafac->Visible = true;
 		this->tlfac->Visible = true;
 		this->LabelMontoTotal->Visible = true;
-		this->montoTotal->Text = Convert::ToString(totalMonto);
+		this->montoTotal->Text = totalMonto.ToString("F2");
 		this->montoTotal->Visible = true;
+		this->cantidad->Visible = true;
 		this->hora->Text = DateTime::Now.ToString("HH:mm:ss");
 	}
 
 	void finalizarTransferencia() {
 		int index = clientesEnCola->SelectedIndex;
-		// Remover el primer cliente de `listClient`
+		// Remover el primer cliente de `listClient` y la primera persona en la cola
 		if (listClient->Count > 0) {
 			listClient->RemoveAt(0);
+			clientesEnCola->Items->RemoveAt(0);
 		}
 
 		// Manejar eliminación del primer item
 		if (index == 0 && clientesEnCola->Items->Count > 0) {
-			clientesEnCola->Items->RemoveAt(0);
-
 			// Seleccionar el nuevo primer item si hay más elementos
-			if (clientesEnCola->Items->Count > 0) {
-				clientesEnCola->SelectedIndex = 0;
-			}
+			clientesEnCola->SelectedIndex = 0;
 			mostrarEnCola(listClient, 0); // Mostrar el nuevo primer cliente
 
 		}
-		else {
+		else if (index > 0) {
 			// Remover el ítem actual
-			if (clientesEnCola->Items->Count > 0) {
-				clientesEnCola->Items->RemoveAt(0);
-
-				// Ajustar el índice seleccionado
-				if (clientesEnCola->Items->Count > 0) {
-					clientesEnCola->SelectedIndex = (index - 1 < clientesEnCola->Items->Count ? index - 1 : clientesEnCola->Items->Count - 1);
-				}
+				clientesEnCola->SelectedIndex = (index - 1 < clientesEnCola->Items->Count ? index - 1 : clientesEnCola->Items->Count - 1);
 				mostrarEnCola(listClient, clientesEnCola->SelectedIndex); // Mostrar el cliente en la nueva posición
-			}
+			
 		}
-
+		if (clientesEnCola->Items->Count == 0) {
+			LimpiarYPreparaTabla(tableCola);
+			sinClientes();
+		}
 		mostrarEnCaja(listClient);
 
 	
 	}
 
-	void pasarAFactura(int totalMonto) {
+	void pasarAFactura(double totalMonto) {
 		
 
 		if (panel2FacturaD->Controls->Count == 0) {
@@ -1210,58 +1236,59 @@ private: Cliente^ clientes;
 		}
 
 
-		informacionFactura(totalMonto);
+		cantidad->Text = "0";
 		InicializarMoverTimer();
+		informacionFactura(totalMonto);
 	}
 			
 
 
 	void ProcesarTabla(List<Cliente^>^ listClient, TableLayoutPanel^ tabla, int id, double& total) {
-		if (listClient->Count > 0 && listClient[id]->Productos->Count > 0) {
+		if (listClient->Count > 0  && id >= 0) {
 			int cant = 0;
+			if (listClient[id]->Productos->Count > 0) {
+				data->abrirConexion();
+				for (int i = 0; i < listClient[id]->Productos->Count; i++) {
+					Label^ nombre = gcnew Label();
+					Label^ precioIz = gcnew Label();
+					Label^ precioDe = gcnew Label();
+					data->mostrarProductos(listClient[id]->Productos[i], nombre, precioIz, precioDe, listClient[id]->Cantidad[i], total);
+					cant += listClient[id]->Cantidad[i];
 
-			for (int i = 0; i < listClient[id]->Productos->Count; i++) {
-				Label^ nombre = gcnew Label();
-				Label^ precioIz = gcnew Label();
-				Label^ precioDe = gcnew Label();
-				data->mostrarProductos(listClient[id]->Productos[i], nombre, precioIz, precioDe, listClient[id]->Cantidad[i], total);
-				cant += listClient[id]->Cantidad[i];
+					nombre->AutoSize = true;
+					precioIz->AutoSize = true;
+					precioDe->AutoSize = true;
+					precioDe->Anchor = System::Windows::Forms::AnchorStyles::Top;
+					precioIz->Anchor = System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left;
 
-				nombre->AutoSize = true;
-				precioIz->AutoSize = true;
-				precioDe->AutoSize = true;
-				precioDe->Anchor = System::Windows::Forms::AnchorStyles::Top;
-				precioIz->Anchor = System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left;
+					int row = tabla->RowCount++;
+					tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
+					tabla->Controls->Add(nombre, 0, row);
 
-				int row = tabla->RowCount++;
-				tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
-				tabla->Controls->Add(nombre, 0, row);
-
-				row = tabla->RowCount++;
-				tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
-				tabla->Controls->Add(precioIz, 0, row);
-				tabla->Controls->Add(precioDe, 1, row);
+					row = tabla->RowCount++;
+					tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
+					tabla->Controls->Add(precioIz, 0, row);
+					tabla->Controls->Add(precioDe, 1, row);
+				}
+				data->cerrarConexion();
 			}
 		}
 	}
 
 
 	void timer1_Tick(Object^ sender, EventArgs^ e) {          //Este es el metodo para la simulacion, esta funcion el programa la llama cada 1 seg
-			static int generarClientes = 1;
-			TimeSpan contadorTiempo = DateTime::Now - this->startTime;
-			int segundos = static_cast<int>(contadorTiempo.TotalSeconds);
-			TimeSpan elapsed = DateTime::Now - this->startTime; 
-			this->toolStripTextBox1->Text = String::Format("{0:D2}:{1:D2}:{2:D2}", elapsed.Hours,elapsed.Minutes, elapsed.Seconds);
-			if (segundos > T2) {
-				T2 += 30;
+			int generarClientes = tempo->generarClientes;
+			int segundos = static_cast<int>(tempo->startTime->Elapsed.TotalSeconds);
+			if (segundos > tempo->T2) {
+				tempo->T2 += 25;
 				CrearCliente();
 				if (generarClientes > 1) {
 					clientesEnCola->Items->Add("Cliente " + generarClientes);
 				}
-				generarClientes++;
+				tempo->generarClientes++;
 			}
-			if (segundos >= T1) {
-				T1 += 11;
+			if (segundos >= tempo->T1) {
+				tempo->T1 += 10;
 				mostrarEnCaja(listClient);
 				if (splitCola->Panel2->Controls->Count > 0) {
 					mostrarEnCola(listClient, clientesEnCola->SelectedIndex+1);
@@ -1277,7 +1304,7 @@ private: Cliente^ clientes;
 	}
 
 	void mostrarEnCaja(List<Cliente^>^ listClient) {
-		double totalMonto = 0;
+		double totalMonto = 0.0;
 		int id = listClient[0]->GetId();
 		data->datos(id, nombreA, cedula, tlf);
 		MostrarInformacionCliente(nombreA, cedula, tlf);
@@ -1296,7 +1323,7 @@ private: Cliente^ clientes;
 	}
 
 	void mostrarEnCola(List<Cliente^>^ listClient, int posCola) {
-		PrepararInformacionCola(posCola);
+		
 		if (EsNuevaTabla(splitCola->Panel2)) {
 			tableCola = AgregarTabla(splitCola->Panel2);
 		}
@@ -1305,6 +1332,7 @@ private: Cliente^ clientes;
 
 		double totalCola = 0;
 		ProcesarTabla(listClient, tableCola, posCola, totalCola);
+		PrepararInformacionCola(posCola);
 	}
 
 	bool EsNuevaTabla(Panel^ panel) {
@@ -1324,12 +1352,18 @@ private: Cliente^ clientes;
 	}
 
 	void PrepararInformacionCola(int posCola) {
-		int number = listClient[posCola]->GetId();
-		data->datos(number, nombre_Cola, cedula_Cola, tlf_Cola);
-		MostrarInformacionCliente(nombre_Cola, cedula_Cola, tlf_Cola);
+		if (posCola > 0) {
+			int number = listClient[posCola]->GetId();
+			data->datos(number, nombre_Cola, cedula_Cola, tlf_Cola);
+			MostrarInformacionCliente(nombre_Cola, cedula_Cola, tlf_Cola);
+		}
 	}
 
-	
+	void sinClientes() {
+		nombre_Cola->Visible = false;
+		cedula_Cola->Visible = false;
+		tlf->Visible = false;
+	}
 	
 
 		void AsignarColoresABotones(void) { // Definir el color deseado, metodo para cambiar el color de los botones
@@ -1367,8 +1401,12 @@ TableLayoutPanel^ AgregarTabla(Panel^ panel) {
 		TableLayoutPanel^ tableLayoutPanel = gcnew TableLayoutPanel();
 		tableLayoutPanel->RowCount = 1; // Número de filas
 		tableLayoutPanel->ColumnCount = 2; // Número de columnas
+		// Configurar estilo de columna 
+		tableLayoutPanel->ColumnStyles->Add(gcnew ColumnStyle(SizeType::Percent, 60.0F)); // 60% para la primera columna 
+		tableLayoutPanel->ColumnStyles->Add(gcnew ColumnStyle(SizeType::Percent, 40.0F)); // 40% para la segunda columna
 		tableLayoutPanel->Dock = DockStyle::Fill; // Ajustar al tamaño del contenedor
-		tableLayoutPanel->AutoScroll = true;
+		tableLayoutPanel->HorizontalScroll->Enabled = false; // Deja activo solo el scroll vertical 
+		tableLayoutPanel->HorizontalScroll->Visible = false;
 		// Añadir el TableLayoutPanel al Panel específico
 		panel->Controls->Add(tableLayoutPanel);
 		return tableLayoutPanel;
@@ -1400,41 +1438,43 @@ private: System::Void splitCaja_Panel2_Paint(System::Object^ sender, System::Win
 }
 
 void InicializarMoverTimer() {
-	Mover = gcnew Timer(); Mover->Interval = 250; // Intervalo de 1 segundo 
+	Mover = gcnew Timer(); Mover->Interval = 500; // Intervalo de 1 segundo 
 	Mover->Tick += gcnew EventHandler(this, &MenuPrincipal::Mover_Tick);
 	Mover->Start(); // Iniciar el Timer 
 }
+
 private: System::Void Mover_Tick(System::Object^ sender, System::EventArgs^ e) {
-	if (tablaCaja->Controls->Count > 0) {
+	int movedCount = 0; // Contador de controles movidos
+	for (int i = 0; i < 3 && tablaCaja->Controls->Count > 0; ++i) {
+		// Mover el control
 		Control^ control = tablaCaja->Controls[0];
 		tablaCaja->Controls->Remove(control);
 		tablaFactura->Controls->Add(control);
+		movedCount++; // Incrementar el contador de controles movidos
+	}
+
+	// Solo actualizar cantidad si se ha movido al menos un control
+	if (movedCount > 0) {
+		cantidad->Text = (Convert::ToInt32(cantidad->Text) + 1).ToString();
 	}
 	else {
+		// Si no se movieron controles, detener el timer
 		finalizo = true;
 		Mover->Stop();
 		finalizarTransferencia();
 	}
 }
 
-private: System::Void toolStripButton1_Click(System::Object^ sender, System::EventArgs^ e) {
-	// Pausar el timer principal
-	this->timer1->Stop();
 
-	// Iterar a través de cada cliente en `listClient` y pausar sus timers
-	for each (Cliente ^ cliente in listClient) {
-		cliente->PausarTimer(); // Asegúrate de tener este método en la clase `Cliente`
-	}
+
+private: System::Void toolStripButton1_Click(System::Object^ sender, System::EventArgs^ e) {
+	tempo->PausarTemporizador(timer1,listClient, pausa);
 }
 
-private: System::Void toolStripButton3_Click(System::Object^ sender, System::EventArgs^ e) {
-	// Continuar el timer principal
-	this->timer1->Start();
 
-	// Iterar a través de cada cliente en `listClient` y continuar sus timers
-	for each (Cliente ^ cliente in listClient) {
-		cliente->ContinuarTimer(); // Reanudar el Timer del cliente
-	}
+
+private: System::Void toolStripButton3_Click(System::Object^ sender, System::EventArgs^ e) {
+	tempo->reaunudarTemporizador(timer1, listClient, label24);
 }
 
 private: System::Void clientesEnCola_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
@@ -1445,6 +1485,21 @@ private: System::Void clientesEnCola_SelectedIndexChanged(System::Object^ sender
 	mostrarEnCola(listClient, selectedIndex+1);
 }
 
+
+private: System::Void tiempoCC_Tick(System::Object^ sender, System::EventArgs^ e) {
+	
+	if (listClient->Count > 0) {
+		int id = 0;
+		if (clientesEnCola->SelectedIndex >= 0) {
+			id = clientesEnCola->SelectedIndex;
+			tiempoCola->Visible = true;
+		}
+		tempo->tiemposClientes(listClient, tiempoCaja, tiempoCola,id);
+	}
+}
+private: System::Void tiempo_Tick(System::Object^ sender, System::EventArgs^ e) {
+	tempo->tiempoTranscurrido(toolStripTextBox1);
+}
 };
 
 

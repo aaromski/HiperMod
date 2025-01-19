@@ -126,6 +126,7 @@
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="Clientes.cpp" />
     <ClCompile Include="conexion.cpp" />
+    <ClCompile Include="gestorTempo.cpp" />
     <ClCompile Include="Inventario.cpp" />
     <ClCompile Include="MenuPrincipal.cpp" />
     <ClCompile Include="Productos.cpp" />
@@ -137,6 +138,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="conexion.h" />
+    <ClInclude Include="gestorTempo.h" />
     <ClInclude Include="Inventario.h">
       <FileType>CppForm</FileType>
     </ClInclude>

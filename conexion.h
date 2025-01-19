@@ -19,7 +19,7 @@ ref class Conexion
 	MySqlConnection^ st;
 public:
 	Conexion() {
-		this->cn = "datasource=localhost; username=root; password=123456; database=producto;";
+		this->cn = "datasource=localhost; username=root; password=123456; database=hipermod;";
 		this->st = gcnew MySqlConnection(this->cn);
 	}
 
@@ -89,55 +89,10 @@ public:
 		lector->Close();
 		this->st->Close();
 	}
-	// Este metodo es para buscar la informacion del producto y agregarla a la tabla de la forma como se aprecia en la simulacion
-	// cantidad y cantidadcola es la cantidad del productas que lleva el cliente en caja y cola en ese momento
-	//seguir es para saber si el cliente se va a pasar de los 30 productos y ref es para saber si es el cliente en caja o en cola.
-	void productosF(int id, Label^ nombreP, Label^ izqui, Label^ dere, Label^ cantidad, Label^ cantCola, Label^ monto, bool% seguir, int ref) {
-		int cant = randomNumero();
-		Label^ labelActual = (ref == 1) ? cantidad : cantCola;
-		int aux = Convert::ToInt32(labelActual->Text) + cant;
-
-		if (aux > 30) {
-			seguir = false;
-			return;
-		}
-		
-		String^ sentencia = "SELECT descripcion, precio FROM datos WHERE ID = @ID";
-		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
-		ejecutar->Parameters->AddWithValue("@ID", id);
-		this->st->Open();
-		MySqlDataReader^ lector = ejecutar->ExecuteReader();
-
-		if (lector->Read()) {
-			labelActual->Text = aux.ToString();
-
-			String^ producto = lector["descripcion"]->ToString();
-			nombreP->Text = producto;
-
-			String^ precioP = lector["precio"]->ToString();
-			izqui->Text = cant + "x" + precioP;
-
-			double precioNumerico = Convert::ToDouble(precioP);
-			double resultado = cant * precioNumerico;
-			dere->Text = "Bs " + resultado.ToString("F2");
-
-			double montoActual = Convert::ToDouble(monto->Text);
-			monto->Text = (ref == 1 ) ? (resultado + montoActual).ToString("F2") : (montoActual).ToString("F2");
-		}
-		else {
-			nombreP->Text = "Producto no encontrado";
-		}
-
-		lector->Close();
-		this->st->Close();
-	}
+	
 
 
-	int randomNumero() {
-		std::srand(static_cast<unsigned>(std::time(nullptr))); // Generar un número aleatorio entre 1 y 5 
-		int cantidad = (std::rand() % 5) + 1;
-		return cantidad;
-	}
+	
 	int randomNumeroid() {
 		std::srand(static_cast<unsigned>(std::time(nullptr))); // Generar un número aleatorio entre 1 y 5 
 		int cantidad = (std::rand() % 3) + 1;
@@ -145,11 +100,9 @@ public:
 	}
 
 	void mostrarProductos(int id, Label^ nombreP, Label^ izqui, Label^ dere, int cantidad,  double& montoTotal ) {
-
-		String^ sentencia = "SELECT descripcion, precio FROM datos WHERE ID = @ID";
+		String^ sentencia = "SELECT descripcion, Precio_BS FROM productos WHERE ID = @ID";
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
 		ejecutar->Parameters->AddWithValue("@ID", id);
-		this->st->Open();
 		MySqlDataReader^ lector = ejecutar->ExecuteReader();
 
 		if (lector->Read()) {
@@ -157,10 +110,10 @@ public:
 			String^ producto = lector["descripcion"]->ToString();
 			nombreP->Text = producto;
 
-			String^ precioP = lector["precio"]->ToString();
+			String^ precioP = lector["Precio_BS"]->ToString();
 			izqui->Text = cantidad + "x" + precioP;
 
-			double precioNumerico = Convert::ToDouble(precioP);
+			double precioNumerico = Double::Parse(precioP);
 			double resultado = cantidad * precioNumerico;
 			dere->Text = "Bs " + resultado.ToString("F2");
 
@@ -171,7 +124,6 @@ public:
 		}
 
 		lector->Close();
-		this->st->Close();
 	}
 
 };

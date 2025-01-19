@@ -16,6 +16,12 @@ public:
         maxCantidad = 0;
         seguir = true;
         productoCount = 1;
+
+        tCompras = gcnew Timer(); tCompras->Interval = 1000; 
+        // Cada segundo 
+        tCompras->Tick += gcnew EventHandler(this, &Cliente::OnCreacionTimerTick); 
+        tCompras->Start(); 
+        tiempoComprando = 0;
     }
 
     int GetId() { 
@@ -24,6 +30,14 @@ public:
 
     bool GetSeguir() {
         return seguir;
+    }
+
+    int GetCountP() {
+        return productoCount;
+    }
+
+    int GetTiempo() {
+        return tiempoComprando;
     }
 
     void IniciarTimer() {
@@ -62,34 +76,50 @@ private:
     int id_;
     List<int>^ cantidad = gcnew List<int>();
     List<int>^ productos = gcnew List<int>();
-    
+    Timer^ tCompras;
     Timer^ productoTimer;
-    int productoCount = 1; // Contador de productos
+    int productoCount = 0; // Contador de productos
     int maxCantidad;
+    int tiempoComprando;
     bool seguir;
 
     void AgregarProducto() {
-        
+            int producto = randomProducto(); 
+            while (productos->Contains(producto)) { 
+                producto = randomProducto(); 
+            }
         // Generar una cantidad aleatoria
-        int cant = conexion->randomNumero();
+        int cant = randomCantidad();
 
         // Verificar que sumar `cant` no exceda `30`
-        if ((productoCount <= 10 && maxCantidad + cant <= 30) && seguir) {
+        if ((productoCount < 10 && maxCantidad + cant <= 30) && seguir) {
             maxCantidad += cant;
-
-            int producto = productoCount++;
             productos->Add(producto);
             cantidad->Add(cant);
-            
+            productoCount++;
         }
         else  {
             seguir = false;
+            productoTimer->Stop();
         }
     }
 
+    int randomCantidad() {
+        std::srand(static_cast<unsigned>(std::time(nullptr))); // Generar un número aleatorio entre 1 y 5 
+        int cantidad = (std::rand() % 5) + 1;
+        return cantidad;
+    }
 
+    int randomProducto() {
+        std::srand(static_cast<unsigned>(std::time(nullptr))); 
+        return (std::rand() % 16) + 1; // Números del 1 al 10 
+    }
 
     void OnProductoTimerTick(Object^ sender, EventArgs^ e) {
         AgregarProducto();
+    }
+
+    void OnCreacionTimerTick(Object^ sender, EventArgs^ e) {
+        tiempoComprando++; 
     }
 };
