@@ -7,6 +7,7 @@
 #include "Reportes.h"
 #include "Cliente.h"
 #include "gestorTempo.h"
+#include "Productos.h"
 namespace HiperMod {
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -16,6 +17,7 @@ namespace HiperMod {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace System::Text::RegularExpressions;
+	using namespace System::Media;
 	/// <summary>
 	/// Resumen de MenuPrincipal
 	/// </summary>
@@ -38,7 +40,7 @@ namespace HiperMod {
 			this->startTime = DateTime::Now;
 			this->data = gcnew Conexion();
 			this->tempo = gcnew gestorTempo();
-			
+			this->sonidobeeb = gcnew SoundPlayer("sonidos//preview.wav");
 		}
 
 	protected:
@@ -146,7 +148,7 @@ private: System::Windows::Forms::Label^ pausa;
 private: System::Windows::Forms::Timer^ tiempoCC;
 private: System::Windows::Forms::Timer^ tiempo;
 
-
+private: SoundPlayer^ sonidobeeb;
 	private:
 		bool UseImage = true;
 		/// <summary>
@@ -1456,6 +1458,7 @@ private: System::Void Mover_Tick(System::Object^ sender, System::EventArgs^ e) {
 	// Solo actualizar cantidad si se ha movido al menos un control
 	if (movedCount > 0) {
 		cantidad->Text = (Convert::ToInt32(cantidad->Text) + 1).ToString();
+		sonidobeeb->Play();
 	}
 	else {
 		// Si no se movieron controles, detener el timer
@@ -1500,6 +1503,7 @@ private: System::Void tiempoCC_Tick(System::Object^ sender, System::EventArgs^ e
 private: System::Void tiempo_Tick(System::Object^ sender, System::EventArgs^ e) {
 	tempo->tiempoTranscurrido(toolStripTextBox1);
 }
+
 };
 
 

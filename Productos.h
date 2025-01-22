@@ -1,6 +1,7 @@
 #pragma once
-ref class Productos
-{
+
+ref class Productos {
 
 };
+
 
