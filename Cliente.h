@@ -1,9 +1,6 @@
 // Cliente.h
 #include "conexion.h"
 #pragma once
-
-
-
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace System::Collections::Generic;

@@ -10,9 +10,8 @@ using namespace System::Collections;
 using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
-using namespace Data;
-using namespace Data::SqlClient;
 using namespace MySql::Data::MySqlClient;
+using namespace System::Data::Common;
 ref class Conexion
 {
 	String^ cn;
@@ -30,34 +29,39 @@ public:
 	void  cerrarConexion() {
 		this->st->Close();
 	}
-	void Insertar(int id, String^ descripcion, int stock, int precio) { // El metodo insertar y eliminar no los uso en el programa
-		String^ sentencia = "Insert into datos values(@ID,@descripcion,@stock,@precio)";
+
+	void Insertar(String^ CI, String^ nombre, String^ apellido, int tlf) {
+		String^ sentencia = "INSERT INTO Clientes (CI, Nombre, Apellido, Telefono) VALUES (@CI, @Nombre, @Apellido, @Telefono)";
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
-		ejecutar->Parameters->AddWithValue("@ID", id);
-		ejecutar->Parameters->AddWithValue("@descripcion", descripcion);
-		ejecutar->Parameters->AddWithValue("@stock", stock);
-		ejecutar->Parameters->AddWithValue("@precio", precio);
+		ejecutar->Parameters->AddWithValue("@CI", CI);
+		ejecutar->Parameters->AddWithValue("@Nombre", nombre);
+		ejecutar->Parameters->AddWithValue("@Apellido", apellido);
+		ejecutar->Parameters->AddWithValue("@Telefono", tlf);
 		this->st->Open();
 		ejecutar->ExecuteNonQuery();
 		this->st->Close();
 	}
-	void Eliminar(int id) { //Los dejo aqui por si necisitan despues, sirven para ingresar un producto a la base de datos o eliminar un producto de la base de datos.
-		String^ sentencia = "Delete from datos where ID = @ID";
+
+	void Eliminar(String^ CI) {
+		String^ sentencia = "DELETE FROM Clientes WHERE CI = @CI"; 
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
-		ejecutar->Parameters->AddWithValue("@ID", id);
+		ejecutar->Parameters->AddWithValue("@CI", CI);
 		this->st->Open();
 		ejecutar->ExecuteNonQuery();
 		this->st->Close();
 	}
-	DataTable^ Conexion::getData() //Tampoco utilizo esto, sirve para mostrar toda la base de datos en una tabla.
+
+	DataTable^ getData(String^ tableName)
 	{
-		String^ sql = "select *from datos";
+		// Construir la consulta SQL utilizando el parámetro tableName
+		String^ sql = "SELECT * FROM " + tableName;
 		MySqlCommand^ cursor = gcnew MySqlCommand(sql, this->st);
 		MySqlDataAdapter^ data = gcnew MySqlDataAdapter(cursor);
 		DataTable^ tabla = gcnew DataTable();
 		data->Fill(tabla);
 		return tabla;
 	}
+
 	array<int>^ alazar() { 
 		array<int>^ numeros = gcnew array<int> { 1, 2, 3 }; 
 		Random^ rnd = gcnew Random(); 
@@ -127,3 +131,6 @@ public:
 	}
 
 };
+
+
+

@@ -1180,7 +1180,35 @@ private: SoundPlayer^ sonidobeeb;
 					Facturacion();
 				}
 	} */
+	void reportesCompras() {
+		int count = reportes->tablaCompraC->RowCount;
+		reportes->tablaCompraC->RowCount++;
+		Label^ ci = gcnew Label();
+		ci->Text = cedulafac->Text;
+		Label^ nombre = gcnew Label();
+		nombre->Text = nombrefac->Text;
+		Label^ tlfReportes = gcnew Label();
+		tlfReportes->Text = tlf->Text;
+		Label^ fechaReportes = gcnew Label();
+		fechaReportes->Text = fecha->Text;
+		Label^ horaReportes = gcnew Label();
+		horaReportes->Text = hora->Text;
 
+		ci->Anchor = System::Windows::Forms::AnchorStyles::Top;
+		nombre->Anchor = System::Windows::Forms::AnchorStyles::Top;
+		tlfReportes->Anchor = System::Windows::Forms::AnchorStyles::Top;
+		fechaReportes->Anchor = System::Windows::Forms::AnchorStyles::Top;
+		horaReportes->Anchor = System::Windows::Forms::AnchorStyles::Top;
+		
+		reportes->tablaCompraC->RowStyles->Insert(1, gcnew RowStyle(SizeType::Absolute, 15));
+		reportes->tablaCompraC->Controls->Add(ci, 0, count-1);
+		reportes->tablaCompraC->Controls->Add(nombre, 1, count -1);
+		reportes->tablaCompraC->Controls->Add(tlfReportes, 2, count -1);
+		reportes->tablaCompraC->Controls->Add(fechaReportes, 3, count -1);
+		reportes->tablaCompraC->Controls->Add(horaReportes, 4, count -1);
+
+		reportes->tablaCompraC->PerformLayout();
+	}
 
 	void informacionFactura(double totalMonto){
 		this->nombrefac->Text = nombreA->Text;
@@ -1200,6 +1228,7 @@ private: SoundPlayer^ sonidobeeb;
 		int index = clientesEnCola->SelectedIndex;
 		// Remover el primer cliente de `listClient` y la primera persona en la cola
 		if (listClient->Count > 0) {
+			reportesCompras();
 			listClient->RemoveAt(0);
 			clientesEnCola->Items->RemoveAt(0);
 		}
@@ -1222,7 +1251,7 @@ private: SoundPlayer^ sonidobeeb;
 			sinClientes();
 		}
 		mostrarEnCaja(listClient);
-
+		
 	
 	}
 
@@ -1329,8 +1358,11 @@ private: SoundPlayer^ sonidobeeb;
 		if (EsNuevaTabla(splitCola->Panel2)) {
 			tableCola = AgregarTabla(splitCola->Panel2);
 		}
+		else {
+			LimpiarYPreparaTabla(tableCola);
+		}
 
-		LimpiarYPreparaTabla(tableCola);
+		
 
 		double totalCola = 0;
 		ProcesarTabla(listClient, tableCola, posCola, totalCola);
