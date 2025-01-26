@@ -131,6 +131,7 @@
     <ClCompile Include="MenuPrincipal.cpp" />
     <ClCompile Include="Productos.cpp" />
     <ClCompile Include="Reportes.cpp" />
+    <ClCompile Include="ultimasFacturas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cliente.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="Reportes.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="ultimasFacturas.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Clientes.resx">

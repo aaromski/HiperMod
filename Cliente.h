@@ -1,5 +1,6 @@
 // Cliente.h
-#include "conexion.h"
+#include <ctime>
+#include <random>
 #pragma once
 using namespace System;
 using namespace System::Windows::Forms;
@@ -8,7 +9,6 @@ using namespace System::Collections::Generic;
 public ref class Cliente {
 public:
     Cliente(int id) : id_(id) {
-        conexion = gcnew Conexion();
         IniciarTimer();
         maxCantidad = 0;
         seguir = true;
@@ -39,7 +39,7 @@ public:
 
     void IniciarTimer() {
         productoTimer = gcnew Timer();
-        productoTimer->Interval = 5000; // Cada 10 segundos
+        productoTimer->Interval = 10000; // Cada 10 segundos
         productoTimer->Tick += gcnew EventHandler(this, &Cliente::OnProductoTimerTick);
         productoTimer->Start();
     }
@@ -47,12 +47,14 @@ public:
     void PausarTimer() { 
         if (productoTimer != nullptr) { 
             productoTimer->Stop(); 
+            tCompras->Stop();
         } 
     }
 
     void ContinuarTimer() { 
         if (productoTimer != nullptr) { 
-            productoTimer->Start(); 
+            productoTimer->Start();
+            tCompras->Start();
         } 
     }
 
@@ -69,7 +71,6 @@ public:
     }
 
 private:
-    Conexion^ conexion;
     int id_;
     List<int>^ cantidad = gcnew List<int>();
     List<int>^ productos = gcnew List<int>();

@@ -1,7 +1,5 @@
 #pragma once
 #include <iostream>
-#include <ctime>
-#include <random>
 #include <stdlib.h>
 
 using namespace System;
@@ -92,15 +90,6 @@ public:
 		}
 		lector->Close();
 		this->st->Close();
-	}
-	
-
-
-	
-	int randomNumeroid() {
-		std::srand(static_cast<unsigned>(std::time(nullptr))); // Generar un número aleatorio entre 1 y 5 
-		int cantidad = (std::rand() % 3) + 1;
-		return cantidad;
 	}
 
 	void mostrarProductos(int id, Label^ nombreP, Label^ izqui, Label^ dere, int cantidad,  double& montoTotal ) {

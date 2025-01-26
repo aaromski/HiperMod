@@ -8,6 +8,7 @@
 #include "Cliente.h"
 #include "gestorTempo.h"
 #include "Productos.h"
+#include "ultimasFacturas.h"
 namespace HiperMod {
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -28,15 +29,12 @@ namespace HiperMod {
 		{
 			
 			InitializeComponent();
-			AsignarColoresABotones();
 			reportes = gcnew Reportes();
 			reportes->Hide();
+			AsignarColoresABotones();
 			//
 			//TODO: agregar código de constructor aquí
 			//
-			this->timer1->Interval = 1000; // 1 segundo 
-			this->timer1->Tick += gcnew System::EventHandler(this, &MenuPrincipal::timer1_Tick); 
-			this->timer1->Start(); 
 			this->startTime = DateTime::Now;
 			this->data = gcnew Conexion();
 			this->tempo = gcnew gestorTempo();
@@ -60,19 +58,26 @@ namespace HiperMod {
 	private: System::Windows::Forms::Button^ button_Inv;
 	internal: System::Windows::Forms::ToolStrip^ toolStrip1;
 	private: System::Windows::Forms::ToolStripButton^ B_cerrar;
-	private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
+	private: System::Windows::Forms::ToolStripButton^ pausar;
+
 	private: System::Windows::Forms::ToolStripButton^ toolStripButton2;
 	private: System::Windows::Forms::ToolStripTextBox^ toolStripTextBox1;
-	private: System::Windows::Forms::Timer^ timer1;
+
 	private: System::DateTime startTime;
 	private: System::ComponentModel::IContainer^ components;
-	private: System::Windows::Forms::ToolStripButton^ toolStripButton3;
+	private: System::Windows::Forms::ToolStripButton^ reanudar;
+
 	private: System::Windows::Forms::ToolStripLabel^ toolStripButton4;
 	private: Conexion^ data;
-	private: System::Drawing::Color Normal = System::Drawing::Color::FromArgb(
+	private: System::Drawing::Color botonClickeado = System::Drawing::Color::FromArgb(
 		static_cast<System::Int32>(static_cast<System::Byte>(246)),
 		static_cast<System::Int32>(static_cast<System::Byte>(120)),
 		static_cast<System::Int32>(static_cast<System::Byte>(0))
+	);
+	private: System::Drawing::Color Normal = System::Drawing::Color::FromArgb(
+			   static_cast<System::Int32>(static_cast<System::Byte>(0)),
+			   static_cast<System::Int32>(static_cast<System::Byte>(195)),
+			   static_cast<System::Int32>(static_cast<System::Byte>(240))
 	);
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Panel^ panelFacturaD;
@@ -97,7 +102,6 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ label19;
 	private: System::Windows::Forms::Label^ label42;
 	private: System::Windows::Forms::ComboBox^ clientesEnCola;
-
 	private: System::Windows::Forms::SplitContainer^ splitCaja;
 	private: System::Windows::Forms::Label^ label38;
 	private: System::Windows::Forms::Label^ label22;
@@ -108,7 +112,6 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ nombreA;
 	private: System::Windows::Forms::Label^ label28;
 	private: System::Windows::Forms::Label^ tiempoCaja;
-
 	private: System::Windows::Forms::Label^ label27;
 	private: System::Windows::Forms::Label^ Fecha_Caja;
 	private: System::Windows::Forms::Label^ TIEMPOCAU;
@@ -124,7 +127,6 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ nombre_Cola;
 	private: System::Windows::Forms::Label^ label50;
 private: System::Windows::Forms::Label^ tiempoCola;
-
 	private: System::Windows::Forms::Label^ label52;
 private: System::Windows::Forms::Label^ Fecha_Cola;
 	private: System::Windows::Forms::Label^ label54;
@@ -135,7 +137,6 @@ private: System::Windows::Forms::Panel^ panel2FacturaD;
 private: System::Windows::Forms::Timer^ Mover; static bool finalizo = false;
 private: System::Windows::Forms::Label^ LabelMontoTotal;
 private: System::Windows::Forms::Label^ montoTotal;
-
 private: System::Windows::Forms::Label^ nombrefac;
 private: System::Windows::Forms::Label^ tlfac;
 private: System::Windows::Forms::Label^ cedulafac;
@@ -143,12 +144,17 @@ private: System::Windows::Forms::Label^ cant_Caja;
 private: System::Windows::Forms::Label^ cant_Cola;
 private: Cliente^ clientes;
 private: gestorTempo^ tempo;
-private: System::Windows::Forms::Label^ label24;
-private: System::Windows::Forms::Label^ pausa;
+
+
 private: System::Windows::Forms::Timer^ tiempoCC;
 private: System::Windows::Forms::Timer^ tiempo;
-
+private: List<Cliente^>^ listClient = gcnew List<Cliente^>();
 private: SoundPlayer^ sonidobeeb;
+private: ultimasFacturas^ Factura;
+private: List<ultimasFacturas^>^ listFacturas = gcnew List<ultimasFacturas^>();
+private: System::Windows::Forms::Timer^ crearClientes;
+private: System::Windows::Forms::Timer^ mostrarCliente;
+private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 	private:
 		bool UseImage = true;
 		/// <summary>
@@ -169,12 +175,11 @@ private: SoundPlayer^ sonidobeeb;
 			this->button_Inv = (gcnew System::Windows::Forms::Button());
 			this->toolStrip1 = (gcnew System::Windows::Forms::ToolStrip());
 			this->B_cerrar = (gcnew System::Windows::Forms::ToolStripButton());
-			this->toolStripButton3 = (gcnew System::Windows::Forms::ToolStripButton());
-			this->toolStripButton1 = (gcnew System::Windows::Forms::ToolStripButton());
+			this->reanudar = (gcnew System::Windows::Forms::ToolStripButton());
+			this->pausar = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripTextBox1 = (gcnew System::Windows::Forms::ToolStripTextBox());
 			this->toolStripButton4 = (gcnew System::Windows::Forms::ToolStripLabel());
 			this->toolStripButton2 = (gcnew System::Windows::Forms::ToolStripButton());
-			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->panelFacturaD = (gcnew System::Windows::Forms::Panel());
 			this->tlfac = (gcnew System::Windows::Forms::Label());
@@ -220,8 +225,6 @@ private: SoundPlayer^ sonidobeeb;
 			this->TIEMPOCAU = (gcnew System::Windows::Forms::Label());
 			this->label25 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->label24 = (gcnew System::Windows::Forms::Label());
-			this->pausa = (gcnew System::Windows::Forms::Label());
 			this->panel2FacturaD = (gcnew System::Windows::Forms::Panel());
 			this->splitCola = (gcnew System::Windows::Forms::SplitContainer());
 			this->cant_Cola = (gcnew System::Windows::Forms::Label());
@@ -241,6 +244,9 @@ private: SoundPlayer^ sonidobeeb;
 			this->Mover = (gcnew System::Windows::Forms::Timer(this->components));
 			this->tiempoCC = (gcnew System::Windows::Forms::Timer(this->components));
 			this->tiempo = (gcnew System::Windows::Forms::Timer(this->components));
+			this->crearClientes = (gcnew System::Windows::Forms::Timer(this->components));
+			this->mostrarCliente = (gcnew System::Windows::Forms::Timer(this->components));
+			this->toolStripButton1 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStrip1->SuspendLayout();
 			this->panelFacturaD->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitCaja))->BeginInit();
@@ -317,9 +323,9 @@ private: SoundPlayer^ sonidobeeb;
 			this->toolStrip1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(33)), static_cast<System::Int32>(static_cast<System::Byte>(154)),
 				static_cast<System::Int32>(static_cast<System::Byte>(255)));
 			this->toolStrip1->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
-			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {
-				this->B_cerrar, this->toolStripButton3,
-					this->toolStripButton1, this->toolStripTextBox1, this->toolStripButton4, this->toolStripButton2
+			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(7) {
+				this->B_cerrar, this->reanudar,
+					this->pausar, this->toolStripTextBox1, this->toolStripButton4, this->toolStripButton2, this->toolStripButton1
 			});
 			this->toolStrip1->Location = System::Drawing::Point(0, 0);
 			this->toolStrip1->Name = L"toolStrip1";
@@ -338,27 +344,30 @@ private: SoundPlayer^ sonidobeeb;
 			this->B_cerrar->Name = L"B_cerrar";
 			this->B_cerrar->Size = System::Drawing::Size(23, 22);
 			this->B_cerrar->Text = L"toolStripButton1";
+			this->B_cerrar->ToolTipText = L"Cerrar";
 			this->B_cerrar->Click += gcnew System::EventHandler(this, &MenuPrincipal::B_cerrar_Click);
 			// 
-			// toolStripButton3
+			// reanudar
 			// 
-			this->toolStripButton3->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
-			this->toolStripButton3->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"toolStripButton3.Image")));
-			this->toolStripButton3->ImageTransparentColor = System::Drawing::Color::Magenta;
-			this->toolStripButton3->Name = L"toolStripButton3";
-			this->toolStripButton3->Size = System::Drawing::Size(23, 22);
-			this->toolStripButton3->Text = L"toolStripButton3";
-			this->toolStripButton3->Click += gcnew System::EventHandler(this, &MenuPrincipal::toolStripButton3_Click);
+			this->reanudar->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->reanudar->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"reanudar.Image")));
+			this->reanudar->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->reanudar->Name = L"reanudar";
+			this->reanudar->Size = System::Drawing::Size(23, 22);
+			this->reanudar->Text = L"toolStripButton3";
+			this->reanudar->ToolTipText = L"Continuar";
+			this->reanudar->Click += gcnew System::EventHandler(this, &MenuPrincipal::reanudar_Click);
 			// 
-			// toolStripButton1
+			// pausar
 			// 
-			this->toolStripButton1->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
-			this->toolStripButton1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"toolStripButton1.Image")));
-			this->toolStripButton1->ImageTransparentColor = System::Drawing::Color::Magenta;
-			this->toolStripButton1->Name = L"toolStripButton1";
-			this->toolStripButton1->Size = System::Drawing::Size(23, 22);
-			this->toolStripButton1->Text = L"toolStripButton1";
-			this->toolStripButton1->Click += gcnew System::EventHandler(this, &MenuPrincipal::toolStripButton1_Click);
+			this->pausar->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->pausar->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pausar.Image")));
+			this->pausar->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->pausar->Name = L"pausar";
+			this->pausar->Size = System::Drawing::Size(23, 22);
+			this->pausar->Text = L"toolStripButton1";
+			this->pausar->ToolTipText = L"Pausar";
+			this->pausar->Click += gcnew System::EventHandler(this, &MenuPrincipal::pausar_Click);
 			// 
 			// toolStripTextBox1
 			// 
@@ -389,6 +398,7 @@ private: SoundPlayer^ sonidobeeb;
 			this->toolStripButton2->Name = L"toolStripButton2";
 			this->toolStripButton2->Size = System::Drawing::Size(23, 22);
 			this->toolStripButton2->Text = L"toolStripButton2";
+			this->toolStripButton2->ToolTipText = L"X2";
 			this->toolStripButton2->Click += gcnew System::EventHandler(this, &MenuPrincipal::toolStripButton2_Click);
 			// 
 			// label1
@@ -475,11 +485,11 @@ private: SoundPlayer^ sonidobeeb;
 			// montoTotal
 			// 
 			this->montoTotal->AutoSize = true;
-			this->montoTotal->Font = (gcnew System::Drawing::Font(L"Arial", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->montoTotal->Font = (gcnew System::Drawing::Font(L"Arial", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->montoTotal->Location = System::Drawing::Point(179, 491);
 			this->montoTotal->Name = L"montoTotal";
-			this->montoTotal->Size = System::Drawing::Size(14, 16);
+			this->montoTotal->Size = System::Drawing::Size(14, 15);
 			this->montoTotal->TabIndex = 20;
 			this->montoTotal->Text = L"0";
 			this->montoTotal->Visible = false;
@@ -496,11 +506,11 @@ private: SoundPlayer^ sonidobeeb;
 			// LabelMontoTotal
 			// 
 			this->LabelMontoTotal->AutoSize = true;
-			this->LabelMontoTotal->Font = (gcnew System::Drawing::Font(L"Arial", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->LabelMontoTotal->Font = (gcnew System::Drawing::Font(L"Arial", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->LabelMontoTotal->Location = System::Drawing::Point(3, 491);
 			this->LabelMontoTotal->Name = L"LabelMontoTotal";
-			this->LabelMontoTotal->Size = System::Drawing::Size(101, 16);
+			this->LabelMontoTotal->Size = System::Drawing::Size(92, 15);
 			this->LabelMontoTotal->TabIndex = 19;
 			this->LabelMontoTotal->Text = L"MONTO TOTAL:";
 			this->LabelMontoTotal->Visible = false;
@@ -836,6 +846,7 @@ private: SoundPlayer^ sonidobeeb;
 			this->tiempoCaja->Size = System::Drawing::Size(51, 13);
 			this->tiempoCaja->TabIndex = 24;
 			this->tiempoCaja->Text = L"aqui hora";
+			this->tiempoCaja->Visible = false;
 			// 
 			// label27
 			// 
@@ -854,6 +865,7 @@ private: SoundPlayer^ sonidobeeb;
 			this->Fecha_Caja->Size = System::Drawing::Size(83, 13);
 			this->Fecha_Caja->TabIndex = 23;
 			this->Fecha_Caja->Text = L"aqui va la fecha";
+			this->Fecha_Caja->Visible = false;
 			// 
 			// TIEMPOCAU
 			// 
@@ -877,8 +889,6 @@ private: SoundPlayer^ sonidobeeb;
 			// 
 			// panel1
 			// 
-			this->panel1->Controls->Add(this->label24);
-			this->panel1->Controls->Add(this->pausa);
 			this->panel1->Controls->Add(this->panel2FacturaD);
 			this->panel1->Controls->Add(this->splitCola);
 			this->panel1->Controls->Add(this->splitCaja);
@@ -889,26 +899,8 @@ private: SoundPlayer^ sonidobeeb;
 			this->panel1->Controls->Add(this->label1);
 			this->panel1->Location = System::Drawing::Point(0, 58);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(799, 594);
+			this->panel1->Size = System::Drawing::Size(799, 593);
 			this->panel1->TabIndex = 7;
-			// 
-			// label24
-			// 
-			this->label24->AutoSize = true;
-			this->label24->Location = System::Drawing::Point(557, 51);
-			this->label24->Name = L"label24";
-			this->label24->Size = System::Drawing::Size(34, 13);
-			this->label24->TabIndex = 21;
-			this->label24->Text = L"iniciar";
-			// 
-			// pausa
-			// 
-			this->pausa->AutoSize = true;
-			this->pausa->Location = System::Drawing::Point(354, 39);
-			this->pausa->Name = L"pausa";
-			this->pausa->Size = System::Drawing::Size(36, 13);
-			this->pausa->TabIndex = 20;
-			this->pausa->Text = L"pausa";
 			// 
 			// panel2FacturaD
 			// 
@@ -1058,6 +1050,7 @@ private: SoundPlayer^ sonidobeeb;
 			this->Fecha_Cola->Size = System::Drawing::Size(83, 13);
 			this->Fecha_Cola->TabIndex = 23;
 			this->Fecha_Cola->Text = L"aqui va la fecha";
+			this->Fecha_Cola->Visible = false;
 			// 
 			// label54
 			// 
@@ -1085,7 +1078,6 @@ private: SoundPlayer^ sonidobeeb;
 			// 
 			// tiempoCC
 			// 
-			this->tiempoCC->Enabled = true;
 			this->tiempoCC->Interval = 1000;
 			this->tiempoCC->Tick += gcnew System::EventHandler(this, &MenuPrincipal::tiempoCC_Tick);
 			// 
@@ -1095,10 +1087,31 @@ private: SoundPlayer^ sonidobeeb;
 			this->tiempo->Interval = 1000;
 			this->tiempo->Tick += gcnew System::EventHandler(this, &MenuPrincipal::tiempo_Tick);
 			// 
+			// crearClientes
+			// 
+			this->crearClientes->Enabled = true;
+			this->crearClientes->Interval = 30000;
+			this->crearClientes->Tick += gcnew System::EventHandler(this, &MenuPrincipal::crearClientes_Tick);
+			// 
+			// mostrarCliente
+			// 
+			this->mostrarCliente->Interval = 60000;
+			this->mostrarCliente->Tick += gcnew System::EventHandler(this, &MenuPrincipal::mostrarCliente_Tick_1);
+			// 
+			// toolStripButton1
+			// 
+			this->toolStripButton1->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+			this->toolStripButton1->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->toolStripButton1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"toolStripButton1.Image")));
+			this->toolStripButton1->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButton1->Name = L"toolStripButton1";
+			this->toolStripButton1->Size = System::Drawing::Size(23, 22);
+			this->toolStripButton1->Text = L"Minimizar";
+			this->toolStripButton1->Click += gcnew System::EventHandler(this, &MenuPrincipal::toolStripButton1_Click);
+			// 
 			// MenuPrincipal
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
-			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
 			this->ClientSize = System::Drawing::Size(800, 650);
 			this->Controls->Add(this->panel1);
@@ -1109,7 +1122,7 @@ private: SoundPlayer^ sonidobeeb;
 			this->Controls->Add(this->button_Fac);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"MenuPrincipal";
-			this->StartPosition = System::Windows::Forms::FormStartPosition::Manual;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"MenuPrincipal";
 			this->Load += gcnew System::EventHandler(this, &MenuPrincipal::MenuPrincipal_Load);
 			this->toolStrip1->ResumeLayout(false);
@@ -1135,51 +1148,72 @@ private: SoundPlayer^ sonidobeeb;
 			TableLayoutPanel^ tableCola;           // Los tablelayoutpanel son las tablas que contienen toda la informacion de los productos
 			TableLayoutPanel^ tablaCaja;
 			TableLayoutPanel^ tablaFactura;
-			List<Cliente^>^ listClient = gcnew List<Cliente^>();
-
 			
+	void agregarAUltimaFactura() {
+			ultimasFacturas^ nuevaFactura = gcnew ultimasFacturas(
+				nombrefac->Text,
+				cedulafac->Text,
+				tlf->Text,
+				listClient[0]->Productos,
+				listClient[0]->Cantidad,
+				fecha->Text,
+				hora->Text
+			);
+			listFacturas->Add(nuevaFactura);
+			if (reportes->comboUltimasF->Items->Count < 10) {
+				int count = reportes->comboUltimasF->Items->Count;
+				reportes->comboUltimasF->Items->Add("Factura N " + (count+1));
+			}
+	}
 
-			/* void agregarProductos(TableLayoutPanel^ panel, int id, int ref) {    // Este metodo agrega los productos a la tabla, id es  la id del producto y ref:1 si es caja, 2 si es cola.
-				bool Max_Productos = true;
-				Label^ nombreP = gcnew Label(); 
-				Label^ precioIz = gcnew Label(); 
-				Label^ precioDe = gcnew Label(); 
-				data->productosF(id, nombreP, precioIz, precioDe, cant_Caja, cant_Cola, montoTotal, Max_Productos, ref);
-				if (Max_Productos) {
-					// Configurar los estilos de los labels  
-					nombreP->AutoSize = true;
-					precioIz->AutoSize = true;
-					precioDe->AutoSize = true;
-					precioDe->Anchor = System::Windows::Forms::AnchorStyles::Top;
-					precioIz->Anchor = System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left;
-					// Añadir el nombre del producto
-					if (panel->RowCount == 1) {
-						int row = panel->RowCount++;
-						panel->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
-						panel->Controls->Add(nombreP, 0, 0);
 
-						// Añadir la fila de precios 
-						panel->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
-						panel->Controls->Add(precioIz, 0, 1);
-						panel->Controls->Add(precioDe, 1, 1);
-					}
-					else {
-						int row = panel->RowCount++;
-						panel->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
-						panel->Controls->Add(nombreP, 0, row);
 
-						// Añadir la fila de precios 
-						row = panel->RowCount++;
-						panel->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
-						panel->Controls->Add(precioIz, 0, row);
-						panel->Controls->Add(precioDe, 1, row);
+	void cargarTablaUltimaFactura(int index) {
+		double total;
+		if (!EsNuevaTabla(reportes->tabla_UFactura)) {
+			LimpiarYPreparaTabla(reportes->tabla_UFactura);
+		}
+		if (listFacturas[index] != nullptr) {
+			data->abrirConexion();
+			for (int i = 0; i < listFacturas[index]->Productos->Count; i++) {
+				Label^ nombre = gcnew Label();
+				Label^ precioIz = gcnew Label();
+				Label^ precioDe = gcnew Label();
+				data->mostrarProductos(listFacturas[index]->Productos[i], nombre, precioIz, precioDe, listFacturas[index]->Cantidad[i], total);
 
-					}
-				}
-				else {
-					Facturacion();
-				}
-	} */
+				nombre->Font = gcnew System::Drawing::Font("Arial", 8);
+				precioIz->Font = gcnew System::Drawing::Font("Arial", 8);
+				precioDe->Font = gcnew System::Drawing::Font("Arial", 8);
+
+				precioDe->Anchor = System::Windows::Forms::AnchorStyles::Top;
+				precioIz->Anchor = System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left;
+
+				int row = reportes->tabla_UFactura->RowCount++;
+				reportes->tabla_UFactura->RowStyles->Add(gcnew RowStyle(SizeType::Absolute, 15));
+				reportes->tabla_UFactura->Controls->Add(nombre, 0, row);
+
+				row = reportes->tabla_UFactura->RowCount++;
+				reportes->tabla_UFactura->RowStyles->Add(gcnew RowStyle(SizeType::Absolute, 15));
+				reportes->tabla_UFactura->Controls->Add(precioIz, 0, row);
+				reportes->tabla_UFactura->Controls->Add(precioDe, 1, row);
+			}
+			data->cerrarConexion();
+		}
+	}
+
+	void mostrarFactura(int index) {
+		reportes->panelUltimasf->Visible = true;
+		reportes->ultima_Nombre->Text = listFacturas[index ]->Nombre;
+		reportes->ultima_Ci->Text = listFacturas[index ]->CI;
+		reportes->ultima_Tlf->Text = listFacturas[index ]->Tlf;
+		reportes->ultima_Fecha->Text = listFacturas[index ]->Fecha;
+		reportes->ultima_Hora->Text = listFacturas[index ]->Hora;
+		reportes->ultima_MontoTotal->Text = montoTotal->Text;
+		cargarTablaUltimaFactura(index);
+		reportes->panelUltimasf->Refresh();
+}
+
+
 	void reportesCompras() {
 		int count = reportes->tablaCompraC->RowCount;
 		reportes->tablaCompraC->RowCount++;
@@ -1208,6 +1242,7 @@ private: SoundPlayer^ sonidobeeb;
 		reportes->tablaCompraC->Controls->Add(horaReportes, 4, count -1);
 
 		reportes->tablaCompraC->PerformLayout();
+		agregarAUltimaFactura();
 	}
 
 	void informacionFactura(double totalMonto){
@@ -1237,13 +1272,12 @@ private: SoundPlayer^ sonidobeeb;
 		if (index == 0 && clientesEnCola->Items->Count > 0) {
 			// Seleccionar el nuevo primer item si hay más elementos
 			clientesEnCola->SelectedIndex = 0;
-			mostrarEnCola(listClient, 0); // Mostrar el nuevo primer cliente
+			mostrarEnCola(listClient, 1); // Mostrar el nuevo primer cliente
 
 		}
 		else if (index > 0) {
-			// Remover el ítem actual
-				clientesEnCola->SelectedIndex = (index - 1 < clientesEnCola->Items->Count ? index - 1 : clientesEnCola->Items->Count - 1);
-				mostrarEnCola(listClient, clientesEnCola->SelectedIndex); // Mostrar el cliente en la nueva posición
+				index = clientesEnCola->SelectedIndex;
+				mostrarEnCola(listClient, index+1); // Mostrar el cliente en la nueva posición
 			
 		}
 		if (clientesEnCola->Items->Count == 0) {
@@ -1256,8 +1290,6 @@ private: SoundPlayer^ sonidobeeb;
 	}
 
 	void pasarAFactura(double totalMonto) {
-		
-
 		if (panel2FacturaD->Controls->Count == 0) {
 			tablaFactura = AgregarTabla(panel2FacturaD);
 		}
@@ -1306,28 +1338,6 @@ private: SoundPlayer^ sonidobeeb;
 		}
 	}
 
-
-	void timer1_Tick(Object^ sender, EventArgs^ e) {          //Este es el metodo para la simulacion, esta funcion el programa la llama cada 1 seg
-			int generarClientes = tempo->generarClientes;
-			int segundos = static_cast<int>(tempo->startTime->Elapsed.TotalSeconds);
-			if (segundos > tempo->T2) {
-				tempo->T2 += 25;
-				CrearCliente();
-				if (generarClientes > 1) {
-					clientesEnCola->Items->Add("Cliente " + generarClientes);
-				}
-				tempo->generarClientes++;
-			}
-			if (segundos >= tempo->T1) {
-				tempo->T1 += 10;
-				mostrarEnCaja(listClient);
-				if (splitCola->Panel2->Controls->Count > 0) {
-					mostrarEnCola(listClient, clientesEnCola->SelectedIndex+1);
-				}
-			}
-
-		}
-
 	void CrearCliente() { 
 		static int clienteID = 1; 
 		Cliente^ nuevoCliente = gcnew Cliente(clienteID++); 
@@ -1339,7 +1349,6 @@ private: SoundPlayer^ sonidobeeb;
 		int id = listClient[0]->GetId();
 		data->datos(id, nombreA, cedula, tlf);
 		MostrarInformacionCliente(nombreA, cedula, tlf);
-
 		if (EsNuevaTabla(splitCaja->Panel2)) {
 			tablaCaja = AgregarTabla(splitCaja->Panel2);
 		}
@@ -1375,7 +1384,7 @@ private: SoundPlayer^ sonidobeeb;
 
 	void LimpiarYPreparaTabla(TableLayoutPanel^ table) {
 		table->Controls->Clear();
-		table->RowCount = 1;
+		table->RowCount = 0;
 		table->RowStyles->Clear();
 	}
 
@@ -1383,6 +1392,9 @@ private: SoundPlayer^ sonidobeeb;
 		nombre->Visible = true;
 		cedula->Visible = true;
 		tlf->Visible = true;
+		Fecha_Caja->Text = DateTime::Now.ToString("dd/MM/yyyy");
+		Fecha_Caja->Visible = true;
+		tiempoCaja->Visible = true;
 	}
 
 	void PrepararInformacionCola(int posCola) {
@@ -1400,35 +1412,67 @@ private: SoundPlayer^ sonidobeeb;
 	}
 	
 
-		void AsignarColoresABotones(void) { // Definir el color deseado, metodo para cambiar el color de los botones
-			System::Drawing::Color colorDeseado = System::Drawing::Color::FromArgb(
-				static_cast<System::Int32>(static_cast<System::Byte>(0)),
-				static_cast<System::Int32>(static_cast<System::Byte>(195)),
-				static_cast<System::Int32>(static_cast<System::Byte>(240)));
-			// Array con los botones 
-			array<Button^>^ botones = { this->button_Fac, this->button_Inv, this->button_Rep, this->button_Cli };
-			// Asignar el color a cada botón en el array 
-			for each (Button ^ boton in botones) { boton->BackColor = colorDeseado; }
+	void AsignarColoresABotones(void)
+	{
+		// Array con los botones
+		array<Button^>^ botones = {
+			this->button_Fac,
+			this->button_Inv,
+			this->button_Rep,
+			this->button_Cli,
+			reportes->button_Compras,
+			reportes->button_TSuperado
+		};
+
+		// Asignar el color a cada botón en el array
+		for each (Button ^ boton in botones)
+		{
+			boton->BackColor = Normal;
 		}
+	}
+
 		
 
-private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e) { //metodo para cambier el color del boton clickeado y cambiar el panel segun el boton
-	AsignarColoresABotones();
+private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	// Obtener el botón que fue clickeado
 	Button^ botonClick = dynamic_cast<Button^>(sender);
-	if (botonClick != nullptr) {
-		botonClick->BackColor = Normal;
-		if (botonClick == button_Rep) {     // Se cambia el panel a el de reportes si se le da click a el boton de reporte
+
+	// Si el botón clickeado está en el formulario principal
+	if (botonClick == button_Fac || botonClick == button_Inv || botonClick == button_Rep || botonClick == button_Cli)
+	{
+		// Restablecer los colores de todos los botones principales
+		AsignarColoresABotones();
+		botonClick->BackColor = botonClickeado; // Cambiar el color del botón clickeado
+
+		// Cambiar el panel según el botón clickeado
+		if (botonClick == button_Rep)
+		{
 			this->panel1->Visible = false;
 			this->Controls->Add(reportes->panel1);
 			this->reportes->panel1->Location = System::Drawing::Point(0, 58);
 			this->reportes->panel1->Visible = true;
 		}
-		else if (botonClick == button_Fac) {  //Cambia al panel de factura si se le da click al boton de factura
+		else if (botonClick == button_Fac)
+		{
 			this->reportes->panel1->Visible = false;
-			this->panel1->Visible = true;   //Pd: Falta agregarle los demas paneles
+			this->panel1->Visible = true;
 		}
 	}
-} 
+	// Si el botón clickeado está en el formulario de reportes
+	else if (botonClick == reportes->button_Compras || botonClick == reportes->button_TSuperado)
+	{
+		// Restablecer solo los colores de los botones dentro del panel de reportes
+		array<Button^>^ botonesReportes = { reportes->button_Compras, reportes->button_TSuperado };
+		for each (Button ^ boton in botonesReportes)
+		{
+			boton->BackColor = Normal;
+		}
+
+		botonClick->BackColor = botonClickeado; // Cambiar el color del botón clickeado
+	}
+}
+
 
 TableLayoutPanel^ AgregarTabla(Panel^ panel) {
 		// Crear una instancia de TableLayoutPanel
@@ -1457,6 +1501,9 @@ private: System::Void MenuPrincipal_Load(System::Object^ sender, System::EventAr
 		this->button_Inv->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click); 
 		this->button_Rep->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click); 
 		this->button_Cli->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
+		this->reportes->button_Compras->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
+		this->reportes->button_TSuperado->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
+		this->reportes->comboUltimasF->SelectedIndexChanged += gcnew System::EventHandler(this, &MenuPrincipal::comboBox_SelectedIndexChanged);
 }
 private: System::Void toolStripButton2_Click(System::Object^ sender, System::EventArgs^ e) {  //Este metodo es para cambiar la imagen de x2 al darle click
 	if (UseImage == true) {
@@ -1501,15 +1548,16 @@ private: System::Void Mover_Tick(System::Object^ sender, System::EventArgs^ e) {
 }
 
 
-
-private: System::Void toolStripButton1_Click(System::Object^ sender, System::EventArgs^ e) {
-	tempo->PausarTemporizador(timer1,listClient, pausa);
+private: System::Void pausar_Click(System::Object^ sender, System::EventArgs^ e) {
+	mostrarCliente->Stop();
+	crearClientes->Stop();
+	tempo->PausarTemporizador(tiempo, listClient);
 }
 
-
-
-private: System::Void toolStripButton3_Click(System::Object^ sender, System::EventArgs^ e) {
-	tempo->reaunudarTemporizador(timer1, listClient, label24);
+private: System::Void reanudar_Click(System::Object^ sender, System::EventArgs^ e) {
+	mostrarCliente->Start();
+	crearClientes->Start();
+	tempo->reanudarTemporizador(tiempo, listClient);
 }
 
 private: System::Void clientesEnCola_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
@@ -1522,7 +1570,6 @@ private: System::Void clientesEnCola_SelectedIndexChanged(System::Object^ sender
 
 
 private: System::Void tiempoCC_Tick(System::Object^ sender, System::EventArgs^ e) {
-	
 	if (listClient->Count > 0) {
 		int id = 0;
 		if (clientesEnCola->SelectedIndex >= 0) {
@@ -1536,10 +1583,51 @@ private: System::Void tiempo_Tick(System::Object^ sender, System::EventArgs^ e) 
 	tempo->tiempoTranscurrido(toolStripTextBox1);
 }
 
-};
-
-
+private: System::Void comboBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e)
+{
+	// Obtener el ComboBox que fue seleccionado
+	ComboBox^ comboBox = dynamic_cast<ComboBox^>(sender);
+	// Obtener el índice seleccionado
+	int index = comboBox->SelectedIndex;
+	if (index >= 0) {
+		mostrarFactura(index);
+		Fecha_Cola->Text = DateTime::Now.ToString("dd/MM/yyyy");
+		Fecha_Cola->Visible = true;
+		reportes->comboUltimasF->Refresh(); // Forzar refresco del ComboBox
+	}
+}
+private: System::Void crearClientes_Tick(System::Object^ sender, System::EventArgs^ e) {
+	int generarClientes = tempo->generarClientes;
+		CrearCliente();
+		if (generarClientes > 1) {
+			clientesEnCola->Items->Add("Cliente " + generarClientes);
+		}
+		tempo->generarClientes++;
+		if (generarClientes == 1) {
+			mostrarEnCaja(listClient);
+			if (tiempoCC->Enabled == false) {
+				tiempoCC->Enabled = true;
+				mostrarCliente->Enabled = true;
+			}
+		}
+	}
+private: System::Void mostrarCliente_Tick_1(System::Object^ sender, System::EventArgs^ e) {
+	
+	mostrarEnCaja(listClient);
+	if (splitCola->Panel2->Controls->Count > 0) {
+		mostrarEnCola(listClient, clientesEnCola->SelectedIndex + 1);
+	}
+}
+private: System::Void toolStripButton1_Click(System::Object^ sender, System::EventArgs^ e) {
+	this->WindowState = FormWindowState::Minimized;
 
 }
+};
+
+}
+
+
+
+
 
  

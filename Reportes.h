@@ -1,5 +1,5 @@
 #pragma once
-
+#include "ultimasFacturas.h"
 namespace HiperMod {
 
 	using namespace System;
@@ -36,7 +36,6 @@ namespace HiperMod {
 		}
 	public: System::Windows::Forms::Panel^ panel1;
 	private: System::Windows::Forms::Panel^ panel2;
-	public:
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::Label^ label3;
@@ -44,27 +43,44 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Label^ label7;
 	private: System::Windows::Forms::Label^ label6;
-	private: System::Windows::Forms::Button^ button2;
-	private: System::Windows::Forms::Button^ button1;
+	public: System::Windows::Forms::Button^ button_Compras;
+	public: System::Windows::Forms::Button^ button_TSuperado;
 	public: System::Windows::Forms::TableLayoutPanel^ tablaVentasProductos;
 	private: System::Windows::Forms::Label^ label8;
 	public: System::Windows::Forms::TableLayoutPanel^ tablaCompraC;
-	private:
 	private: System::Windows::Forms::Label^ label15;
-	public:
 	private: System::Windows::Forms::Label^ label13;
 	private: System::Windows::Forms::Label^ label9;
 	private: System::Windows::Forms::Label^ label14;
 	private: System::Windows::Forms::Label^ label10;
 	private: System::Windows::Forms::Label^ label12;
-
-
-
-
-
-
-
-
+	public: System::Windows::Forms::ComboBox^ comboUltimasF;
+	private: System::Windows::Forms::Label^ label11;
+	public: System::Windows::Forms::Panel^ panelUltimasf;
+	 System::Windows::Forms::Label^ ultima_Tlf;
+	 System::Windows::Forms::Label^ ultima_Ci;
+	 System::Windows::Forms::Label^ ultima_Nombre;
+	 System::Windows::Forms::Label^ ultima_Hora;
+	 System::Windows::Forms::Label^ ultima_Fecha;
+	private: System::Windows::Forms::Label^ label18;
+	private: System::Windows::Forms::Label^ label17;
+	private: System::Windows::Forms::Label^ label16;
+	private: System::Windows::Forms::Label^ label19;
+	private: System::Windows::Forms::Label^ label21;
+	private: System::Windows::Forms::Label^ label22;
+	private: System::Windows::Forms::Label^ label23;
+	private: System::Windows::Forms::Label^ label24;
+	private: System::Windows::Forms::Label^ label26;
+	private: System::Windows::Forms::Label^ label27;
+	private: System::Windows::Forms::Label^ label28;
+	private: System::Windows::Forms::Label^ label29;
+	private: System::Windows::Forms::Label^ label30;
+	private: System::Windows::Forms::Label^ label31;
+	public: System::Windows::Forms::Label^ ultima_MontoTotal;
+	private: System::Windows::Forms::Label^ label25;
+	public: System::Windows::Forms::TableLayoutPanel^ tabla_UFactura;
+	private:
+		   // Evento personalizado
 
 	protected:
 
@@ -82,10 +98,42 @@ namespace HiperMod {
 		void InitializeComponent(void)
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->panelUltimasf = (gcnew System::Windows::Forms::Panel());
+			this->tabla_UFactura = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->ultima_MontoTotal = (gcnew System::Windows::Forms::Label());
+			this->label25 = (gcnew System::Windows::Forms::Label());
+			this->ultima_Tlf = (gcnew System::Windows::Forms::Label());
+			this->ultima_Ci = (gcnew System::Windows::Forms::Label());
+			this->ultima_Nombre = (gcnew System::Windows::Forms::Label());
+			this->ultima_Hora = (gcnew System::Windows::Forms::Label());
+			this->ultima_Fecha = (gcnew System::Windows::Forms::Label());
+			this->label18 = (gcnew System::Windows::Forms::Label());
+			this->label17 = (gcnew System::Windows::Forms::Label());
+			this->label16 = (gcnew System::Windows::Forms::Label());
+			this->label19 = (gcnew System::Windows::Forms::Label());
+			this->label21 = (gcnew System::Windows::Forms::Label());
+			this->label22 = (gcnew System::Windows::Forms::Label());
+			this->label23 = (gcnew System::Windows::Forms::Label());
+			this->label24 = (gcnew System::Windows::Forms::Label());
+			this->label26 = (gcnew System::Windows::Forms::Label());
+			this->label27 = (gcnew System::Windows::Forms::Label());
+			this->label28 = (gcnew System::Windows::Forms::Label());
+			this->label29 = (gcnew System::Windows::Forms::Label());
+			this->label30 = (gcnew System::Windows::Forms::Label());
+			this->label31 = (gcnew System::Windows::Forms::Label());
+			this->label11 = (gcnew System::Windows::Forms::Label());
+			this->comboUltimasF = (gcnew System::Windows::Forms::ComboBox());
 			this->tablaVentasProductos = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->label8 = (gcnew System::Windows::Forms::Label());
-			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->tablaCompraC = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->label15 = (gcnew System::Windows::Forms::Label());
+			this->label13 = (gcnew System::Windows::Forms::Label());
+			this->label9 = (gcnew System::Windows::Forms::Label());
+			this->label14 = (gcnew System::Windows::Forms::Label());
+			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->button_Compras = (gcnew System::Windows::Forms::Button());
+			this->button_TSuperado = (gcnew System::Windows::Forms::Button());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
@@ -94,30 +142,331 @@ namespace HiperMod {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->label14 = (gcnew System::Windows::Forms::Label());
-			this->label15 = (gcnew System::Windows::Forms::Label());
-			this->label9 = (gcnew System::Windows::Forms::Label());
-			this->label12 = (gcnew System::Windows::Forms::Label());
-			this->label13 = (gcnew System::Windows::Forms::Label());
-			this->tablaCompraC = (gcnew System::Windows::Forms::TableLayoutPanel());
-			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
-			this->panel2->SuspendLayout();
+			this->panelUltimasf->SuspendLayout();
 			this->tablaCompraC->SuspendLayout();
+			this->panel2->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// panel1
 			// 
+			this->panel1->Controls->Add(this->panelUltimasf);
+			this->panel1->Controls->Add(this->label11);
+			this->panel1->Controls->Add(this->comboUltimasF);
 			this->panel1->Controls->Add(this->tablaVentasProductos);
 			this->panel1->Controls->Add(this->label8);
 			this->panel1->Controls->Add(this->tablaCompraC);
-			this->panel1->Controls->Add(this->button2);
-			this->panel1->Controls->Add(this->button1);
+			this->panel1->Controls->Add(this->button_Compras);
+			this->panel1->Controls->Add(this->button_TSuperado);
 			this->panel1->Controls->Add(this->panel2);
 			this->panel1->Location = System::Drawing::Point(0, 58);
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(799, 592);
 			this->panel1->TabIndex = 8;
+			// 
+			// panelUltimasf
+			// 
+			this->panelUltimasf->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->panelUltimasf->Controls->Add(this->tabla_UFactura);
+			this->panelUltimasf->Controls->Add(this->ultima_MontoTotal);
+			this->panelUltimasf->Controls->Add(this->label25);
+			this->panelUltimasf->Controls->Add(this->ultima_Tlf);
+			this->panelUltimasf->Controls->Add(this->ultima_Ci);
+			this->panelUltimasf->Controls->Add(this->ultima_Nombre);
+			this->panelUltimasf->Controls->Add(this->ultima_Hora);
+			this->panelUltimasf->Controls->Add(this->ultima_Fecha);
+			this->panelUltimasf->Controls->Add(this->label18);
+			this->panelUltimasf->Controls->Add(this->label17);
+			this->panelUltimasf->Controls->Add(this->label16);
+			this->panelUltimasf->Controls->Add(this->label19);
+			this->panelUltimasf->Controls->Add(this->label21);
+			this->panelUltimasf->Controls->Add(this->label22);
+			this->panelUltimasf->Controls->Add(this->label23);
+			this->panelUltimasf->Controls->Add(this->label24);
+			this->panelUltimasf->Controls->Add(this->label26);
+			this->panelUltimasf->Controls->Add(this->label27);
+			this->panelUltimasf->Controls->Add(this->label28);
+			this->panelUltimasf->Controls->Add(this->label29);
+			this->panelUltimasf->Controls->Add(this->label30);
+			this->panelUltimasf->Controls->Add(this->label31);
+			this->panelUltimasf->Font = (gcnew System::Drawing::Font(L"Arial", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->panelUltimasf->Location = System::Drawing::Point(549, 65);
+			this->panelUltimasf->Name = L"panelUltimasf";
+			this->panelUltimasf->Size = System::Drawing::Size(237, 483);
+			this->panelUltimasf->TabIndex = 16;
+			this->panelUltimasf->Visible = false;
+			// 
+			// tabla_UFactura
+			// 
+			this->tabla_UFactura->ColumnCount = 2;
+			this->tabla_UFactura->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				50)));
+			this->tabla_UFactura->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				50)));
+			this->tabla_UFactura->Location = System::Drawing::Point(9, 191);
+			this->tabla_UFactura->Name = L"tabla_UFactura";
+			this->tabla_UFactura->RowCount = 1;
+			this->tabla_UFactura->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+			this->tabla_UFactura->Size = System::Drawing::Size(211, 271);
+			this->tabla_UFactura->TabIndex = 0;
+			// 
+			// ultima_MontoTotal
+			// 
+			this->ultima_MontoTotal->AutoSize = true;
+			this->ultima_MontoTotal->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->ultima_MontoTotal->Location = System::Drawing::Point(183, 465);
+			this->ultima_MontoTotal->Name = L"ultima_MontoTotal";
+			this->ultima_MontoTotal->Size = System::Drawing::Size(13, 14);
+			this->ultima_MontoTotal->TabIndex = 26;
+			this->ultima_MontoTotal->Text = L"0";
+			// 
+			// label25
+			// 
+			this->label25->AutoSize = true;
+			this->label25->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label25->Location = System::Drawing::Point(7, 465);
+			this->label25->Name = L"label25";
+			this->label25->Size = System::Drawing::Size(83, 14);
+			this->label25->TabIndex = 25;
+			this->label25->Text = L"MONTO TOTAL:";
+			// 
+			// ultima_Tlf
+			// 
+			this->ultima_Tlf->AutoSize = true;
+			this->ultima_Tlf->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->ultima_Tlf->Location = System::Drawing::Point(30, 121);
+			this->ultima_Tlf->Name = L"ultima_Tlf";
+			this->ultima_Tlf->Size = System::Drawing::Size(35, 14);
+			this->ultima_Tlf->TabIndex = 23;
+			this->ultima_Tlf->Text = L"label8";
+			// 
+			// ultima_Ci
+			// 
+			this->ultima_Ci->AutoSize = true;
+			this->ultima_Ci->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->ultima_Ci->Location = System::Drawing::Point(57, 108);
+			this->ultima_Ci->Name = L"ultima_Ci";
+			this->ultima_Ci->Size = System::Drawing::Size(35, 14);
+			this->ultima_Ci->TabIndex = 22;
+			this->ultima_Ci->Text = L"label8";
+			// 
+			// ultima_Nombre
+			// 
+			this->ultima_Nombre->AutoSize = true;
+			this->ultima_Nombre->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->ultima_Nombre->Location = System::Drawing::Point(57, 94);
+			this->ultima_Nombre->Name = L"ultima_Nombre";
+			this->ultima_Nombre->Size = System::Drawing::Size(35, 14);
+			this->ultima_Nombre->TabIndex = 21;
+			this->ultima_Nombre->Text = L"label8";
+			// 
+			// ultima_Hora
+			// 
+			this->ultima_Hora->AutoSize = true;
+			this->ultima_Hora->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->ultima_Hora->Location = System::Drawing::Point(182, 159);
+			this->ultima_Hora->Name = L"ultima_Hora";
+			this->ultima_Hora->Size = System::Drawing::Size(29, 14);
+			this->ultima_Hora->TabIndex = 18;
+			this->ultima_Hora->Text = L"hora";
+			// 
+			// ultima_Fecha
+			// 
+			this->ultima_Fecha->AutoSize = true;
+			this->ultima_Fecha->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->ultima_Fecha->Location = System::Drawing::Point(57, 159);
+			this->ultima_Fecha->Name = L"ultima_Fecha";
+			this->ultima_Fecha->Size = System::Drawing::Size(66, 14);
+			this->ultima_Fecha->TabIndex = 17;
+			this->ultima_Fecha->Text = L"aqui va la fe";
+			// 
+			// label18
+			// 
+			this->label18->AutoSize = true;
+			this->label18->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label18->Location = System::Drawing::Point(6, 172);
+			this->label18->Name = L"label18";
+			this->label18->Size = System::Drawing::Size(223, 16);
+			this->label18->TabIndex = 16;
+			this->label18->Text = L"------------------------------------------------------";
+			// 
+			// label17
+			// 
+			this->label17->AutoSize = true;
+			this->label17->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label17->Location = System::Drawing::Point(138, 159);
+			this->label17->Name = L"label17";
+			this->label17->Size = System::Drawing::Size(40, 14);
+			this->label17->TabIndex = 15;
+			this->label17->Text = L"HORA:";
+			// 
+			// label16
+			// 
+			this->label16->AutoSize = true;
+			this->label16->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label16->Location = System::Drawing::Point(7, 159);
+			this->label16->Name = L"label16";
+			this->label16->Size = System::Drawing::Size(44, 14);
+			this->label16->TabIndex = 14;
+			this->label16->Text = L"FECHA:";
+			// 
+			// label19
+			// 
+			this->label19->AutoSize = true;
+			this->label19->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label19->Location = System::Drawing::Point(7, 146);
+			this->label19->Name = L"label19";
+			this->label19->Size = System::Drawing::Size(58, 14);
+			this->label19->TabIndex = 13;
+			this->label19->Text = L"FACTURA:";
+			// 
+			// label21
+			// 
+			this->label21->AutoSize = true;
+			this->label21->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label21->Location = System::Drawing::Point(3, 121);
+			this->label21->Name = L"label21";
+			this->label21->Size = System::Drawing::Size(28, 14);
+			this->label21->TabIndex = 11;
+			this->label21->Text = L"TLF:";
+			// 
+			// label22
+			// 
+			this->label22->AutoSize = true;
+			this->label22->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label22->Location = System::Drawing::Point(3, 108);
+			this->label22->Name = L"label22";
+			this->label22->Size = System::Drawing::Size(51, 14);
+			this->label22->TabIndex = 10;
+			this->label22->Text = L"CEDULA:";
+			// 
+			// label23
+			// 
+			this->label23->AutoSize = true;
+			this->label23->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label23->Location = System::Drawing::Point(3, 95);
+			this->label23->Name = L"label23";
+			this->label23->Size = System::Drawing::Size(50, 14);
+			this->label23->TabIndex = 9;
+			this->label23->Text = L"CLIENTE:";
+			// 
+			// label24
+			// 
+			this->label24->AutoSize = true;
+			this->label24->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label24->Location = System::Drawing::Point(3, 82);
+			this->label24->Name = L"label24";
+			this->label24->Size = System::Drawing::Size(29, 14);
+			this->label24->TabIndex = 8;
+			this->label24->Text = L"REF:";
+			// 
+			// label26
+			// 
+			this->label26->AutoSize = true;
+			this->label26->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label26->Location = System::Drawing::Point(41, 65);
+			this->label26->Name = L"label26";
+			this->label26->Size = System::Drawing::Size(150, 14);
+			this->label26->TabIndex = 5;
+			this->label26->Text = L"CONTRIBUYENTE ORDINARIO";
+			// 
+			// label27
+			// 
+			this->label27->AutoSize = true;
+			this->label27->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label27->Location = System::Drawing::Point(26, 52);
+			this->label27->Name = L"label27";
+			this->label27->Size = System::Drawing::Size(194, 14);
+			this->label27->TabIndex = 4;
+			this->label27->Text = L"C. GURI, PUERTO ORDAZ ED BOLIVAR";
+			// 
+			// label28
+			// 
+			this->label28->AutoSize = true;
+			this->label28->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label28->Location = System::Drawing::Point(76, 39);
+			this->label28->Name = L"label28";
+			this->label28->Size = System::Drawing::Size(85, 14);
+			this->label28->TabIndex = 3;
+			this->label28->Text = L"C.C ALTAVISTA I";
+			// 
+			// label29
+			// 
+			this->label29->AutoSize = true;
+			this->label29->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label29->Location = System::Drawing::Point(76, 27);
+			this->label29->Name = L"label29";
+			this->label29->Size = System::Drawing::Size(82, 14);
+			this->label29->TabIndex = 2;
+			this->label29->Text = L"HIPERMOD C.A.";
+			// 
+			// label30
+			// 
+			this->label30->AutoSize = true;
+			this->label30->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label30->Location = System::Drawing::Point(69, 14);
+			this->label30->Name = L"label30";
+			this->label30->Size = System::Drawing::Size(94, 14);
+			this->label30->TabIndex = 1;
+			this->label30->Text = L"RIF J-5552225555";
+			// 
+			// label31
+			// 
+			this->label31->AutoSize = true;
+			this->label31->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label31->Location = System::Drawing::Point(92, 1);
+			this->label31->Name = L"label31";
+			this->label31->Size = System::Drawing::Size(42, 14);
+			this->label31->TabIndex = 0;
+			this->label31->Text = L"SENIAT";
+			// 
+			// label11
+			// 
+			this->label11->AutoSize = true;
+			this->label11->Font = (gcnew System::Drawing::Font(L"Arial Black", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label11->Location = System::Drawing::Point(608, 12);
+			this->label11->Name = L"label11";
+			this->label11->Size = System::Drawing::Size(132, 18);
+			this->label11->TabIndex = 15;
+			this->label11->Text = L"Ultimas Facturas";
+			// 
+			// comboUltimasF
+			// 
+			this->comboUltimasF->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(33)), static_cast<System::Int32>(static_cast<System::Byte>(154)),
+				static_cast<System::Int32>(static_cast<System::Byte>(255)));
+			this->comboUltimasF->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->comboUltimasF->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->comboUltimasF->Font = (gcnew System::Drawing::Font(L"Arial Black", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->comboUltimasF->ForeColor = System::Drawing::Color::WhiteSmoke;
+			this->comboUltimasF->FormattingEnabled = true;
+			this->comboUltimasF->Location = System::Drawing::Point(599, 33);
+			this->comboUltimasF->Name = L"comboUltimasF";
+			this->comboUltimasF->Size = System::Drawing::Size(168, 26);
+			this->comboUltimasF->TabIndex = 14;
 			// 
 			// tablaVentasProductos
 			// 
@@ -147,35 +496,121 @@ namespace HiperMod {
 			this->label8->TabIndex = 11;
 			this->label8->Text = L"Ventas por productos";
 			// 
-			// button2
+			// tablaCompraC
 			// 
-			this->button2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(246)), static_cast<System::Int32>(static_cast<System::Byte>(120)),
-				static_cast<System::Int32>(static_cast<System::Byte>(0)));
-			this->button2->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button2->Font = (gcnew System::Drawing::Font(L"Arial", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->tablaCompraC->AutoScroll = true;
+			this->tablaCompraC->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(212)), static_cast<System::Int32>(static_cast<System::Byte>(243)),
+				static_cast<System::Int32>(static_cast<System::Byte>(227)));
+			this->tablaCompraC->CellBorderStyle = System::Windows::Forms::TableLayoutPanelCellBorderStyle::Single;
+			this->tablaCompraC->ColumnCount = 6;
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				80)));
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				120)));
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				100)));
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				80)));
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				80)));
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 100)));
+			this->tablaCompraC->Controls->Add(this->label15, 5, 0);
+			this->tablaCompraC->Controls->Add(this->label13, 3, 0);
+			this->tablaCompraC->Controls->Add(this->label9, 0, 0);
+			this->tablaCompraC->Controls->Add(this->label14, 4, 0);
+			this->tablaCompraC->Controls->Add(this->label10, 1, 0);
+			this->tablaCompraC->Controls->Add(this->label12, 2, 0);
+			this->tablaCompraC->Location = System::Drawing::Point(0, 158);
+			this->tablaCompraC->Name = L"tablaCompraC";
+			this->tablaCompraC->RowCount = 2;
+			this->tablaCompraC->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+			this->tablaCompraC->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+			this->tablaCompraC->Size = System::Drawing::Size(539, 208);
+			this->tablaCompraC->TabIndex = 10;
+			// 
+			// label15
+			// 
+			this->label15->AutoSize = true;
+			this->label15->Location = System::Drawing::Point(469, 1);
+			this->label15->Name = L"label15";
+			this->label15->Size = System::Drawing::Size(27, 13);
+			this->label15->TabIndex = 6;
+			this->label15->Text = L"Ref:";
+			// 
+			// label13
+			// 
+			this->label13->AutoSize = true;
+			this->label13->Location = System::Drawing::Point(307, 1);
+			this->label13->Name = L"label13";
+			this->label13->Size = System::Drawing::Size(37, 13);
+			this->label13->TabIndex = 4;
+			this->label13->Text = L"Fecha";
+			// 
+			// label9
+			// 
+			this->label9->AutoSize = true;
+			this->label9->Location = System::Drawing::Point(4, 1);
+			this->label9->Name = L"label9";
+			this->label9->Size = System::Drawing::Size(20, 13);
+			this->label9->TabIndex = 0;
+			this->label9->Text = L"C.I";
+			// 
+			// label14
+			// 
+			this->label14->AutoSize = true;
+			this->label14->Location = System::Drawing::Point(388, 1);
+			this->label14->Name = L"label14";
+			this->label14->Size = System::Drawing::Size(30, 13);
+			this->label14->TabIndex = 5;
+			this->label14->Text = L"Hora";
+			// 
+			// label10
+			// 
+			this->label10->AutoSize = true;
+			this->label10->Location = System::Drawing::Point(85, 1);
+			this->label10->Name = L"label10";
+			this->label10->Size = System::Drawing::Size(92, 13);
+			this->label10->TabIndex = 1;
+			this->label10->Text = L"Nombre y Apellido";
+			// 
+			// label12
+			// 
+			this->label12->AutoSize = true;
+			this->label12->Location = System::Drawing::Point(206, 1);
+			this->label12->Name = L"label12";
+			this->label12->Size = System::Drawing::Size(49, 13);
+			this->label12->TabIndex = 3;
+			this->label12->Text = L"Telefono";
+			// 
+			// button_Compras
+			// 
+			this->button_Compras->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(195)),
+				static_cast<System::Int32>(static_cast<System::Byte>(240)));
+			this->button_Compras->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button_Compras->Font = (gcnew System::Drawing::Font(L"Arial", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button2->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->button2->Location = System::Drawing::Point(3, 120);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(136, 25);
-			this->button2->TabIndex = 9;
-			this->button2->Text = L"Compras";
-			this->button2->UseVisualStyleBackColor = false;
+			this->button_Compras->ForeColor = System::Drawing::SystemColors::ButtonFace;
+			this->button_Compras->Location = System::Drawing::Point(3, 120);
+			this->button_Compras->Name = L"button_Compras";
+			this->button_Compras->Size = System::Drawing::Size(136, 25);
+			this->button_Compras->TabIndex = 9;
+			this->button_Compras->Text = L"Compras";
+			this->button_Compras->UseVisualStyleBackColor = false;
 			// 
-			// button1
+			// button_TSuperado
 			// 
-			this->button1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(246)), static_cast<System::Int32>(static_cast<System::Byte>(120)),
-				static_cast<System::Int32>(static_cast<System::Byte>(0)));
-			this->button1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button1->Font = (gcnew System::Drawing::Font(L"Arial", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->button_TSuperado->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(195)),
+				static_cast<System::Int32>(static_cast<System::Byte>(240)));
+			this->button_TSuperado->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button_TSuperado->Font = (gcnew System::Drawing::Font(L"Arial", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button1->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->button1->Location = System::Drawing::Point(145, 120);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(136, 25);
-			this->button1->TabIndex = 8;
-			this->button1->Text = L"T.  Superado";
-			this->button1->UseVisualStyleBackColor = false;
+			this->button_TSuperado->ForeColor = System::Drawing::SystemColors::ButtonFace;
+			this->button_TSuperado->Location = System::Drawing::Point(145, 120);
+			this->button_TSuperado->Name = L"button_TSuperado";
+			this->button_TSuperado->Size = System::Drawing::Size(136, 25);
+			this->button_TSuperado->TabIndex = 8;
+			this->button_TSuperado->Text = L"T.  Superado";
+			this->button_TSuperado->UseVisualStyleBackColor = false;
 			// 
 			// panel2
 			// 
@@ -255,90 +690,6 @@ namespace HiperMod {
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"SENIAT";
 			// 
-			// label14
-			// 
-			this->label14->AutoSize = true;
-			this->label14->Location = System::Drawing::Point(388, 1);
-			this->label14->Name = L"label14";
-			this->label14->Size = System::Drawing::Size(30, 13);
-			this->label14->TabIndex = 5;
-			this->label14->Text = L"Hora";
-			// 
-			// label15
-			// 
-			this->label15->AutoSize = true;
-			this->label15->Location = System::Drawing::Point(469, 1);
-			this->label15->Name = L"label15";
-			this->label15->Size = System::Drawing::Size(27, 13);
-			this->label15->TabIndex = 6;
-			this->label15->Text = L"Ref:";
-			// 
-			// label9
-			// 
-			this->label9->AutoSize = true;
-			this->label9->Location = System::Drawing::Point(4, 1);
-			this->label9->Name = L"label9";
-			this->label9->Size = System::Drawing::Size(20, 13);
-			this->label9->TabIndex = 0;
-			this->label9->Text = L"C.I";
-			// 
-			// label12
-			// 
-			this->label12->AutoSize = true;
-			this->label12->Location = System::Drawing::Point(206, 1);
-			this->label12->Name = L"label12";
-			this->label12->Size = System::Drawing::Size(49, 13);
-			this->label12->TabIndex = 3;
-			this->label12->Text = L"Telefono";
-			// 
-			// label13
-			// 
-			this->label13->AutoSize = true;
-			this->label13->Location = System::Drawing::Point(307, 1);
-			this->label13->Name = L"label13";
-			this->label13->Size = System::Drawing::Size(37, 13);
-			this->label13->TabIndex = 4;
-			this->label13->Text = L"Fecha";
-			// 
-			// tablaCompraC
-			// 
-			this->tablaCompraC->CellBorderStyle = System::Windows::Forms::TableLayoutPanelCellBorderStyle::Single;
-			this->tablaCompraC->ColumnCount = 6;
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				80)));
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				120)));
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				100)));
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				80)));
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				80)));
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				80)));
-			this->tablaCompraC->Controls->Add(this->label15, 5, 0);
-			this->tablaCompraC->Controls->Add(this->label13, 3, 0);
-			this->tablaCompraC->Controls->Add(this->label9, 0, 0);
-			this->tablaCompraC->Controls->Add(this->label14, 4, 0);
-			this->tablaCompraC->Controls->Add(this->label10, 1, 0);
-			this->tablaCompraC->Controls->Add(this->label12, 2, 0);
-			this->tablaCompraC->Location = System::Drawing::Point(0, 158);
-			this->tablaCompraC->Name = L"tablaCompraC";
-			this->tablaCompraC->RowCount = 2;
-			this->tablaCompraC->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
-			this->tablaCompraC->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
-			this->tablaCompraC->Size = System::Drawing::Size(538, 187);
-			this->tablaCompraC->TabIndex = 10;
-			// 
-			// label10
-			// 
-			this->label10->AutoSize = true;
-			this->label10->Location = System::Drawing::Point(85, 1);
-			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(92, 13);
-			this->label10->TabIndex = 1;
-			this->label10->Text = L"Nombre y Apellido";
-			// 
 			// Reportes
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -350,14 +701,22 @@ namespace HiperMod {
 			this->Text = L"Reportes";
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
-			this->panel2->ResumeLayout(false);
-			this->panel2->PerformLayout();
+			this->panelUltimasf->ResumeLayout(false);
+			this->panelUltimasf->PerformLayout();
 			this->tablaCompraC->ResumeLayout(false);
 			this->tablaCompraC->PerformLayout();
+			this->panel2->ResumeLayout(false);
+			this->panel2->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 	
+
+	
+
+
+	
+
 };
 }

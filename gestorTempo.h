@@ -24,25 +24,22 @@ ref class gestorTempo
             T1 = 1;  // 1 minuto en segundos
             T2 = 0; // 3 minutos en segundos
         }
-        void PausarTemporizador(Timer^ timer1, List<Cliente^>^ listClient, Label^ la) {
+        void PausarTemporizador(Timer^ timer1, List<Cliente^>^ listClient) {
+            startTime->Stop();
             if (timer1->Enabled) {
                 timer1->Stop();
-
                 // Iterar a través de cada cliente en `listClient` y pausar sus timers
                 for each (Cliente ^ cliente in listClient) {
                     cliente->PausarTimer(); // Asegúrate de tener este método en la clase `Cliente`
                 }
-
                 // Guardar el tiempo transcurrido
-                tiempoPausado = startTime->Elapsed;
-                la->Text = Convert::ToString(tiempoPausado);
                 estaPausado = true;
             }
         }
 
-        void reaunudarTemporizador(Timer^ timer1, List<Cliente^>^ listClient, Label^ la) {
+        void reanudarTemporizador(Timer^ timer1, List<Cliente^>^ listClient) {
             if (estaPausado) { // Ajustar el startTime para compensar el tiempo pausado 
-                la->Text = Convert::ToString(startTime);
+
                 startTime->Start(); 
                 timer1->Start(); 
                 estaPausado = false; 
