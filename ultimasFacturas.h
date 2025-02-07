@@ -1,27 +1,24 @@
 #pragma once
-
-using namespace System;
-using namespace System::Collections::Generic;
 ref class ultimasFacturas
 {
 public:
-    ultimasFacturas(String^ nombre, String^ ci, String^ tlf, List<int>^ productos, List<int>^ cantidad, String^ fecha, String^ hora) {
+    ultimasFacturas(System::String^ nombre, System::String^ ci, System::String^ tlf, System::Windows::Forms::TableLayoutPanel^ tproductos, System::String^ fecha, System::String^ hora, System::String^ ref) {
         this->Nombre = nombre;
         this->CI = ci;
         this->Tlf = tlf;
-        this->Productos = productos;
-        this->Cantidad = cantidad;
+        this->tablaProductos = tproductos;
         this->Fecha = fecha;
         this->Hora = hora;
+        this->Ref = ref;
     }
 
-    property String^ Nombre;
-    property String^ CI;
-    property String^ Tlf;
-    property List<int>^ Productos;
-    property List<int>^ Cantidad;
-    property String^ Fecha;
-    property String^ Hora;
-
+    property System::String^ Nombre;
+    property System::String^ CI;
+    property System::String^ Tlf;
+    property System::Windows::Forms::TableLayoutPanel^ tablaProductos;
+    property System::String^ Fecha;
+    property System::String^ Hora;
+    property System::String^ Ref;
 };
+
 

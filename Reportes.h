@@ -78,7 +78,19 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ label31;
 	public: System::Windows::Forms::Label^ ultima_MontoTotal;
 	private: System::Windows::Forms::Label^ label25;
-	public: System::Windows::Forms::TableLayoutPanel^ tabla_UFactura;
+	public: String^ itemUltimo;
+	public: System::Windows::Forms::Label^ Ref1;
+	public: System::Windows::Forms::Label^ Ref2;
+	public: System::Windows::Forms::Panel^ panelTabla;
+	private: System::Windows::Forms::Label^ label38;
+	public:
+	private: System::Windows::Forms::Label^ label37;
+	private: System::Windows::Forms::Label^ label36;
+	private: System::Windows::Forms::Label^ label35;
+
+	private: System::Windows::Forms::Label^ label33;
+	private: System::Windows::Forms::Label^ label32;
+	private: System::Windows::Forms::Label^ label20;
 	private:
 		   // Evento personalizado
 
@@ -99,7 +111,9 @@ namespace HiperMod {
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->panelUltimasf = (gcnew System::Windows::Forms::Panel());
-			this->tabla_UFactura = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->panelTabla = (gcnew System::Windows::Forms::Panel());
+			this->Ref1 = (gcnew System::Windows::Forms::Label());
+			this->Ref2 = (gcnew System::Windows::Forms::Label());
 			this->ultima_MontoTotal = (gcnew System::Windows::Forms::Label());
 			this->label25 = (gcnew System::Windows::Forms::Label());
 			this->ultima_Tlf = (gcnew System::Windows::Forms::Label());
@@ -142,8 +156,16 @@ namespace HiperMod {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->label20 = (gcnew System::Windows::Forms::Label());
+			this->label32 = (gcnew System::Windows::Forms::Label());
+			this->label33 = (gcnew System::Windows::Forms::Label());
+			this->label35 = (gcnew System::Windows::Forms::Label());
+			this->label36 = (gcnew System::Windows::Forms::Label());
+			this->label37 = (gcnew System::Windows::Forms::Label());
+			this->label38 = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
 			this->panelUltimasf->SuspendLayout();
+			this->tablaVentasProductos->SuspendLayout();
 			this->tablaCompraC->SuspendLayout();
 			this->panel2->SuspendLayout();
 			this->SuspendLayout();
@@ -167,7 +189,9 @@ namespace HiperMod {
 			// panelUltimasf
 			// 
 			this->panelUltimasf->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->panelUltimasf->Controls->Add(this->tabla_UFactura);
+			this->panelUltimasf->Controls->Add(this->panelTabla);
+			this->panelUltimasf->Controls->Add(this->Ref1);
+			this->panelUltimasf->Controls->Add(this->Ref2);
 			this->panelUltimasf->Controls->Add(this->ultima_MontoTotal);
 			this->panelUltimasf->Controls->Add(this->label25);
 			this->panelUltimasf->Controls->Add(this->ultima_Tlf);
@@ -197,19 +221,34 @@ namespace HiperMod {
 			this->panelUltimasf->TabIndex = 16;
 			this->panelUltimasf->Visible = false;
 			// 
-			// tabla_UFactura
+			// panelTabla
 			// 
-			this->tabla_UFactura->ColumnCount = 2;
-			this->tabla_UFactura->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				50)));
-			this->tabla_UFactura->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				50)));
-			this->tabla_UFactura->Location = System::Drawing::Point(9, 191);
-			this->tabla_UFactura->Name = L"tabla_UFactura";
-			this->tabla_UFactura->RowCount = 1;
-			this->tabla_UFactura->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
-			this->tabla_UFactura->Size = System::Drawing::Size(211, 271);
-			this->tabla_UFactura->TabIndex = 0;
+			this->panelTabla->Location = System::Drawing::Point(-1, 185);
+			this->panelTabla->Name = L"panelTabla";
+			this->panelTabla->Size = System::Drawing::Size(236, 280);
+			this->panelTabla->TabIndex = 29;
+			// 
+			// Ref1
+			// 
+			this->Ref1->AutoSize = true;
+			this->Ref1->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->Ref1->Location = System::Drawing::Point(36, 80);
+			this->Ref1->Name = L"Ref1";
+			this->Ref1->Size = System::Drawing::Size(29, 14);
+			this->Ref1->TabIndex = 28;
+			this->Ref1->Text = L"hora";
+			// 
+			// Ref2
+			// 
+			this->Ref2->AutoSize = true;
+			this->Ref2->Font = (gcnew System::Drawing::Font(L"Arial", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->Ref2->Location = System::Drawing::Point(167, 145);
+			this->Ref2->Name = L"Ref2";
+			this->Ref2->Size = System::Drawing::Size(29, 14);
+			this->Ref2->TabIndex = 27;
+			this->Ref2->Text = L"hora";
 			// 
 			// ultima_MontoTotal
 			// 
@@ -467,21 +506,40 @@ namespace HiperMod {
 			this->comboUltimasF->Name = L"comboUltimasF";
 			this->comboUltimasF->Size = System::Drawing::Size(168, 26);
 			this->comboUltimasF->TabIndex = 14;
+			this->comboUltimasF->DropDown += gcnew System::EventHandler(this, &Reportes::comboUltimasF_DropDown);
+			this->comboUltimasF->DropDownClosed += gcnew System::EventHandler(this, &Reportes::comboUltimasF_DropDownClosed);
 			// 
 			// tablaVentasProductos
 			// 
-			this->tablaVentasProductos->ColumnCount = 2;
+			this->tablaVentasProductos->BackColor = System::Drawing::SystemColors::Info;
+			this->tablaVentasProductos->CellBorderStyle = System::Windows::Forms::TableLayoutPanelCellBorderStyle::Single;
+			this->tablaVentasProductos->ColumnCount = 7;
+			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				40)));
+			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				140)));
+			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				60)));
+			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				70)));
+			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				70)));
+			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				70)));
 			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				50)));
-			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				50)));
+				100)));
+			this->tablaVentasProductos->Controls->Add(this->label38, 6, 0);
+			this->tablaVentasProductos->Controls->Add(this->label37, 5, 0);
+			this->tablaVentasProductos->Controls->Add(this->label36, 4, 0);
+			this->tablaVentasProductos->Controls->Add(this->label35, 3, 0);
+			this->tablaVentasProductos->Controls->Add(this->label33, 2, 0);
+			this->tablaVentasProductos->Controls->Add(this->label32, 1, 0);
+			this->tablaVentasProductos->Controls->Add(this->label20, 0, 0);
 			this->tablaVentasProductos->Location = System::Drawing::Point(1, 390);
 			this->tablaVentasProductos->Name = L"tablaVentasProductos";
 			this->tablaVentasProductos->RowCount = 2;
-			this->tablaVentasProductos->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent,
-				50)));
-			this->tablaVentasProductos->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent,
-				50)));
+			this->tablaVentasProductos->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+			this->tablaVentasProductos->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
 			this->tablaVentasProductos->Size = System::Drawing::Size(538, 202);
 			this->tablaVentasProductos->TabIndex = 12;
 			// 
@@ -690,6 +748,73 @@ namespace HiperMod {
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"SENIAT";
 			// 
+			// label20
+			// 
+			this->label20->AutoSize = true;
+			this->label20->Location = System::Drawing::Point(4, 1);
+			this->label20->Name = L"label20";
+			this->label20->Size = System::Drawing::Size(30, 13);
+			this->label20->TabIndex = 0;
+			this->label20->Text = L"COD";
+			// 
+			// label32
+			// 
+			this->label32->AutoSize = true;
+			this->label32->Location = System::Drawing::Point(45, 1);
+			this->label32->Name = L"label32";
+			this->label32->Size = System::Drawing::Size(80, 13);
+			this->label32->TabIndex = 1;
+			this->label32->Text = L"DESCRIPCIÓN";
+			// 
+			// label33
+			// 
+			this->label33->AutoSize = true;
+			this->label33->Location = System::Drawing::Point(186, 1);
+			this->label33->Name = L"label33";
+			this->label33->Size = System::Drawing::Size(39, 13);
+			this->label33->TabIndex = 2;
+			this->label33->Text = L"CANT:";
+			// 
+			// label35
+			// 
+			this->label35->AutoSize = true;
+			this->label35->Location = System::Drawing::Point(247, 1);
+			this->label35->Name = L"label35";
+			this->label35->Size = System::Drawing::Size(56, 13);
+			this->label35->TabIndex = 4;
+			this->label35->Text = L"PRECIO $";
+			this->label35->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// label36
+			// 
+			this->label36->AutoSize = true;
+			this->label36->Location = System::Drawing::Point(318, 1);
+			this->label36->Name = L"label36";
+			this->label36->Size = System::Drawing::Size(64, 13);
+			this->label36->TabIndex = 5;
+			this->label36->Text = L"PRECIO BS";
+			this->label36->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// label37
+			// 
+			this->label37->AutoSize = true;
+			this->label37->Location = System::Drawing::Point(389, 1);
+			this->label37->Name = L"label37";
+			this->label37->Size = System::Drawing::Size(59, 13);
+			this->label37->TabIndex = 6;
+			this->label37->Text = L"VENTAS $";
+			this->label37->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// label38
+			// 
+			this->label38->AutoSize = true;
+			this->label38->Location = System::Drawing::Point(460, 1);
+			this->label38->Name = L"label38";
+			this->label38->Size = System::Drawing::Size(67, 13);
+			this->label38->TabIndex = 7;
+			this->label38->Text = L"VENTAS BS";
+			this->label38->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
 			// Reportes
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -703,6 +828,8 @@ namespace HiperMod {
 			this->panel1->PerformLayout();
 			this->panelUltimasf->ResumeLayout(false);
 			this->panelUltimasf->PerformLayout();
+			this->tablaVentasProductos->ResumeLayout(false);
+			this->tablaVentasProductos->PerformLayout();
 			this->tablaCompraC->ResumeLayout(false);
 			this->tablaCompraC->PerformLayout();
 			this->panel2->ResumeLayout(false);
@@ -711,12 +838,31 @@ namespace HiperMod {
 
 		}
 #pragma endregion
-	
+		void comboUltimasF_DropDown(System::Object^ sender, System::EventArgs^ e) {
+			ComboBox^ comboUltimasF = safe_cast<ComboBox^>(sender);
+			int totalItems = comboUltimasF->Items->Count;
 
-	
+			if (totalItems > 0) {
+				// Almacenar temporalmente el último ítem y eliminarlo del ComboBox
+				itemUltimo = comboUltimasF->Items[totalItems - 1]->ToString();
+				comboUltimasF->Items->RemoveAt(totalItems - 1);
 
+				// Ajustar el número de ítems visibles si hay más de un ítem
+				if (totalItems > 1) {
+					comboUltimasF->MaxDropDownItems = totalItems - 1;
+				}
+				
+			}
+		}
 
-	
+		void comboUltimasF_DropDownClosed(System::Object^ sender, System::EventArgs^ e) {
+			ComboBox^ comboUltimasF = safe_cast<ComboBox^>(sender);
+			if (itemUltimo != nullptr) {
+				comboUltimasF->Items->Add(itemUltimo);
+				itemUltimo = nullptr;
+			}
+		}
+
 
 };
 }

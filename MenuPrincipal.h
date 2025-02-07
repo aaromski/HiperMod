@@ -9,6 +9,7 @@
 #include "gestorTempo.h"
 #include "Productos.h"
 #include "ultimasFacturas.h"
+#include "claseReportes.h"
 namespace HiperMod {
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -39,6 +40,7 @@ namespace HiperMod {
 			this->data = gcnew Conexion();
 			this->tempo = gcnew gestorTempo();
 			this->sonidobeeb = gcnew SoundPlayer("sonidos//preview.wav");
+
 		}
 
 	protected:
@@ -87,7 +89,7 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ label17;
 	private: System::Windows::Forms::Label^ label16;
 	private: System::Windows::Forms::Label^ label15;
-	private: System::Windows::Forms::Label^ label14;
+
 	private: System::Windows::Forms::Label^ label13;
 	private: System::Windows::Forms::Label^ label12;
 	private: System::Windows::Forms::Label^ label11;
@@ -144,7 +146,7 @@ private: System::Windows::Forms::Label^ cant_Caja;
 private: System::Windows::Forms::Label^ cant_Cola;
 private: Cliente^ clientes;
 private: gestorTempo^ tempo;
-
+private: claseReportes^ nuevoReporte;
 
 private: System::Windows::Forms::Timer^ tiempoCC;
 private: System::Windows::Forms::Timer^ tiempo;
@@ -155,6 +157,8 @@ private: List<ultimasFacturas^>^ listFacturas = gcnew List<ultimasFacturas^>();
 private: System::Windows::Forms::Timer^ crearClientes;
 private: System::Windows::Forms::Timer^ mostrarCliente;
 private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
+private: System::Windows::Forms::Label^ Ref;
+private: System::Windows::Forms::Label^ refFactura;
 	private:
 		bool UseImage = true;
 		/// <summary>
@@ -180,8 +184,11 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			this->toolStripTextBox1 = (gcnew System::Windows::Forms::ToolStripTextBox());
 			this->toolStripButton4 = (gcnew System::Windows::Forms::ToolStripLabel());
 			this->toolStripButton2 = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButton1 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->panelFacturaD = (gcnew System::Windows::Forms::Panel());
+			this->Ref = (gcnew System::Windows::Forms::Label());
+			this->refFactura = (gcnew System::Windows::Forms::Label());
 			this->tlfac = (gcnew System::Windows::Forms::Label());
 			this->cedulafac = (gcnew System::Windows::Forms::Label());
 			this->nombrefac = (gcnew System::Windows::Forms::Label());
@@ -194,7 +201,6 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			this->label17 = (gcnew System::Windows::Forms::Label());
 			this->label16 = (gcnew System::Windows::Forms::Label());
 			this->label15 = (gcnew System::Windows::Forms::Label());
-			this->label14 = (gcnew System::Windows::Forms::Label());
 			this->label13 = (gcnew System::Windows::Forms::Label());
 			this->label12 = (gcnew System::Windows::Forms::Label());
 			this->label11 = (gcnew System::Windows::Forms::Label());
@@ -246,7 +252,6 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			this->tiempo = (gcnew System::Windows::Forms::Timer(this->components));
 			this->crearClientes = (gcnew System::Windows::Forms::Timer(this->components));
 			this->mostrarCliente = (gcnew System::Windows::Forms::Timer(this->components));
-			this->toolStripButton1 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStrip1->SuspendLayout();
 			this->panelFacturaD->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitCaja))->BeginInit();
@@ -401,6 +406,17 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			this->toolStripButton2->ToolTipText = L"X2";
 			this->toolStripButton2->Click += gcnew System::EventHandler(this, &MenuPrincipal::toolStripButton2_Click);
 			// 
+			// toolStripButton1
+			// 
+			this->toolStripButton1->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+			this->toolStripButton1->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->toolStripButton1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"toolStripButton1.Image")));
+			this->toolStripButton1->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButton1->Name = L"toolStripButton1";
+			this->toolStripButton1->Size = System::Drawing::Size(23, 22);
+			this->toolStripButton1->Text = L"Minimizar";
+			this->toolStripButton1->Click += gcnew System::EventHandler(this, &MenuPrincipal::toolStripButton1_Click);
+			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
@@ -415,6 +431,8 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			// panelFacturaD
 			// 
 			this->panelFacturaD->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->panelFacturaD->Controls->Add(this->Ref);
+			this->panelFacturaD->Controls->Add(this->refFactura);
 			this->panelFacturaD->Controls->Add(this->tlfac);
 			this->panelFacturaD->Controls->Add(this->cedulafac);
 			this->panelFacturaD->Controls->Add(this->nombrefac);
@@ -427,7 +445,6 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			this->panelFacturaD->Controls->Add(this->label17);
 			this->panelFacturaD->Controls->Add(this->label16);
 			this->panelFacturaD->Controls->Add(this->label15);
-			this->panelFacturaD->Controls->Add(this->label14);
 			this->panelFacturaD->Controls->Add(this->label13);
 			this->panelFacturaD->Controls->Add(this->label12);
 			this->panelFacturaD->Controls->Add(this->label11);
@@ -445,6 +462,26 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			this->panelFacturaD->Name = L"panelFacturaD";
 			this->panelFacturaD->Size = System::Drawing::Size(245, 514);
 			this->panelFacturaD->TabIndex = 1;
+			// 
+			// Ref
+			// 
+			this->Ref->AutoSize = true;
+			this->Ref->Location = System::Drawing::Point(43, 105);
+			this->Ref->Name = L"Ref";
+			this->Ref->Size = System::Drawing::Size(41, 15);
+			this->Ref->TabIndex = 25;
+			this->Ref->Text = L"label8";
+			this->Ref->Visible = false;
+			// 
+			// refFactura
+			// 
+			this->refFactura->AutoSize = true;
+			this->refFactura->Location = System::Drawing::Point(185, 168);
+			this->refFactura->Name = L"refFactura";
+			this->refFactura->Size = System::Drawing::Size(41, 15);
+			this->refFactura->TabIndex = 24;
+			this->refFactura->Text = L"label8";
+			this->refFactura->Visible = false;
 			// 
 			// tlfac
 			// 
@@ -518,27 +555,29 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			// hora
 			// 
 			this->hora->AutoSize = true;
-			this->hora->Location = System::Drawing::Point(179, 195);
+			this->hora->Location = System::Drawing::Point(179, 183);
 			this->hora->Name = L"hora";
 			this->hora->Size = System::Drawing::Size(59, 15);
 			this->hora->TabIndex = 18;
 			this->hora->Text = L"aqui hora";
+			this->hora->Visible = false;
 			// 
 			// fecha
 			// 
 			this->fecha->AutoSize = true;
-			this->fecha->Location = System::Drawing::Point(54, 195);
+			this->fecha->Location = System::Drawing::Point(54, 183);
 			this->fecha->Name = L"fecha";
 			this->fecha->Size = System::Drawing::Size(72, 15);
 			this->fecha->TabIndex = 17;
 			this->fecha->Text = L"aqui va la fe";
+			this->fecha->Visible = false;
 			// 
 			// label18
 			// 
 			this->label18->AutoSize = true;
 			this->label18->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label18->Location = System::Drawing::Point(3, 208);
+			this->label18->Location = System::Drawing::Point(3, 196);
 			this->label18->Name = L"label18";
 			this->label18->Size = System::Drawing::Size(223, 16);
 			this->label18->TabIndex = 16;
@@ -547,7 +586,7 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			// label17
 			// 
 			this->label17->AutoSize = true;
-			this->label17->Location = System::Drawing::Point(135, 195);
+			this->label17->Location = System::Drawing::Point(135, 183);
 			this->label17->Name = L"label17";
 			this->label17->Size = System::Drawing::Size(44, 15);
 			this->label17->TabIndex = 15;
@@ -556,7 +595,7 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			// label16
 			// 
 			this->label16->AutoSize = true;
-			this->label16->Location = System::Drawing::Point(4, 195);
+			this->label16->Location = System::Drawing::Point(4, 183);
 			this->label16->Name = L"label16";
 			this->label16->Size = System::Drawing::Size(50, 15);
 			this->label16->TabIndex = 14;
@@ -565,20 +604,11 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			// label15
 			// 
 			this->label15->AutoSize = true;
-			this->label15->Location = System::Drawing::Point(4, 182);
+			this->label15->Location = System::Drawing::Point(4, 170);
 			this->label15->Name = L"label15";
 			this->label15->Size = System::Drawing::Size(64, 15);
 			this->label15->TabIndex = 13;
 			this->label15->Text = L"FACTURA:";
-			// 
-			// label14
-			// 
-			this->label14->AutoSize = true;
-			this->label14->Location = System::Drawing::Point(3, 157);
-			this->label14->Name = L"label14";
-			this->label14->Size = System::Drawing::Size(81, 15);
-			this->label14->TabIndex = 12;
-			this->label14->Text = L"OPERACION:";
 			// 
 			// label13
 			// 
@@ -904,9 +934,9 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			// 
 			// panel2FacturaD
 			// 
-			this->panel2FacturaD->Location = System::Drawing::Point(20, 285);
+			this->panel2FacturaD->Location = System::Drawing::Point(20, 273);
 			this->panel2FacturaD->Name = L"panel2FacturaD";
-			this->panel2FacturaD->Size = System::Drawing::Size(233, 260);
+			this->panel2FacturaD->Size = System::Drawing::Size(233, 272);
 			this->panel2FacturaD->TabIndex = 19;
 			// 
 			// splitCola
@@ -1098,17 +1128,6 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			this->mostrarCliente->Interval = 60000;
 			this->mostrarCliente->Tick += gcnew System::EventHandler(this, &MenuPrincipal::mostrarCliente_Tick_1);
 			// 
-			// toolStripButton1
-			// 
-			this->toolStripButton1->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
-			this->toolStripButton1->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
-			this->toolStripButton1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"toolStripButton1.Image")));
-			this->toolStripButton1->ImageTransparentColor = System::Drawing::Color::Magenta;
-			this->toolStripButton1->Name = L"toolStripButton1";
-			this->toolStripButton1->Size = System::Drawing::Size(23, 22);
-			this->toolStripButton1->Text = L"Minimizar";
-			this->toolStripButton1->Click += gcnew System::EventHandler(this, &MenuPrincipal::toolStripButton1_Click);
-			// 
 			// MenuPrincipal
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
@@ -1150,56 +1169,35 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			TableLayoutPanel^ tablaFactura;
 			
 	void agregarAUltimaFactura() {
+		static int Max_10 = 1;
 			ultimasFacturas^ nuevaFactura = gcnew ultimasFacturas(
 				nombrefac->Text,
 				cedulafac->Text,
 				tlf->Text,
-				listClient[0]->Productos,
-				listClient[0]->Cantidad,
+				tablaFactura,
 				fecha->Text,
-				hora->Text
+				hora->Text,
+				Ref->Text
 			);
-			listFacturas->Add(nuevaFactura);
-			if (reportes->comboUltimasF->Items->Count < 10) {
-				int count = reportes->comboUltimasF->Items->Count;
-				reportes->comboUltimasF->Items->Add("Factura N " + (count+1));
+			if (Max_10 <= 11) {
+				listFacturas->Add(nuevaFactura);
+				reportes->comboUltimasF->Items->Add("Factura N " + (Max_10++));
+			}
+			else {
+				listFacturas->RemoveAt(0);
+				listFacturas->Add(nuevaFactura);
 			}
 	}
-
-
 
 	void cargarTablaUltimaFactura(int index) {
-		double total;
-		if (!EsNuevaTabla(reportes->tabla_UFactura)) {
-			LimpiarYPreparaTabla(reportes->tabla_UFactura);
-		}
+		// Limpia el panel antes de agregar el nuevo TableLayoutPanel
+		reportes->panelTabla->Controls->Clear();
 		if (listFacturas[index] != nullptr) {
-			data->abrirConexion();
-			for (int i = 0; i < listFacturas[index]->Productos->Count; i++) {
-				Label^ nombre = gcnew Label();
-				Label^ precioIz = gcnew Label();
-				Label^ precioDe = gcnew Label();
-				data->mostrarProductos(listFacturas[index]->Productos[i], nombre, precioIz, precioDe, listFacturas[index]->Cantidad[i], total);
-
-				nombre->Font = gcnew System::Drawing::Font("Arial", 8);
-				precioIz->Font = gcnew System::Drawing::Font("Arial", 8);
-				precioDe->Font = gcnew System::Drawing::Font("Arial", 8);
-
-				precioDe->Anchor = System::Windows::Forms::AnchorStyles::Top;
-				precioIz->Anchor = System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left;
-
-				int row = reportes->tabla_UFactura->RowCount++;
-				reportes->tabla_UFactura->RowStyles->Add(gcnew RowStyle(SizeType::Absolute, 15));
-				reportes->tabla_UFactura->Controls->Add(nombre, 0, row);
-
-				row = reportes->tabla_UFactura->RowCount++;
-				reportes->tabla_UFactura->RowStyles->Add(gcnew RowStyle(SizeType::Absolute, 15));
-				reportes->tabla_UFactura->Controls->Add(precioIz, 0, row);
-				reportes->tabla_UFactura->Controls->Add(precioDe, 1, row);
-			}
-			data->cerrarConexion();
+			// Agrega el TableLayoutPanel al panel
+			reportes->panelTabla->Controls->Add(listFacturas[index]->tablaProductos);
 		}
 	}
+
 
 	void mostrarFactura(int index) {
 		reportes->panelUltimasf->Visible = true;
@@ -1208,55 +1206,60 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 		reportes->ultima_Tlf->Text = listFacturas[index ]->Tlf;
 		reportes->ultima_Fecha->Text = listFacturas[index ]->Fecha;
 		reportes->ultima_Hora->Text = listFacturas[index ]->Hora;
+		reportes->Ref1->Text = listFacturas[index]->Ref;
+		reportes->Ref2->Text = listFacturas[index]->Ref;
 		reportes->ultima_MontoTotal->Text = montoTotal->Text;
 		cargarTablaUltimaFactura(index);
 		reportes->panelUltimasf->Refresh();
 }
 
 
-	void reportesCompras() {
-		int count = reportes->tablaCompraC->RowCount;
-		reportes->tablaCompraC->RowCount++;
-		Label^ ci = gcnew Label();
-		ci->Text = cedulafac->Text;
-		Label^ nombre = gcnew Label();
-		nombre->Text = nombrefac->Text;
-		Label^ tlfReportes = gcnew Label();
-		tlfReportes->Text = tlf->Text;
-		Label^ fechaReportes = gcnew Label();
-		fechaReportes->Text = fecha->Text;
-		Label^ horaReportes = gcnew Label();
-		horaReportes->Text = hora->Text;
-
-		ci->Anchor = System::Windows::Forms::AnchorStyles::Top;
-		nombre->Anchor = System::Windows::Forms::AnchorStyles::Top;
-		tlfReportes->Anchor = System::Windows::Forms::AnchorStyles::Top;
-		fechaReportes->Anchor = System::Windows::Forms::AnchorStyles::Top;
-		horaReportes->Anchor = System::Windows::Forms::AnchorStyles::Top;
-		
+	void agregarReporteACompra(int fila, claseReportes^ reporte) {
 		reportes->tablaCompraC->RowStyles->Insert(1, gcnew RowStyle(SizeType::Absolute, 15));
-		reportes->tablaCompraC->Controls->Add(ci, 0, count-1);
-		reportes->tablaCompraC->Controls->Add(nombre, 1, count -1);
-		reportes->tablaCompraC->Controls->Add(tlfReportes, 2, count -1);
-		reportes->tablaCompraC->Controls->Add(fechaReportes, 3, count -1);
-		reportes->tablaCompraC->Controls->Add(horaReportes, 4, count -1);
-
+		reportes->tablaCompraC->Controls->Add(reporte->ci, 0, fila);
+		reportes->tablaCompraC->Controls->Add(reporte->nombre, 1, fila);
+		reportes->tablaCompraC->Controls->Add(reporte->tlfReportes, 2, fila);
+		reportes->tablaCompraC->Controls->Add(reporte->fechaReportes, 3, fila);
+		reportes->tablaCompraC->Controls->Add(reporte->horaReportes, 4, fila);
+		reportes->tablaCompraC->Controls->Add(reporte->refReportes, 5, fila);
 		reportes->tablaCompraC->PerformLayout();
+	}
+
+	void reportesCompras() {
+		int fila = reportes->tablaCompraC->RowCount;
+		reportes->tablaCompraC->RowCount++;
+
+		claseReportes^ nuevoReporte = gcnew claseReportes(
+			cedulafac->Text, nombrefac->Text, tlf->Text, fecha->Text, hora->Text, Ref->Text);
+
+		agregarReporteACompra(fila-1, nuevoReporte);
 		agregarAUltimaFactura();
 	}
 
-	void informacionFactura(double totalMonto){
+
+	void generarRef(double totalMonto) {
+		static int ref = 74853;
+		Ref->Text = "*" + Convert::ToString(ref);
+		refFactura->Text = Ref->Text;
+		ref++;
+		this->montoTotal->Text = totalMonto.ToString("F2");
 		this->nombrefac->Text = nombreA->Text;
 		this->cedulafac->Text = cedula->Text;
 		this->tlfac->Text = tlf->Text;
+		this->hora->Text = DateTime::Now.ToString("HH:mm:ss");
+	}
+
+	void visibilidadInformacionFactura(){ 
+		this->hora->Visible = true;
+		this->Ref->Visible = true;
+		this->refFactura->Visible = true;
+		this->fecha->Visible = true;
 		this->nombrefac->Visible = true;
 		this->cedulafac->Visible = true;
 		this->tlfac->Visible = true;
 		this->LabelMontoTotal->Visible = true;
-		this->montoTotal->Text = totalMonto.ToString("F2");
 		this->montoTotal->Visible = true;
 		this->cantidad->Visible = true;
-		this->hora->Text = DateTime::Now.ToString("HH:mm:ss");
 	}
 
 	void finalizarTransferencia() {
@@ -1301,11 +1304,12 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 
 		cantidad->Text = "0";
 		InicializarMoverTimer();
-		informacionFactura(totalMonto);
+		generarRef(totalMonto);
+		if (!this->hora->Visible) {
+			visibilidadInformacionFactura();
+		}
 	}
 			
-
-
 	void ProcesarTabla(List<Cliente^>^ listClient, TableLayoutPanel^ tabla, int id, double& total) {
 		if (listClient->Count > 0  && id >= 0) {
 			int cant = 0;
@@ -1337,6 +1341,7 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 			}
 		}
 	}
+
 
 	void CrearCliente() { 
 		static int clienteID = 1; 
@@ -1388,7 +1393,7 @@ private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 		table->RowStyles->Clear();
 	}
 
-	void MostrarInformacionCliente(Label^ nombre, Label^ cedula, Label^ tlf) {
+	void MostrarInformacionCliente(Label^ nombre, Label^ cedula, Label^ tlf) {            // Primero en cola
 		nombre->Visible = true;
 		cedula->Visible = true;
 		tlf->Visible = true;
@@ -1622,6 +1627,7 @@ private: System::Void toolStripButton1_Click(System::Object^ sender, System::Eve
 	this->WindowState = FormWindowState::Minimized;
 
 }
+
 };
 
 }
