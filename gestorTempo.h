@@ -68,10 +68,6 @@ ref class gestorTempo
             int segundos = segundosTotales % 60; 
             return String::Format("{0:D2}:{1:D2}", minutos, segundos); 
         }
-
-        DateTime RedondearASegundos(DateTime fechaHora) { 
-            return fechaHora.AddTicks(-(fechaHora.Ticks % TimeSpan::TicksPerSecond));
-        }
 };
 
 

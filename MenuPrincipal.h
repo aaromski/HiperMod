@@ -7,7 +7,6 @@
 #include "Reportes.h"
 #include "Cliente.h"
 #include "gestorTempo.h"
-#include "Productos.h"
 #include "ultimasFacturas.h"
 #include "claseReportes.h"
 namespace HiperMod {
@@ -61,14 +60,11 @@ namespace HiperMod {
 	internal: System::Windows::Forms::ToolStrip^ toolStrip1;
 	private: System::Windows::Forms::ToolStripButton^ B_cerrar;
 	private: System::Windows::Forms::ToolStripButton^ pausar;
-
 	private: System::Windows::Forms::ToolStripButton^ toolStripButton2;
 	private: System::Windows::Forms::ToolStripTextBox^ toolStripTextBox1;
-
 	private: System::DateTime startTime;
 	private: System::ComponentModel::IContainer^ components;
 	private: System::Windows::Forms::ToolStripButton^ reanudar;
-
 	private: System::Windows::Forms::ToolStripLabel^ toolStripButton4;
 	private: Conexion^ data;
 	private: System::Drawing::Color botonClickeado = System::Drawing::Color::FromArgb(
@@ -89,7 +85,6 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ label17;
 	private: System::Windows::Forms::Label^ label16;
 	private: System::Windows::Forms::Label^ label15;
-
 	private: System::Windows::Forms::Label^ label13;
 	private: System::Windows::Forms::Label^ label12;
 	private: System::Windows::Forms::Label^ label11;
@@ -128,39 +123,39 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ label48;
 	private: System::Windows::Forms::Label^ nombre_Cola;
 	private: System::Windows::Forms::Label^ label50;
-private: System::Windows::Forms::Label^ tiempoCola;
+	private: System::Windows::Forms::Label^ tiempoCola;
 	private: System::Windows::Forms::Label^ label52;
-private: System::Windows::Forms::Label^ Fecha_Cola;
+	private: System::Windows::Forms::Label^ Fecha_Cola;
 	private: System::Windows::Forms::Label^ label54;
 	private: System::Windows::Forms::Label^ label55;
 	private: Reportes^ reportes;
-private: System::Windows::Forms::Label^ cantidad;
-private: System::Windows::Forms::Panel^ panel2FacturaD;
-private: System::Windows::Forms::Timer^ Mover; static bool finalizo = false;
-private: System::Windows::Forms::Label^ LabelMontoTotal;
-private: System::Windows::Forms::Label^ montoTotal;
-private: System::Windows::Forms::Label^ nombrefac;
-private: System::Windows::Forms::Label^ tlfac;
-private: System::Windows::Forms::Label^ cedulafac;
-private: System::Windows::Forms::Label^ cant_Caja;
-private: System::Windows::Forms::Label^ cant_Cola;
-private: Cliente^ clientes;
-private: gestorTempo^ tempo;
-private: claseReportes^ nuevoReporte;
-
-private: System::Windows::Forms::Timer^ tiempoCC;
-private: System::Windows::Forms::Timer^ tiempo;
-private: List<Cliente^>^ listClient = gcnew List<Cliente^>();
-private: SoundPlayer^ sonidobeeb;
-private: ultimasFacturas^ Factura;
-private: List<ultimasFacturas^>^ listFacturas = gcnew List<ultimasFacturas^>();
-private: System::Windows::Forms::Timer^ crearClientes;
-private: System::Windows::Forms::Timer^ mostrarCliente;
-private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
-private: System::Windows::Forms::Label^ Ref;
-private: System::Windows::Forms::Label^ refFactura;
+	private: System::Windows::Forms::Label^ cantidad;
+	private: System::Windows::Forms::Panel^ panel2FacturaD;
+	private: System::Windows::Forms::Timer^ Mover; static bool finalizo = false;
+	private: System::Windows::Forms::Label^ LabelMontoTotal;
+	private: System::Windows::Forms::Label^ montoTotal;
+	private: System::Windows::Forms::Label^ nombrefac;
+	private: System::Windows::Forms::Label^ tlfac;
+	private: System::Windows::Forms::Label^ cedulafac;
+	private: System::Windows::Forms::Label^ cant_Caja;
+	private: System::Windows::Forms::Label^ cant_Cola;
+	private: Cliente^ clientes;
+	private: gestorTempo^ tempo;
+	private: claseReportes^ nuevoReporte;
+	private: DataTable^ BaseDatos;
+	private: System::Windows::Forms::Timer^ tiempoCC;
+	private: System::Windows::Forms::Timer^ tiempo;
+	private: List<Cliente^>^ listClient = gcnew List<Cliente^>();
+	private: SoundPlayer^ sonidobeeb;
+	private: ultimasFacturas^ Factura;
+	private: List<ultimasFacturas^>^ listFacturas = gcnew List<ultimasFacturas^>();
+	private: System::Windows::Forms::Timer^ crearClientes;
+	private: System::Windows::Forms::Timer^ mostrarCliente;
+	private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
+	private: System::Windows::Forms::Label^ Ref;
+	private: System::Windows::Forms::Label^ refFactura;
 	private:
-		bool UseImage = true;
+	bool UseImage = true;
 		/// <summary>
 		/// Variable del diseñador necesaria.
 		/// </summary>
@@ -778,7 +773,6 @@ private: System::Windows::Forms::Label^ refFactura;
 			// splitCaja.Panel2
 			// 
 			this->splitCaja->Panel2->AutoScroll = true;
-			this->splitCaja->Panel2->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MenuPrincipal::splitCaja_Panel2_Paint);
 			this->splitCaja->Size = System::Drawing::Size(253, 360);
 			this->splitCaja->SplitterDistance = 101;
 			this->splitCaja->SplitterWidth = 1;
@@ -1120,12 +1114,12 @@ private: System::Windows::Forms::Label^ refFactura;
 			// crearClientes
 			// 
 			this->crearClientes->Enabled = true;
-			this->crearClientes->Interval = 30000;
+			this->crearClientes->Interval = 180000;
 			this->crearClientes->Tick += gcnew System::EventHandler(this, &MenuPrincipal::crearClientes_Tick);
 			// 
 			// mostrarCliente
 			// 
-			this->mostrarCliente->Interval = 60000;
+			this->mostrarCliente->Interval = 55000;
 			this->mostrarCliente->Tick += gcnew System::EventHandler(this, &MenuPrincipal::mostrarCliente_Tick_1);
 			// 
 			// MenuPrincipal
@@ -1167,9 +1161,11 @@ private: System::Windows::Forms::Label^ refFactura;
 			TableLayoutPanel^ tableCola;           // Los tablelayoutpanel son las tablas que contienen toda la informacion de los productos
 			TableLayoutPanel^ tablaCaja;
 			TableLayoutPanel^ tablaFactura;
-			
+		
+	// Agrega una nueva factura a la lista de últimas facturas
 	void agregarAUltimaFactura() {
-		static int Max_10 = 1;
+		static int Max_10 = 1;  // Contador para limitar a 10 facturas
+			// Crear una nueva instancia de ultimasFacturas
 			ultimasFacturas^ nuevaFactura = gcnew ultimasFacturas(
 				nombrefac->Text,
 				cedulafac->Text,
@@ -1188,7 +1184,7 @@ private: System::Windows::Forms::Label^ refFactura;
 				listFacturas->Add(nuevaFactura);
 			}
 	}
-
+	// Cargar la tabla de la última factura en el panel
 	void cargarTablaUltimaFactura(int index) {
 		// Limpia el panel antes de agregar el nuevo TableLayoutPanel
 		reportes->panelTabla->Controls->Clear();
@@ -1198,7 +1194,7 @@ private: System::Windows::Forms::Label^ refFactura;
 		}
 	}
 
-
+	// Mostrar la factura en el reporte
 	void mostrarFactura(int index) {
 		reportes->panelUltimasf->Visible = true;
 		reportes->ultima_Nombre->Text = listFacturas[index ]->Nombre;
@@ -1213,7 +1209,7 @@ private: System::Windows::Forms::Label^ refFactura;
 		reportes->panelUltimasf->Refresh();
 }
 
-
+	// Agregar un reporte de compra a la tabla de reportes
 	void agregarReporteACompra(int fila, claseReportes^ reporte) {
 		reportes->tablaCompraC->RowStyles->Insert(1, gcnew RowStyle(SizeType::Absolute, 15));
 		reportes->tablaCompraC->Controls->Add(reporte->ci, 0, fila);
@@ -1225,6 +1221,7 @@ private: System::Windows::Forms::Label^ refFactura;
 		reportes->tablaCompraC->PerformLayout();
 	}
 
+	// Generar reportes de compras y agregar la factura a la lista
 	void reportesCompras() {
 		int fila = reportes->tablaCompraC->RowCount;
 		reportes->tablaCompraC->RowCount++;
@@ -1236,7 +1233,7 @@ private: System::Windows::Forms::Label^ refFactura;
 		agregarAUltimaFactura();
 	}
 
-
+	// Generar una referencia única para la factura y actualiza datos de la factura
 	void generarRef(double totalMonto) {
 		static int ref = 74853;
 		Ref->Text = "*" + Convert::ToString(ref);
@@ -1249,6 +1246,7 @@ private: System::Windows::Forms::Label^ refFactura;
 		this->hora->Text = DateTime::Now.ToString("HH:mm:ss");
 	}
 
+	// Hacer visible la información de la factura
 	void visibilidadInformacionFactura(){ 
 		this->hora->Visible = true;
 		this->Ref->Visible = true;
@@ -1261,12 +1259,13 @@ private: System::Windows::Forms::Label^ refFactura;
 		this->montoTotal->Visible = true;
 		this->cantidad->Visible = true;
 	}
-
+	// Finalizar la transferencia y actualizar la cola de clientes
 	void finalizarTransferencia() {
 		int index = clientesEnCola->SelectedIndex;
 		// Remover el primer cliente de `listClient` y la primera persona en la cola
 		if (listClient->Count > 0) {
 			reportesCompras();
+			tablaVentasProductos(listClient[0]);
 			listClient->RemoveAt(0);
 			clientesEnCola->Items->RemoveAt(0);
 		}
@@ -1292,6 +1291,7 @@ private: System::Windows::Forms::Label^ refFactura;
 	
 	}
 
+	// Pasar los productos a la factura y generar la referencia
 	void pasarAFactura(double totalMonto) {
 		if (panel2FacturaD->Controls->Count == 0) {
 			tablaFactura = AgregarTabla(panel2FacturaD);
@@ -1309,7 +1309,8 @@ private: System::Windows::Forms::Label^ refFactura;
 			visibilidadInformacionFactura();
 		}
 	}
-			
+
+	// Procesar y mostrar los productos en la tabla
 	void ProcesarTabla(List<Cliente^>^ listClient, TableLayoutPanel^ tabla, int id, double& total) {
 		if (listClient->Count > 0  && id >= 0) {
 			int cant = 0;
@@ -1342,13 +1343,14 @@ private: System::Windows::Forms::Label^ refFactura;
 		}
 	}
 
-
+	// Crear un nuevo cliente
 	void CrearCliente() { 
 		static int clienteID = 1; 
 		Cliente^ nuevoCliente = gcnew Cliente(clienteID++); 
 		listClient->Add(nuevoCliente);
 	}
 
+	// Mostrar la información del cliente en caja
 	void mostrarEnCaja(List<Cliente^>^ listClient) {
 		double totalMonto = 0.0;
 		int id = listClient[0]->GetId();
@@ -1367,6 +1369,7 @@ private: System::Windows::Forms::Label^ refFactura;
 		}
 	}
 
+	// Mostrar la información del cliente en la cola
 	void mostrarEnCola(List<Cliente^>^ listClient, int posCola) {
 		
 		if (EsNuevaTabla(splitCola->Panel2)) {
@@ -1446,6 +1449,9 @@ private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
 	// Si el botón clickeado está en el formulario principal
 	if (botonClick == button_Fac || botonClick == button_Inv || botonClick == button_Rep || botonClick == button_Cli)
 	{
+		BaseDatos = data->getData("ventasproductos");
+		reportes->dataGridView1->DataSource = BaseDatos;
+		
 		// Restablecer los colores de todos los botones principales
 		AsignarColoresABotones();
 		botonClick->BackColor = botonClickeado; // Cambiar el color del botón clickeado
@@ -1462,6 +1468,8 @@ private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
 		{
 			this->reportes->panel1->Visible = false;
 			this->panel1->Visible = true;
+			
+		
 		}
 	}
 	// Si el botón clickeado está en el formulario de reportes
@@ -1520,11 +1528,9 @@ private: System::Void toolStripButton2_Click(System::Object^ sender, System::Eve
 		UseImage = true;
 	}
 }
-private: System::Void splitCaja_Panel2_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
-}
 
 void InicializarMoverTimer() {
-	Mover = gcnew Timer(); Mover->Interval = 500; // Intervalo de 1 segundo 
+	Mover = gcnew Timer(); Mover->Interval = 500; // Intervalo de 0.5 segundo 
 	Mover->Tick += gcnew EventHandler(this, &MenuPrincipal::Mover_Tick);
 	Mover->Start(); // Iniciar el Timer 
 }
@@ -1550,6 +1556,17 @@ private: System::Void Mover_Tick(System::Object^ sender, System::EventArgs^ e) {
 		Mover->Stop();
 		finalizarTransferencia();
 	}
+}
+
+	   void tablaVentasProductos(Cliente^ comprasCliente) {
+		   int count = comprasCliente->Productos->Count;
+		   data->abrirConexion();
+		   for (int i = 0; i < count; i++) {
+			   int cod = comprasCliente->Productos[i];
+			   int cant = comprasCliente->Cantidad[i];
+			   data->guardarCompras(cod, cant);
+		   }
+		   data->cerrarConexion();
 }
 
 

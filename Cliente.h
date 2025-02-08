@@ -39,7 +39,7 @@ public:
 
     void IniciarTimer() {
         productoTimer = gcnew Timer();
-        productoTimer->Interval = 10000; // Cada 10 segundos
+        productoTimer->Interval = 50000; // Cada 10 segundos
         productoTimer->Tick += gcnew EventHandler(this, &Cliente::OnProductoTimerTick);
         productoTimer->Start();
     }

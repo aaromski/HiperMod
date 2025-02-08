@@ -130,7 +130,6 @@
     <ClCompile Include="gestorTempo.cpp" />
     <ClCompile Include="Inventario.cpp" />
     <ClCompile Include="MenuPrincipal.cpp" />
-    <ClCompile Include="Productos.cpp" />
     <ClCompile Include="Reportes.cpp" />
     <ClCompile Include="ultimasFacturas.cpp" />
   </ItemGroup>
@@ -148,7 +147,6 @@
     <ClInclude Include="MenuPrincipal.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="Productos.h" />
     <ClInclude Include="Reportes.h">
       <FileType>CppForm</FileType>
     </ClInclude>

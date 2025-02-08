@@ -45,7 +45,6 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ label6;
 	public: System::Windows::Forms::Button^ button_Compras;
 	public: System::Windows::Forms::Button^ button_TSuperado;
-	public: System::Windows::Forms::TableLayoutPanel^ tablaVentasProductos;
 	private: System::Windows::Forms::Label^ label8;
 	public: System::Windows::Forms::TableLayoutPanel^ tablaCompraC;
 	private: System::Windows::Forms::Label^ label15;
@@ -82,15 +81,15 @@ namespace HiperMod {
 	public: System::Windows::Forms::Label^ Ref1;
 	public: System::Windows::Forms::Label^ Ref2;
 	public: System::Windows::Forms::Panel^ panelTabla;
-	private: System::Windows::Forms::Label^ label38;
-	public:
-	private: System::Windows::Forms::Label^ label37;
-	private: System::Windows::Forms::Label^ label36;
-	private: System::Windows::Forms::Label^ label35;
+	public: System::Windows::Forms::DataGridView^ dataGridView1;
 
-	private: System::Windows::Forms::Label^ label33;
-	private: System::Windows::Forms::Label^ label32;
-	private: System::Windows::Forms::Label^ label20;
+	public:
+
+
+
+
+
+
 	private:
 		   // Evento personalizado
 
@@ -110,6 +109,7 @@ namespace HiperMod {
 		void InitializeComponent(void)
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->panelUltimasf = (gcnew System::Windows::Forms::Panel());
 			this->panelTabla = (gcnew System::Windows::Forms::Panel());
 			this->Ref1 = (gcnew System::Windows::Forms::Label());
@@ -137,7 +137,6 @@ namespace HiperMod {
 			this->label31 = (gcnew System::Windows::Forms::Label());
 			this->label11 = (gcnew System::Windows::Forms::Label());
 			this->comboUltimasF = (gcnew System::Windows::Forms::ComboBox());
-			this->tablaVentasProductos = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->label8 = (gcnew System::Windows::Forms::Label());
 			this->tablaCompraC = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->label15 = (gcnew System::Windows::Forms::Label());
@@ -156,26 +155,19 @@ namespace HiperMod {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->label20 = (gcnew System::Windows::Forms::Label());
-			this->label32 = (gcnew System::Windows::Forms::Label());
-			this->label33 = (gcnew System::Windows::Forms::Label());
-			this->label35 = (gcnew System::Windows::Forms::Label());
-			this->label36 = (gcnew System::Windows::Forms::Label());
-			this->label37 = (gcnew System::Windows::Forms::Label());
-			this->label38 = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->panelUltimasf->SuspendLayout();
-			this->tablaVentasProductos->SuspendLayout();
 			this->tablaCompraC->SuspendLayout();
 			this->panel2->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// panel1
 			// 
+			this->panel1->Controls->Add(this->dataGridView1);
 			this->panel1->Controls->Add(this->panelUltimasf);
 			this->panel1->Controls->Add(this->label11);
 			this->panel1->Controls->Add(this->comboUltimasF);
-			this->panel1->Controls->Add(this->tablaVentasProductos);
 			this->panel1->Controls->Add(this->label8);
 			this->panel1->Controls->Add(this->tablaCompraC);
 			this->panel1->Controls->Add(this->button_Compras);
@@ -185,6 +177,18 @@ namespace HiperMod {
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(799, 592);
 			this->panel1->TabIndex = 8;
+			// 
+			// dataGridView1
+			// 
+			this->dataGridView1->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dataGridView1->BackgroundColor = System::Drawing::SystemColors::ButtonFace;
+			this->dataGridView1->CellBorderStyle = System::Windows::Forms::DataGridViewCellBorderStyle::Sunken;
+			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView1->Location = System::Drawing::Point(0, 390);
+			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->RowHeadersVisible = false;
+			this->dataGridView1->Size = System::Drawing::Size(539, 199);
+			this->dataGridView1->TabIndex = 17;
 			// 
 			// panelUltimasf
 			// 
@@ -509,40 +513,6 @@ namespace HiperMod {
 			this->comboUltimasF->DropDown += gcnew System::EventHandler(this, &Reportes::comboUltimasF_DropDown);
 			this->comboUltimasF->DropDownClosed += gcnew System::EventHandler(this, &Reportes::comboUltimasF_DropDownClosed);
 			// 
-			// tablaVentasProductos
-			// 
-			this->tablaVentasProductos->BackColor = System::Drawing::SystemColors::Info;
-			this->tablaVentasProductos->CellBorderStyle = System::Windows::Forms::TableLayoutPanelCellBorderStyle::Single;
-			this->tablaVentasProductos->ColumnCount = 7;
-			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				40)));
-			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				140)));
-			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				60)));
-			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				70)));
-			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				70)));
-			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				70)));
-			this->tablaVentasProductos->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				100)));
-			this->tablaVentasProductos->Controls->Add(this->label38, 6, 0);
-			this->tablaVentasProductos->Controls->Add(this->label37, 5, 0);
-			this->tablaVentasProductos->Controls->Add(this->label36, 4, 0);
-			this->tablaVentasProductos->Controls->Add(this->label35, 3, 0);
-			this->tablaVentasProductos->Controls->Add(this->label33, 2, 0);
-			this->tablaVentasProductos->Controls->Add(this->label32, 1, 0);
-			this->tablaVentasProductos->Controls->Add(this->label20, 0, 0);
-			this->tablaVentasProductos->Location = System::Drawing::Point(1, 390);
-			this->tablaVentasProductos->Name = L"tablaVentasProductos";
-			this->tablaVentasProductos->RowCount = 2;
-			this->tablaVentasProductos->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
-			this->tablaVentasProductos->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
-			this->tablaVentasProductos->Size = System::Drawing::Size(538, 202);
-			this->tablaVentasProductos->TabIndex = 12;
-			// 
 			// label8
 			// 
 			this->label8->AutoSize = true;
@@ -748,73 +718,6 @@ namespace HiperMod {
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"SENIAT";
 			// 
-			// label20
-			// 
-			this->label20->AutoSize = true;
-			this->label20->Location = System::Drawing::Point(4, 1);
-			this->label20->Name = L"label20";
-			this->label20->Size = System::Drawing::Size(30, 13);
-			this->label20->TabIndex = 0;
-			this->label20->Text = L"COD";
-			// 
-			// label32
-			// 
-			this->label32->AutoSize = true;
-			this->label32->Location = System::Drawing::Point(45, 1);
-			this->label32->Name = L"label32";
-			this->label32->Size = System::Drawing::Size(80, 13);
-			this->label32->TabIndex = 1;
-			this->label32->Text = L"DESCRIPCIÓN";
-			// 
-			// label33
-			// 
-			this->label33->AutoSize = true;
-			this->label33->Location = System::Drawing::Point(186, 1);
-			this->label33->Name = L"label33";
-			this->label33->Size = System::Drawing::Size(39, 13);
-			this->label33->TabIndex = 2;
-			this->label33->Text = L"CANT:";
-			// 
-			// label35
-			// 
-			this->label35->AutoSize = true;
-			this->label35->Location = System::Drawing::Point(247, 1);
-			this->label35->Name = L"label35";
-			this->label35->Size = System::Drawing::Size(56, 13);
-			this->label35->TabIndex = 4;
-			this->label35->Text = L"PRECIO $";
-			this->label35->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
-			// label36
-			// 
-			this->label36->AutoSize = true;
-			this->label36->Location = System::Drawing::Point(318, 1);
-			this->label36->Name = L"label36";
-			this->label36->Size = System::Drawing::Size(64, 13);
-			this->label36->TabIndex = 5;
-			this->label36->Text = L"PRECIO BS";
-			this->label36->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
-			// label37
-			// 
-			this->label37->AutoSize = true;
-			this->label37->Location = System::Drawing::Point(389, 1);
-			this->label37->Name = L"label37";
-			this->label37->Size = System::Drawing::Size(59, 13);
-			this->label37->TabIndex = 6;
-			this->label37->Text = L"VENTAS $";
-			this->label37->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
-			// label38
-			// 
-			this->label38->AutoSize = true;
-			this->label38->Location = System::Drawing::Point(460, 1);
-			this->label38->Name = L"label38";
-			this->label38->Size = System::Drawing::Size(67, 13);
-			this->label38->TabIndex = 7;
-			this->label38->Text = L"VENTAS BS";
-			this->label38->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
 			// Reportes
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -826,10 +729,9 @@ namespace HiperMod {
 			this->Text = L"Reportes";
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			this->panelUltimasf->ResumeLayout(false);
 			this->panelUltimasf->PerformLayout();
-			this->tablaVentasProductos->ResumeLayout(false);
-			this->tablaVentasProductos->PerformLayout();
 			this->tablaCompraC->ResumeLayout(false);
 			this->tablaCompraC->PerformLayout();
 			this->panel2->ResumeLayout(false);

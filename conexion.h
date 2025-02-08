@@ -1,13 +1,8 @@
 #pragma once
-#include <iostream>
-#include <stdlib.h>
 
 using namespace System;
-using namespace System::ComponentModel;
-using namespace System::Collections;
-using namespace System::Windows::Forms;
 using namespace System::Data;
-using namespace System::Drawing;
+using namespace System::Windows::Forms;
 using namespace MySql::Data::MySqlClient;
 using namespace System::Data::Common;
 ref class Conexion
@@ -52,7 +47,7 @@ public:
 	DataTable^ getData(String^ tableName)
 	{
 		// Construir la consulta SQL utilizando el parámetro tableName
-		String^ sql = "SELECT * FROM " + tableName;
+		String^ sql = "SELECT * FROM " + tableName + " ORDER BY `Ventas Bs` DESC";
 		MySqlCommand^ cursor = gcnew MySqlCommand(sql, this->st);
 		MySqlDataAdapter^ data = gcnew MySqlDataAdapter(cursor);
 		DataTable^ tabla = gcnew DataTable();
@@ -60,15 +55,6 @@ public:
 		return tabla;
 	}
 
-	array<int>^ alazar() { 
-		array<int>^ numeros = gcnew array<int> { 1, 2, 3 }; 
-		Random^ rnd = gcnew Random(); 
-		for (int i = 0; i < numeros->Length; ++i) { 
-			int j = rnd->Next(i, numeros->Length); 
-			int temp = numeros[i]; numeros[i] = numeros[j]; numeros[j] = temp; 
-		} 
-		return numeros; 
-	}
 	void datos(int id, Label^ nombreA, Label^ ci, Label^ tlf) { // Metodo para buscar la informacion del cliente y guardala en label
 		String^ sentencia = "SELECT nombre, apellido, CI, Tlf FROM cliente WHERE ID = @ID";
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
@@ -91,6 +77,79 @@ public:
 		lector->Close();
 		this->st->Close();
 	}
+
+	void guardarCompras(int cod, int cantidad) {
+		String^ consulta = "SELECT * FROM ventasproductos WHERE COD = @COD";
+		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, this->st);
+		ejecutar->Parameters->AddWithValue("@COD", cod);
+
+		MySqlDataReader^ lector = ejecutar->ExecuteReader();
+		if (lector->Read()) {
+			// El producto existe, actualizar la cantidad
+			int cantidadActual = Convert::ToInt32(lector["Cantidad"]);
+			int nuevaCantidad = cantidadActual + cantidad;
+			double precioBs = Convert::ToDouble(lector["Precio Bs"]);
+			double ventasBs = precioBs * nuevaCantidad;
+			double precioDolares = Convert::ToDouble(lector["Precio $"]);
+			double ventasDolares = precioDolares * nuevaCantidad;
+
+			lector->Close(); // Cerrar el lector antes de ejecutar otra consulta
+
+			// Actualizar la cantidad y ventas
+			consulta = "UPDATE ventasproductos SET Cantidad = @nuevaCantidad, `Ventas $` = @ventasDolares, `Ventas Bs` = @ventasBs WHERE Cod = @COD";
+			ejecutar = gcnew MySqlCommand(consulta, this->st);
+			ejecutar->Parameters->AddWithValue("@nuevaCantidad", nuevaCantidad);
+			ejecutar->Parameters->AddWithValue("@ventasDolares", ventasDolares);
+			ejecutar->Parameters->AddWithValue("@ventasBs", ventasBs);
+			ejecutar->Parameters->AddWithValue("@COD", cod);
+			ejecutar->ExecuteNonQuery(); // Ejecutar la consulta de actualización
+		}
+		else {
+			lector->Close(); // Cerrar el lector antes de ejecutar otra consulta
+
+			// Variables para almacenar los datos obtenidos de la base de datos
+			String^ descripcion = nullptr;
+			double precioDolar = 0;
+			double precioBs = 0;
+
+			// Obtener descripción y precios desde la tabla productos
+			obtenerDescripcionPrecios(cod, descripcion, precioDolar, precioBs);
+
+			// Calcular las ventas
+			double ventasBs = precioBs * cantidad;
+			double ventasDolares = precioDolar * cantidad;
+
+			consulta = "INSERT INTO ventasproductos (COD, Descripcion, Cantidad, `Precio $`, `Precio Bs`, `Ventas $`, `Ventas Bs`) VALUES (@COD, @Descripcion, @Cantidad, @PrecioDolares, @PrecioBs, @VentasDolares, @VentasBs)";
+			ejecutar = gcnew MySqlCommand(consulta, this->st);
+			ejecutar->Parameters->AddWithValue("@COD", cod);
+			ejecutar->Parameters->AddWithValue("@Descripcion", descripcion);
+			ejecutar->Parameters->AddWithValue("@Cantidad", cantidad);
+			ejecutar->Parameters->AddWithValue("@PrecioDolares", precioDolar);
+			ejecutar->Parameters->AddWithValue("@PrecioBs", precioBs);
+			ejecutar->Parameters->AddWithValue("@VentasDolares", ventasDolares);
+			ejecutar->Parameters->AddWithValue("@VentasBs", ventasBs);
+			ejecutar->ExecuteNonQuery(); // Ejecutar la consulta de inserción
+		}
+	}
+
+
+	void obtenerDescripcionPrecios(int id, String^& descripcion, double& dolar, double& bs) {
+		String^ consulta = "SELECT descripcion, Precio_$, Precio_BS FROM productos WHERE ID = @ID";
+		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, this->st);
+		ejecutar->Parameters->AddWithValue("@ID", id);
+		MySqlDataReader^ lector = ejecutar->ExecuteReader();
+
+		if (lector->Read()) {
+			descripcion = lector["descripcion"]->ToString();
+
+			dolar = Convert::ToDouble(lector["Precio_$"]);
+
+			bs = Convert::ToDouble(lector["Precio_BS"]);
+		}
+		lector->Close();
+
+	}
+
 
 	void mostrarProductos(int id, Label^ nombreP, Label^ izqui, Label^ dere, int cantidad,  double& montoTotal ) {
 		String^ sentencia = "SELECT descripcion, Precio_BS FROM productos WHERE ID = @ID";
