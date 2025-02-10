@@ -47,7 +47,7 @@ public:
 	DataTable^ getData(String^ tableName)
 	{
 		// Construir la consulta SQL utilizando el parámetro tableName
-		String^ sql = "SELECT * FROM " + tableName + " ORDER BY `Ventas Bs` DESC";
+		String^ sql = "SELECT * FROM " + tableName + " ORDER BY `Ventas Bs` DESC"; //ORDENAR DE MAYOR A MENOR LAS VENTAS BS
 		MySqlCommand^ cursor = gcnew MySqlCommand(sql, this->st);
 		MySqlDataAdapter^ data = gcnew MySqlDataAdapter(cursor);
 		DataTable^ tabla = gcnew DataTable();
@@ -78,6 +78,32 @@ public:
 		this->st->Close();
 	}
 
+	void reducirStock(int cod, int cantidadVendida) {     //REDUCE EL STOCK CUANDO EL CLIENTE COMPRA ALGUN PRODUCTO
+		String^ consulta = "SELECT Stock FROM productos WHERE ID = @ID";
+		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, this->st);
+		ejecutar->Parameters->AddWithValue("@ID", cod);
+
+		MySqlDataReader^ lector = ejecutar->ExecuteReader();
+		if (lector->Read()) {
+			// Obtener el stock actual
+			int stockActual = Convert::ToInt32(lector["Stock"]);
+			int nuevoStock = stockActual - cantidadVendida;
+
+			lector->Close(); // Cerrar el lector antes de ejecutar otra consulta
+
+			// Actualizar el stock en la tabla productos
+			consulta = "UPDATE productos SET Stock = @nuevoStock WHERE ID = @ID";
+			ejecutar = gcnew MySqlCommand(consulta, this->st);
+			ejecutar->Parameters->AddWithValue("@nuevoStock", nuevoStock);
+			ejecutar->Parameters->AddWithValue("@ID", cod);
+			ejecutar->ExecuteNonQuery(); // Ejecutar la consulta de actualización
+		}
+		else {
+			lector->Close();
+		}
+	}
+
+
 	void guardarCompras(int cod, int cantidad) {
 		String^ consulta = "SELECT * FROM ventasproductos WHERE COD = @COD";
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, this->st);
@@ -103,6 +129,9 @@ public:
 			ejecutar->Parameters->AddWithValue("@ventasBs", ventasBs);
 			ejecutar->Parameters->AddWithValue("@COD", cod);
 			ejecutar->ExecuteNonQuery(); // Ejecutar la consulta de actualización
+
+			// Reducir el stock del producto
+			reducirStock(cod, cantidad);
 		}
 		else {
 			lector->Close(); // Cerrar el lector antes de ejecutar otra consulta
@@ -129,11 +158,13 @@ public:
 			ejecutar->Parameters->AddWithValue("@VentasDolares", ventasDolares);
 			ejecutar->Parameters->AddWithValue("@VentasBs", ventasBs);
 			ejecutar->ExecuteNonQuery(); // Ejecutar la consulta de inserción
+
+			// Reducir el stock del producto
+			reducirStock(cod, cantidad);
 		}
 	}
 
-
-	void obtenerDescripcionPrecios(int id, String^& descripcion, double& dolar, double& bs) {
+	void obtenerDescripcionPrecios(int id, String^% descripcion, double% dolar, double% bs) {
 		String^ consulta = "SELECT descripcion, Precio_$, Precio_BS FROM productos WHERE ID = @ID";
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, this->st);
 		ejecutar->Parameters->AddWithValue("@ID", id);
@@ -141,14 +172,12 @@ public:
 
 		if (lector->Read()) {
 			descripcion = lector["descripcion"]->ToString();
-
 			dolar = Convert::ToDouble(lector["Precio_$"]);
-
 			bs = Convert::ToDouble(lector["Precio_BS"]);
 		}
 		lector->Close();
-
 	}
+
 
 
 	void mostrarProductos(int id, Label^ nombreP, Label^ izqui, Label^ dere, int cantidad,  double& montoTotal ) {

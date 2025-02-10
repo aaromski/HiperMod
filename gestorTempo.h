@@ -9,23 +9,16 @@ ref class gestorTempo
 {
     public:
         static int generarClientes;
-        Stopwatch^ startTime;
-        TimeSpan tiempoPausado;
         bool estaPausado;
-        int T1;
-        int T2;
+        int tiempo;
 
         gestorTempo() {
             // Constructor inicializa las variables de instancia
             generarClientes = 1;
-            startTime = Stopwatch::StartNew();
-            tiempoPausado = TimeSpan::Zero;
             estaPausado = false;
-            T1 = 1;  // 1 minuto en segundos
-            T2 = 0; // 3 minutos en segundos
+            tiempo = 0;
         }
         void PausarTemporizador(Timer^ timer1, List<Cliente^>^ listClient) {
-            startTime->Stop();
             if (timer1->Enabled) {
                 timer1->Stop();
                 // Iterar a través de cada cliente en `listClient` y pausar sus timers
@@ -39,21 +32,23 @@ ref class gestorTempo
 
         void reanudarTemporizador(Timer^ timer1, List<Cliente^>^ listClient) {
             if (estaPausado) { // Ajustar el startTime para compensar el tiempo pausado 
-
-                startTime->Start(); 
                 timer1->Start(); 
                 estaPausado = false; 
                 // Iterar a través de cada cliente en `listClient` y pausar sus timers
                 for each (Cliente ^ cliente in listClient) {
                     cliente->ContinuarTimer(); // Asegúrate de tener este método en la clase `Cliente`
                 }
-                tiempoPausado = TimeSpan::Zero;
             }
         }
 
         void tiempoTranscurrido(ToolStripTextBox^ text) {
-            TimeSpan tiempoTranscurrido = startTime->Elapsed;
-            text->Text = String::Format("{0:D2}:{1:D2}:{2:D2}", tiempoTranscurrido.Hours, tiempoTranscurrido.Minutes, tiempoTranscurrido.Seconds);
+            tiempo++; // Incrementa tiempo en cada Tick
+            // Convierte el tiempo en horas, minutos y segundos
+            int hours = tiempo / 3600;
+            int minutes = (tiempo % 3600) / 60;
+            int seconds = tiempo % 60;
+            // Muestra el tiempo en formato de horas, minutos y segundos
+            text->Text = String::Format("{0:D2}:{1:D2}:{2:D2}", hours, minutes, seconds);
         }
 
         void tiemposClientes(List<Cliente^>^ listClient, Label^ tCaja, Label^ tCola, int id) {
@@ -67,6 +62,22 @@ ref class gestorTempo
             int minutos = (segundosTotales % 3600) / 60; 
             int segundos = segundosTotales % 60; 
             return String::Format("{0:D2}:{1:D2}", minutos, segundos); 
+        }
+
+        void dobleVelocidad(Timer^ crearCliente, Timer^ mostrarCliente, List<Cliente^>^ listClient) {
+            crearCliente->Interval = 90000;
+            mostrarCliente->Interval = 35000;
+            for each(Cliente ^ cliente in listClient) {
+                cliente->dobleV(); // Asegúrate de tener este método en la clase `Cliente`
+            }
+        }
+
+        void veloInicial(Timer^ crearCliente, Timer^ mostrarCliente, List<Cliente^>^ listClient) {
+            crearCliente->Interval = 180000;
+            mostrarCliente->Interval = 65000;
+            for each(Cliente ^ cliente in listClient) {
+                cliente->velocidadInicial(); // Asegúrate de tener este método en la clase `Cliente`
+            }
         }
 };
 

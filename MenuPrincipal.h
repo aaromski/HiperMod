@@ -1119,7 +1119,7 @@ namespace HiperMod {
 			// 
 			// mostrarCliente
 			// 
-			this->mostrarCliente->Interval = 55000;
+			this->mostrarCliente->Interval = 60000;
 			this->mostrarCliente->Tick += gcnew System::EventHandler(this, &MenuPrincipal::mostrarCliente_Tick_1);
 			// 
 			// MenuPrincipal
@@ -1267,7 +1267,9 @@ namespace HiperMod {
 			reportesCompras();
 			tablaVentasProductos(listClient[0]);
 			listClient->RemoveAt(0);
-			clientesEnCola->Items->RemoveAt(0);
+			if (clientesEnCola->Items->Count > 0) {
+				clientesEnCola->Items->RemoveAt(0);
+			}
 		}
 
 		// Manejar eliminación del primer item
@@ -1283,11 +1285,14 @@ namespace HiperMod {
 			
 		}
 		if (clientesEnCola->Items->Count == 0) {
-			LimpiarYPreparaTabla(tableCola);
+			if (tableCola != nullptr) {
+				LimpiarYPreparaTabla(tableCola);
+			}
 			sinClientes();
 		}
-		mostrarEnCaja(listClient);
-		
+		if (listClient->Count > 0) {            // Mostrar en caja solo si la cola no esta vacia
+			mostrarEnCaja(listClient);
+		}
 	
 	}
 
@@ -1518,13 +1523,17 @@ private: System::Void MenuPrincipal_Load(System::Object^ sender, System::EventAr
 		this->reportes->button_TSuperado->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
 		this->reportes->comboUltimasF->SelectedIndexChanged += gcnew System::EventHandler(this, &MenuPrincipal::comboBox_SelectedIndexChanged);
 }
-private: System::Void toolStripButton2_Click(System::Object^ sender, System::EventArgs^ e) {  //Este metodo es para cambiar la imagen de x2 al darle click
+private: System::Void toolStripButton2_Click(System::Object^ sender, System::EventArgs^ e) {  // Cambiar la velocidad del programa 
 	if (UseImage == true) {
 		this->toolStripButton4->Image = System::Drawing::Image::FromFile("Imagenes/final.png");
+		tiempoCC->Interval = 500;
+		tempo->dobleVelocidad(crearClientes, mostrarCliente, listClient);
 		UseImage = false;
 	}
 	else {
 		this->toolStripButton4->Image = System::Drawing::Image::FromFile("Imagenes/inicial.png");
+		tiempoCC->Interval = 1000;
+		tempo->veloInicial(crearClientes, mostrarCliente, listClient);
 		UseImage = true;
 	}
 }
@@ -1632,14 +1641,44 @@ private: System::Void crearClientes_Tick(System::Object^ sender, System::EventAr
 				mostrarCliente->Enabled = true;
 			}
 		}
+		if (!UseImage) {
+			tempo->dobleVelocidad(crearClientes, mostrarCliente, listClient);
+		}
 	}
 private: System::Void mostrarCliente_Tick_1(System::Object^ sender, System::EventArgs^ e) {
-	
-	mostrarEnCaja(listClient);
-	if (splitCola->Panel2->Controls->Count > 0) {
-		mostrarEnCola(listClient, clientesEnCola->SelectedIndex + 1);
+	if (listClient[0]->GetTiempo() > 600) {
+		enviarUltimo(listClient[0]);
+		mostrarEnCaja(listClient);
 	}
+	else {
+		mostrarEnCaja(listClient);
+	}
+	if (splitCola->Panel2->Controls->Count > 0) {
+		if (clientesEnCola->SelectedIndex != -1) {
+			mostrarEnCola(listClient, clientesEnCola->SelectedIndex + 1);
+		}
+	}
+	
 }
+
+	   void enviarUltimo(Cliente^ cliente) {
+		   Cliente^ ultimo = cliente;
+		   listClient->RemoveAt(0);
+		   listClient->Add(ultimo);
+		   ultimo->reiniciar();
+		   // Obtener el nombre del primer elemento
+		   String^ firstItemName = clientesEnCola->Items[0]->ToString();
+		   // Encontrar el índice del primer dígito en el nombre del cliente
+		   int digitIndex = firstItemName->IndexOf(" ") + 1;
+		   // Extraer el número del nombre del primer cliente
+		   int number = Convert::ToInt32(firstItemName->Substring(digitIndex));
+		   // Crear el nuevo nombre con el número reducido en 1
+		   String^ newItemName = "Cliente " + (number - 1).ToString();
+		   // Agregar el nuevo elemento al ComboBox
+		   clientesEnCola->Items->Add(newItemName);
+		   clientesEnCola->Items->RemoveAt(0);
+} 
+
 private: System::Void toolStripButton1_Click(System::Object^ sender, System::EventArgs^ e) {
 	this->WindowState = FormWindowState::Minimized;
 

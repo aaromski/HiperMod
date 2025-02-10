@@ -13,7 +13,7 @@ public:
         maxCantidad = 0;
         seguir = true;
         productoCount = 1;
-
+        maxProdu = randomCantidad(0);
         tCompras = gcnew Timer(); tCompras->Interval = 1000; 
         // Cada segundo 
         tCompras->Tick += gcnew EventHandler(this, &Cliente::OnCreacionTimerTick); 
@@ -37,9 +37,13 @@ public:
         return tiempoComprando;
     }
 
+    void reiniciar() {
+        tiempoComprando = 0;
+    }
+
     void IniciarTimer() {
         productoTimer = gcnew Timer();
-        productoTimer->Interval = 50000; // Cada 10 segundos
+        productoTimer->Interval = 60000; // Cada 60 segundos
         productoTimer->Tick += gcnew EventHandler(this, &Cliente::OnProductoTimerTick);
         productoTimer->Start();
     }
@@ -56,6 +60,15 @@ public:
             productoTimer->Start();
             tCompras->Start();
         } 
+    }
+    void dobleV() {
+        productoTimer->Interval = 30000; // Cada 30 segundos
+        tCompras->Interval = 500;        // Cada 0.5 segundos
+    }
+
+    void velocidadInicial() {
+        productoTimer->Interval = 60000;
+        tCompras->Interval = 1000;
     }
 
     property List<int>^ Cantidad {
@@ -80,6 +93,7 @@ private:
     int maxCantidad;
     int tiempoComprando;
     bool seguir;
+    static int maxProdu;
 
     void AgregarProducto() {
             int producto = randomProducto(); 
@@ -87,10 +101,10 @@ private:
                 producto = randomProducto(); 
             }
         // Generar una cantidad aleatoria
-        int cant = randomCantidad();
-
+        int cant = randomCantidad(1);
+        int maxProducto = randomCantidad(0);
         // Verificar que sumar `cant` no exceda `30`
-        if ((productoCount < 10 && maxCantidad + cant <= 30) && seguir) {
+        if ((productoCount <= maxProducto && maxCantidad + cant <= 30) && seguir) {
             maxCantidad += cant;
             productos->Add(producto);
             cantidad->Add(cant);
@@ -102,10 +116,16 @@ private:
         }
     }
 
-    int randomCantidad() {
+    int randomCantidad( int opcion) {
         std::srand(static_cast<unsigned>(std::time(nullptr))); // Generar un número aleatorio entre 1 y 5 
-        int cantidad = (std::rand() % 5) + 1;
-        return cantidad;
+        if (opcion == 1) {
+            int cantidad = (std::rand() % 5) + 1;
+            return cantidad;
+        }
+        else {
+            maxProdu = (std::rand() % 10) + 5;
+            return maxProdu; // Asegura que el número sea al menos 1 
+        }
     }
 
     int randomProducto() {
