@@ -117,4 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>169, 17</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="toolStripSplitButton1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEHSURBVGhD7dpBasJgFEXhbKq1uygtrqpQ6I6qdkWic3vf
+        7A0O3EQQ7+Ad+IY3CQTJ4HeZpunu9nKSq9yerJ7hKJ+yqR+hCyb4llXVm6ALJPkQ25/QOMlBbAm/Ceci
+        NhomstEokY1GiWw0SmSjUSIbjRLZaNS9yKPbCd27s9Goe5VH9yZ0785Go0Q2GiWy0SiRjUaJbDRKZKNR
+        IhuNEtlo1M0HcUPzQezRKJGNRolsNEpko1EiG40S2WiUyEajbj6IG5oPYo9GiWw0SmSjUSIbjRLZaJTI
+        VocoNExyFludntI4ya/Y6giYxkneZVV1BEwXSPAlm6oj4HqFKX8YqGdZ/Samaeotyz89hS8o4nXFFgAA
+        AABJRU5ErkJggg==
+</value>
+  </data>
+  <metadata name="directorySearcher1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

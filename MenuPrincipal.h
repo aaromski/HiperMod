@@ -5,10 +5,12 @@
 #include <algorithm>
 #include "conexion.h"
 #include "Reportes.h"
-#include "Cliente.h"
+#include "formClientes.h"
+#include "Inventario.h"
 #include "gestorTempo.h"
 #include "ultimasFacturas.h"
 #include "claseReportes.h"
+#include "Cliente.h"
 namespace HiperMod {
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -31,6 +33,10 @@ namespace HiperMod {
 			InitializeComponent();
 			reportes = gcnew Reportes();
 			reportes->Hide();
+			inventario = gcnew Inventario();
+			inventario->Hide();
+			formCliente = gcnew formClientes();
+			formCliente->Hide();
 			AsignarColoresABotones();
 			//
 			//TODO: agregar código de constructor aquí
@@ -140,9 +146,12 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ cant_Caja;
 	private: System::Windows::Forms::Label^ cant_Cola;
 	private: Cliente^ clientes;
+	private: formClientes^ formCliente;
 	private: gestorTempo^ tempo;
 	private: claseReportes^ nuevoReporte;
-	private: DataTable^ BaseDatos;
+	private: DataTable^ BaseDatosReportes;
+	private: DataTable^ BaseDatosInventario;
+	private: DataTable^ BaseDatosCliente;
 	private: System::Windows::Forms::Timer^ tiempoCC;
 	private: System::Windows::Forms::Timer^ tiempo;
 	private: List<Cliente^>^ listClient = gcnew List<Cliente^>();
@@ -154,6 +163,7 @@ namespace HiperMod {
 	private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 	private: System::Windows::Forms::Label^ Ref;
 	private: System::Windows::Forms::Label^ refFactura;
+	private: Inventario^ inventario;
 	private:
 	bool UseImage = true;
 		/// <summary>
@@ -1444,7 +1454,13 @@ namespace HiperMod {
 		}
 	}
 
-		
+void OcultarPaneles()
+{
+	this->panel1->Visible = false;
+	this->reportes->panel1->Visible = false;
+	this->inventario->panel1->Visible = false;
+	this->formCliente->panel1->Visible = false;
+}
 
 private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
 {
@@ -1454,27 +1470,29 @@ private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
 	// Si el botón clickeado está en el formulario principal
 	if (botonClick == button_Fac || botonClick == button_Inv || botonClick == button_Rep || botonClick == button_Cli)
 	{
-		BaseDatos = data->getData("ventasproductos");
-		reportes->dataGridView1->DataSource = BaseDatos;
+		BaseDatosReportes = data->getData("ventasproductos");
+		reportes->dataGridView1->DataSource = BaseDatosReportes;
 		
 		// Restablecer los colores de todos los botones principales
 		AsignarColoresABotones();
 		botonClick->BackColor = botonClickeado; // Cambiar el color del botón clickeado
 
+		OcultarPaneles(); 
+
 		// Cambiar el panel según el botón clickeado
 		if (botonClick == button_Rep)
 		{
-			this->panel1->Visible = false;
-			this->Controls->Add(reportes->panel1);
-			this->reportes->panel1->Location = System::Drawing::Point(0, 58);
 			this->reportes->panel1->Visible = true;
 		}
 		else if (botonClick == button_Fac)
 		{
-			this->reportes->panel1->Visible = false;
 			this->panel1->Visible = true;
-			
-		
+		}
+		else if (botonClick == button_Inv) {
+			this->inventario->panel1->Visible = true;
+		}
+		else {
+			this->formCliente->panel1->Visible = true;
 		}
 	}
 	// Si el botón clickeado está en el formulario de reportes
@@ -1489,6 +1507,8 @@ private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
 
 		botonClick->BackColor = botonClickeado; // Cambiar el color del botón clickeado
 	}
+
+	
 }
 
 
@@ -1511,17 +1531,56 @@ TableLayoutPanel^ AgregarTabla(Panel^ panel) {
 private: System::Void B_cerrar_Click(System::Object^ sender, System::EventArgs^ e) { //metodo para cerrar el programa
 	this->Close();
 }
-private: System::Void MenuPrincipal_Load(System::Object^ sender, System::EventArgs^ e) { // Lo que este dentro de este metodo se inicia automaticamente apenas abrir el programa
+
+	   // Método para inicializar componentes
+void InicializarComponentes()
+{
 	this->panel2FacturaD->Controls->Add(tablaFactura);
-		this->button_Fac->BackColor = Normal;
-		this->fecha->Text = DateTime::Now.ToString("dd/MM/yyyy");
-		this->button_Fac->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
-		this->button_Inv->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click); 
-		this->button_Rep->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click); 
-		this->button_Cli->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
-		this->reportes->button_Compras->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
-		this->reportes->button_TSuperado->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
-		this->reportes->comboUltimasF->SelectedIndexChanged += gcnew System::EventHandler(this, &MenuPrincipal::comboBox_SelectedIndexChanged);
+	this->button_Fac->BackColor = Normal;
+	this->fecha->Text = DateTime::Now.ToString("dd/MM/yyyy");
+
+	InicializarPaneles();
+	AsignarEventos();
+}
+
+	   // Método para inicializar paneles
+void InicializarPaneles()
+{
+	// Agregar todos los paneles al formulario y establecer su visibilidad inicial
+	this->Controls->Add(reportes->panel1);
+	reportes->panel1->Location = System::Drawing::Point(0, 58);
+	reportes->panel1->Visible = false;
+
+	this->Controls->Add(inventario->panel1);
+	inventario->panel1->Location = System::Drawing::Point(0, 58);
+	inventario->panel1->Visible = false;
+	BaseDatosInventario = data->baseDatos("productos");
+	inventario->dataGridView1->DataSource = BaseDatosInventario;
+
+	this->Controls->Add(formCliente->panel1);
+	formCliente->panel1->Location = System::Drawing::Point(0, 58);
+	formCliente->panel1->Visible = false;
+	BaseDatosCliente = data->baseDatos("cliente");
+	formCliente->dataGridView1->DataSource = BaseDatosCliente;
+	// Ocultar la quinta columna
+	formCliente->dataGridView1->Columns[4]->Visible = false;
+}
+
+	   // Método para asignar eventos a los botones
+void AsignarEventos()
+{
+	this->button_Fac->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
+	this->button_Inv->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
+	this->button_Rep->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
+	this->button_Cli->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
+	this->reportes->button_Compras->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
+	this->reportes->button_TSuperado->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
+	this->reportes->comboUltimasF->SelectedIndexChanged += gcnew System::EventHandler(this, &MenuPrincipal::comboBox_SelectedIndexChanged);
+}
+
+	   // Evento de carga del formulario
+private: System::Void MenuPrincipal_Load(System::Object^ sender, System::EventArgs^ e) { // Lo que este dentro de este metodo se inicia automaticamente apenas abrir el programa
+		InicializarComponentes();
 }
 private: System::Void toolStripButton2_Click(System::Object^ sender, System::EventArgs^ e) {  // Cambiar la velocidad del programa 
 	if (UseImage == true) {

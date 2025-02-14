@@ -23,8 +23,23 @@ public:
 		this->st->Close();
 	}
 
-	void Insertar(String^ CI, String^ nombre, String^ apellido, int tlf) {
-		String^ sentencia = "INSERT INTO Clientes (CI, Nombre, Apellido, Telefono) VALUES (@CI, @Nombre, @Apellido, @Telefono)";
+	void modificarCelda(int id, String^ valor, String^ modificacion, String^ nombreDeColumna, String^ nombreTabla) {
+		// Construir la consulta SQL utilizando el nombre de la tabla, la columna y el valor
+		String^ sentencia = "UPDATE " + nombreTabla + " SET " + nombreDeColumna + " = @modificacion WHERE ID = @id AND " + nombreDeColumna + " = @valor";
+		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
+		ejecutar->Parameters->AddWithValue("@modificacion", modificacion);
+		ejecutar->Parameters->AddWithValue("@id", id);
+		ejecutar->Parameters->AddWithValue("@valor", valor);
+
+		this->st->Open();
+		ejecutar->ExecuteNonQuery();
+		this->st->Close();
+	}
+
+
+
+	void Insertar(String^ CI, String^ nombre, String^ apellido, String^ tlf) {
+		String^ sentencia = "INSERT INTO cliente (CI, Nombre, Apellido, Tlf) VALUES (@CI, @Nombre, @Apellido, @Telefono)";
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
 		ejecutar->Parameters->AddWithValue("@CI", CI);
 		ejecutar->Parameters->AddWithValue("@Nombre", nombre);
@@ -36,7 +51,7 @@ public:
 	}
 
 	void Eliminar(String^ CI) {
-		String^ sentencia = "DELETE FROM Clientes WHERE CI = @CI"; 
+		String^ sentencia = "DELETE FROM cliente WHERE CI = @CI"; 
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
 		ejecutar->Parameters->AddWithValue("@CI", CI);
 		this->st->Open();
@@ -48,6 +63,16 @@ public:
 	{
 		// Construir la consulta SQL utilizando el parámetro tableName
 		String^ sql = "SELECT * FROM " + tableName + " ORDER BY `Ventas Bs` DESC"; //ORDENAR DE MAYOR A MENOR LAS VENTAS BS
+		MySqlCommand^ cursor = gcnew MySqlCommand(sql, this->st);
+		MySqlDataAdapter^ data = gcnew MySqlDataAdapter(cursor);
+		DataTable^ tabla = gcnew DataTable();
+		data->Fill(tabla);
+		return tabla;
+	}
+
+	DataTable^ baseDatos(String^ tableName) 
+	{
+		String^ sql = "select *from " + tableName;
 		MySqlCommand^ cursor = gcnew MySqlCommand(sql, this->st);
 		MySqlDataAdapter^ data = gcnew MySqlDataAdapter(cursor);
 		DataTable^ tabla = gcnew DataTable();

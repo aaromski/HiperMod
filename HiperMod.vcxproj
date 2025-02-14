@@ -118,11 +118,13 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="claseCliente.cpp" />
     <ClCompile Include="claseReportes.cpp" />
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="Clientes.cpp" />
@@ -134,9 +136,10 @@
     <ClCompile Include="ultimasFacturas.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="claseCliente.h" />
     <ClInclude Include="claseReportes.h" />
     <ClInclude Include="Cliente.h" />
-    <ClInclude Include="Clientes.h">
+    <ClInclude Include="formClientes.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="conexion.h" />
@@ -153,8 +156,8 @@
     <ClInclude Include="ultimasFacturas.h" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Clientes.resx">
-      <DependentUpon>Clientes.h</DependentUpon>
+    <EmbeddedResource Include="formClientes.resx">
+      <DependentUpon>formClientes.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Inventario.resx">
       <DependentUpon>Inventario.h</DependentUpon>
