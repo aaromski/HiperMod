@@ -37,7 +37,6 @@ namespace HiperMod {
 			inventario->Hide();
 			formCliente = gcnew formClientes();
 			formCliente->Hide();
-			AsignarColoresABotones();
 			//
 			//TODO: agregar código de constructor aquí
 			//
@@ -143,8 +142,6 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ nombrefac;
 	private: System::Windows::Forms::Label^ tlfac;
 	private: System::Windows::Forms::Label^ cedulafac;
-	private: System::Windows::Forms::Label^ cant_Caja;
-	private: System::Windows::Forms::Label^ cant_Cola;
 	private: Cliente^ clientes;
 	private: formClientes^ formCliente;
 	private: gestorTempo^ tempo;
@@ -164,7 +161,7 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ Ref;
 	private: System::Windows::Forms::Label^ refFactura;
 	private: Inventario^ inventario;
-	private:
+	private: 
 	bool UseImage = true;
 		/// <summary>
 		/// Variable del diseñador necesaria.
@@ -222,7 +219,6 @@ namespace HiperMod {
 			this->clientesEnCola = (gcnew System::Windows::Forms::ComboBox());
 			this->splitCaja = (gcnew System::Windows::Forms::SplitContainer());
 			this->label38 = (gcnew System::Windows::Forms::Label());
-			this->cant_Caja = (gcnew System::Windows::Forms::Label());
 			this->label22 = (gcnew System::Windows::Forms::Label());
 			this->tlf = (gcnew System::Windows::Forms::Label());
 			this->label21 = (gcnew System::Windows::Forms::Label());
@@ -238,7 +234,6 @@ namespace HiperMod {
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->panel2FacturaD = (gcnew System::Windows::Forms::Panel());
 			this->splitCola = (gcnew System::Windows::Forms::SplitContainer());
-			this->cant_Cola = (gcnew System::Windows::Forms::Label());
 			this->label43 = (gcnew System::Windows::Forms::Label());
 			this->label44 = (gcnew System::Windows::Forms::Label());
 			this->tlf_Cola = (gcnew System::Windows::Forms::Label());
@@ -539,7 +534,7 @@ namespace HiperMod {
 			// cantidad
 			// 
 			this->cantidad->AutoSize = true;
-			this->cantidad->Location = System::Drawing::Point(126, 92);
+			this->cantidad->Location = System::Drawing::Point(212, 92);
 			this->cantidad->Name = L"cantidad";
 			this->cantidad->Size = System::Drawing::Size(14, 15);
 			this->cantidad->TabIndex = 13;
@@ -656,9 +651,9 @@ namespace HiperMod {
 			this->label9->AutoSize = true;
 			this->label9->Location = System::Drawing::Point(3, 92);
 			this->label9->Name = L"label9";
-			this->label9->Size = System::Drawing::Size(126, 15);
+			this->label9->Size = System::Drawing::Size(204, 15);
 			this->label9->TabIndex = 7;
-			this->label9->Text = L"TOTAL PRODUCTOS:";
+			this->label9->Text = L"TOTAL UNITARIO DE PRODUCTOS:";
 			// 
 			// label7
 			// 
@@ -766,7 +761,6 @@ namespace HiperMod {
 			// splitCaja.Panel1
 			// 
 			this->splitCaja->Panel1->Controls->Add(this->label38);
-			this->splitCaja->Panel1->Controls->Add(this->cant_Caja);
 			this->splitCaja->Panel1->Controls->Add(this->label22);
 			this->splitCaja->Panel1->Controls->Add(this->tlf);
 			this->splitCaja->Panel1->Controls->Add(this->label21);
@@ -796,15 +790,6 @@ namespace HiperMod {
 			this->label38->Size = System::Drawing::Size(81, 13);
 			this->label38->TabIndex = 28;
 			this->label38->Text = L"POR ASIGNAR";
-			// 
-			// cant_Caja
-			// 
-			this->cant_Caja->AutoSize = true;
-			this->cant_Caja->Location = System::Drawing::Point(232, 3);
-			this->cant_Caja->Name = L"cant_Caja";
-			this->cant_Caja->Size = System::Drawing::Size(13, 13);
-			this->cant_Caja->TabIndex = 21;
-			this->cant_Caja->Text = L"0";
 			// 
 			// label22
 			// 
@@ -954,7 +939,6 @@ namespace HiperMod {
 			// 
 			// splitCola.Panel1
 			// 
-			this->splitCola->Panel1->Controls->Add(this->cant_Cola);
 			this->splitCola->Panel1->Controls->Add(this->label43);
 			this->splitCola->Panel1->Controls->Add(this->label44);
 			this->splitCola->Panel1->Controls->Add(this->tlf_Cola);
@@ -972,15 +956,6 @@ namespace HiperMod {
 			this->splitCola->SplitterDistance = 101;
 			this->splitCola->SplitterWidth = 1;
 			this->splitCola->TabIndex = 10;
-			// 
-			// cant_Cola
-			// 
-			this->cant_Cola->AutoSize = true;
-			this->cant_Cola->Location = System::Drawing::Point(239, 3);
-			this->cant_Cola->Name = L"cant_Cola";
-			this->cant_Cola->Size = System::Drawing::Size(13, 13);
-			this->cant_Cola->TabIndex = 22;
-			this->cant_Cola->Text = L"0";
 			// 
 			// label43
 			// 
@@ -1220,26 +1195,35 @@ namespace HiperMod {
 }
 
 	// Agregar un reporte de compra a la tabla de reportes
-	void agregarReporteACompra(int fila, claseReportes^ reporte) {
-		reportes->tablaCompraC->RowStyles->Insert(1, gcnew RowStyle(SizeType::Absolute, 15));
-		reportes->tablaCompraC->Controls->Add(reporte->ci, 0, fila);
-		reportes->tablaCompraC->Controls->Add(reporte->nombre, 1, fila);
-		reportes->tablaCompraC->Controls->Add(reporte->tlfReportes, 2, fila);
-		reportes->tablaCompraC->Controls->Add(reporte->fechaReportes, 3, fila);
-		reportes->tablaCompraC->Controls->Add(reporte->horaReportes, 4, fila);
-		reportes->tablaCompraC->Controls->Add(reporte->refReportes, 5, fila);
-		reportes->tablaCompraC->PerformLayout();
+	void agregarReporteACompra(int fila, claseReportes^ reporte, TableLayoutPanel^ tablaCOT) {  // COT = Tabla Compra o Tabla Tiempo superado
+		tablaCOT->RowStyles->Insert(1, gcnew RowStyle(SizeType::Absolute, 15));
+		tablaCOT->Controls->Add(reporte->ci, 0, fila);
+		tablaCOT->Controls->Add(reporte->nombre, 1, fila);
+		tablaCOT->Controls->Add(reporte->tlfReportes, 2, fila);
+		tablaCOT->Controls->Add(reporte->fechaReportes, 3, fila);
+		tablaCOT->Controls->Add(reporte->horaReportes, 4, fila);
+		tablaCOT->Controls->Add(reporte->refReportes, 5, fila);
+		tablaCOT->PerformLayout();
 	}
 
 	// Generar reportes de compras y agregar la factura a la lista
 	void reportesCompras() {
-		int fila = reportes->tablaCompraC->RowCount;
-		reportes->tablaCompraC->RowCount++;
+		
 
 		claseReportes^ nuevoReporte = gcnew claseReportes(
 			cedulafac->Text, nombrefac->Text, tlf->Text, fecha->Text, hora->Text, Ref->Text);
-
-		agregarReporteACompra(fila-1, nuevoReporte);
+		if (listClient[0]->GetTardo()) {                // Si el cliente tardo mas de 10 min lo agrega en la tabla de tiempo superado
+			int fila = reportes->tablaTsuperado->RowCount;
+			reportes->tablaTsuperado->RowCount++;
+			agregarReporteACompra(fila - 1, nuevoReporte, reportes->tablaTsuperado);
+		}
+		else {
+			int fila = reportes->tablaCompraC->RowCount;
+			reportes->tablaCompraC->RowCount++;
+			agregarReporteACompra(fila - 1, nuevoReporte, reportes->tablaCompraC);
+			
+		}
+		
 		agregarAUltimaFactura();
 	}
 
@@ -1360,7 +1344,8 @@ namespace HiperMod {
 
 	// Crear un nuevo cliente
 	void CrearCliente() { 
-		static int clienteID = 1; 
+		static int clienteID = 1;
+		clienteID = data->CheckIdExists(clienteID) ? clienteID : clienteID + 1;  //Si no existe un cliente con ese id, se
 		Cliente^ nuevoCliente = gcnew Cliente(clienteID++); 
 		listClient->Add(nuevoCliente);
 	}
@@ -1393,12 +1378,14 @@ namespace HiperMod {
 		else {
 			LimpiarYPreparaTabla(tableCola);
 		}
-
-		
-
 		double totalCola = 0;
 		ProcesarTabla(listClient, tableCola, posCola, totalCola);
 		PrepararInformacionCola(posCola);
+
+		if (!Fecha_Cola->Visible) {
+			Fecha_Cola->Text = DateTime::Now.ToString("dd/MM/yyyy");
+			Fecha_Cola->Visible = true;
+		}
 	}
 
 	bool EsNuevaTabla(Panel^ panel) {
@@ -1435,7 +1422,7 @@ namespace HiperMod {
 	}
 	
 
-	void AsignarColoresABotones(void)
+	void AsignarColoresABotones()
 	{
 		// Array con los botones
 		array<Button^>^ botones = {
@@ -1443,17 +1430,18 @@ namespace HiperMod {
 			this->button_Inv,
 			this->button_Rep,
 			this->button_Cli,
-			reportes->button_Compras,
-			reportes->button_TSuperado
+			
 		};
 
 		// Asignar el color a cada botón en el array
-		for each (Button ^ boton in botones)
-		{
-			boton->BackColor = Normal;
-		}
+			for each(Button ^ boton in botones)
+			{
+				boton->BackColor = Normal;
+			}
+		
+		
 	}
-
+	
 void OcultarPaneles()
 {
 	this->panel1->Visible = false;
@@ -1511,7 +1499,6 @@ private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
 	
 }
 
-
 TableLayoutPanel^ AgregarTabla(Panel^ panel) {
 		// Crear una instancia de TableLayoutPanel
 		TableLayoutPanel^ tableLayoutPanel = gcnew TableLayoutPanel();
@@ -1526,9 +1513,11 @@ TableLayoutPanel^ AgregarTabla(Panel^ panel) {
 		// Añadir el TableLayoutPanel al Panel específico
 		panel->Controls->Add(tableLayoutPanel);
 		return tableLayoutPanel;
+		
 }
 
 private: System::Void B_cerrar_Click(System::Object^ sender, System::EventArgs^ e) { //metodo para cerrar el programa
+	data->TruncateTable();
 	this->Close();
 }
 
@@ -1536,7 +1525,6 @@ private: System::Void B_cerrar_Click(System::Object^ sender, System::EventArgs^ 
 void InicializarComponentes()
 {
 	this->panel2FacturaD->Controls->Add(tablaFactura);
-	this->button_Fac->BackColor = Normal;
 	this->fecha->Text = DateTime::Now.ToString("dd/MM/yyyy");
 
 	InicializarPaneles();
@@ -1681,8 +1669,6 @@ private: System::Void comboBox_SelectedIndexChanged(System::Object^ sender, Syst
 	int index = comboBox->SelectedIndex;
 	if (index >= 0) {
 		mostrarFactura(index);
-		Fecha_Cola->Text = DateTime::Now.ToString("dd/MM/yyyy");
-		Fecha_Cola->Visible = true;
 		reportes->comboUltimasF->Refresh(); // Forzar refresco del ComboBox
 	}
 }
@@ -1725,6 +1711,7 @@ private: System::Void mostrarCliente_Tick_1(System::Object^ sender, System::Even
 		   listClient->RemoveAt(0);
 		   listClient->Add(ultimo);
 		   ultimo->reiniciar();
+		   ultimo->siTardo();
 		   // Obtener el nombre del primer elemento
 		   String^ firstItemName = clientesEnCola->Items[0]->ToString();
 		   // Encontrar el índice del primer dígito en el nombre del cliente

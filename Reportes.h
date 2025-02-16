@@ -46,7 +46,8 @@ namespace HiperMod {
 	public: System::Windows::Forms::Button^ button_Compras;
 	public: System::Windows::Forms::Button^ button_TSuperado;
 	private: System::Windows::Forms::Label^ label8;
-	public: System::Windows::Forms::TableLayoutPanel^ tablaCompraC;
+
+	public: System::Windows::Forms::TableLayoutPanel^ tablaTsuperado;
 	private: System::Windows::Forms::Label^ label15;
 	private: System::Windows::Forms::Label^ label13;
 	private: System::Windows::Forms::Label^ label9;
@@ -82,6 +83,22 @@ namespace HiperMod {
 	public: System::Windows::Forms::Label^ Ref2;
 	public: System::Windows::Forms::Panel^ panelTabla;
 	public: System::Windows::Forms::DataGridView^ dataGridView1;
+	public: System::Windows::Forms::TableLayoutPanel^ tablaCompraC;
+
+	private: System::Windows::Forms::Label^ label20;
+	public:
+	private: System::Windows::Forms::Label^ label32;
+	private: System::Windows::Forms::Label^ label33;
+	private: System::Windows::Forms::Label^ label34;
+	private: System::Windows::Forms::Label^ label35;
+	private: System::Windows::Forms::Label^ label36;
+
+	public:
+
+
+
+
+
 
 	public:
 
@@ -109,6 +126,13 @@ namespace HiperMod {
 		void InitializeComponent(void)
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->tablaCompraC = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->label20 = (gcnew System::Windows::Forms::Label());
+			this->label32 = (gcnew System::Windows::Forms::Label());
+			this->label33 = (gcnew System::Windows::Forms::Label());
+			this->label34 = (gcnew System::Windows::Forms::Label());
+			this->label35 = (gcnew System::Windows::Forms::Label());
+			this->label36 = (gcnew System::Windows::Forms::Label());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->panelUltimasf = (gcnew System::Windows::Forms::Panel());
 			this->panelTabla = (gcnew System::Windows::Forms::Panel());
@@ -138,7 +162,7 @@ namespace HiperMod {
 			this->label11 = (gcnew System::Windows::Forms::Label());
 			this->comboUltimasF = (gcnew System::Windows::Forms::ComboBox());
 			this->label8 = (gcnew System::Windows::Forms::Label());
-			this->tablaCompraC = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->tablaTsuperado = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->label15 = (gcnew System::Windows::Forms::Label());
 			this->label13 = (gcnew System::Windows::Forms::Label());
 			this->label9 = (gcnew System::Windows::Forms::Label());
@@ -156,20 +180,22 @@ namespace HiperMod {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
+			this->tablaCompraC->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->panelUltimasf->SuspendLayout();
-			this->tablaCompraC->SuspendLayout();
+			this->tablaTsuperado->SuspendLayout();
 			this->panel2->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// panel1
 			// 
+			this->panel1->Controls->Add(this->tablaCompraC);
 			this->panel1->Controls->Add(this->dataGridView1);
 			this->panel1->Controls->Add(this->panelUltimasf);
 			this->panel1->Controls->Add(this->label11);
 			this->panel1->Controls->Add(this->comboUltimasF);
 			this->panel1->Controls->Add(this->label8);
-			this->panel1->Controls->Add(this->tablaCompraC);
+			this->panel1->Controls->Add(this->tablaTsuperado);
 			this->panel1->Controls->Add(this->button_Compras);
 			this->panel1->Controls->Add(this->button_TSuperado);
 			this->panel1->Controls->Add(this->panel2);
@@ -177,6 +203,92 @@ namespace HiperMod {
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(799, 592);
 			this->panel1->TabIndex = 8;
+			// 
+			// tablaCompraC
+			// 
+			this->tablaCompraC->AutoScroll = true;
+			this->tablaCompraC->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(212)), static_cast<System::Int32>(static_cast<System::Byte>(243)),
+				static_cast<System::Int32>(static_cast<System::Byte>(227)));
+			this->tablaCompraC->CellBorderStyle = System::Windows::Forms::TableLayoutPanelCellBorderStyle::Single;
+			this->tablaCompraC->ColumnCount = 6;
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				80)));
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				120)));
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				100)));
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				80)));
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				80)));
+			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 100)));
+			this->tablaCompraC->Controls->Add(this->label20, 5, 0);
+			this->tablaCompraC->Controls->Add(this->label32, 3, 0);
+			this->tablaCompraC->Controls->Add(this->label33, 0, 0);
+			this->tablaCompraC->Controls->Add(this->label34, 4, 0);
+			this->tablaCompraC->Controls->Add(this->label35, 1, 0);
+			this->tablaCompraC->Controls->Add(this->label36, 2, 0);
+			this->tablaCompraC->Location = System::Drawing::Point(0, 158);
+			this->tablaCompraC->Name = L"tablaCompraC";
+			this->tablaCompraC->RowCount = 2;
+			this->tablaCompraC->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+			this->tablaCompraC->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+			this->tablaCompraC->Size = System::Drawing::Size(539, 208);
+			this->tablaCompraC->TabIndex = 11;
+			// 
+			// label20
+			// 
+			this->label20->AutoSize = true;
+			this->label20->Location = System::Drawing::Point(469, 1);
+			this->label20->Name = L"label20";
+			this->label20->Size = System::Drawing::Size(27, 13);
+			this->label20->TabIndex = 6;
+			this->label20->Text = L"Ref:";
+			// 
+			// label32
+			// 
+			this->label32->AutoSize = true;
+			this->label32->Location = System::Drawing::Point(307, 1);
+			this->label32->Name = L"label32";
+			this->label32->Size = System::Drawing::Size(37, 13);
+			this->label32->TabIndex = 4;
+			this->label32->Text = L"Fecha";
+			// 
+			// label33
+			// 
+			this->label33->AutoSize = true;
+			this->label33->Location = System::Drawing::Point(4, 1);
+			this->label33->Name = L"label33";
+			this->label33->Size = System::Drawing::Size(20, 13);
+			this->label33->TabIndex = 0;
+			this->label33->Text = L"C.I";
+			// 
+			// label34
+			// 
+			this->label34->AutoSize = true;
+			this->label34->Location = System::Drawing::Point(388, 1);
+			this->label34->Name = L"label34";
+			this->label34->Size = System::Drawing::Size(30, 13);
+			this->label34->TabIndex = 5;
+			this->label34->Text = L"Hora";
+			// 
+			// label35
+			// 
+			this->label35->AutoSize = true;
+			this->label35->Location = System::Drawing::Point(85, 1);
+			this->label35->Name = L"label35";
+			this->label35->Size = System::Drawing::Size(92, 13);
+			this->label35->TabIndex = 1;
+			this->label35->Text = L"Nombre y Apellido";
+			// 
+			// label36
+			// 
+			this->label36->AutoSize = true;
+			this->label36->Location = System::Drawing::Point(206, 1);
+			this->label36->Name = L"label36";
+			this->label36->Size = System::Drawing::Size(49, 13);
+			this->label36->TabIndex = 3;
+			this->label36->Text = L"Telefono";
 			// 
 			// dataGridView1
 			// 
@@ -525,37 +637,39 @@ namespace HiperMod {
 			this->label8->TabIndex = 11;
 			this->label8->Text = L"Ventas por productos";
 			// 
-			// tablaCompraC
+			// tablaTsuperado
 			// 
-			this->tablaCompraC->AutoScroll = true;
-			this->tablaCompraC->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(212)), static_cast<System::Int32>(static_cast<System::Byte>(243)),
-				static_cast<System::Int32>(static_cast<System::Byte>(227)));
-			this->tablaCompraC->CellBorderStyle = System::Windows::Forms::TableLayoutPanelCellBorderStyle::Single;
-			this->tablaCompraC->ColumnCount = 6;
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+			this->tablaTsuperado->AutoScroll = true;
+			this->tablaTsuperado->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(227)),
+				static_cast<System::Int32>(static_cast<System::Byte>(201)));
+			this->tablaTsuperado->CellBorderStyle = System::Windows::Forms::TableLayoutPanelCellBorderStyle::Single;
+			this->tablaTsuperado->ColumnCount = 6;
+			this->tablaTsuperado->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
 				80)));
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+			this->tablaTsuperado->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
 				120)));
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+			this->tablaTsuperado->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
 				100)));
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+			this->tablaTsuperado->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
 				80)));
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+			this->tablaTsuperado->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
 				80)));
-			this->tablaCompraC->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 100)));
-			this->tablaCompraC->Controls->Add(this->label15, 5, 0);
-			this->tablaCompraC->Controls->Add(this->label13, 3, 0);
-			this->tablaCompraC->Controls->Add(this->label9, 0, 0);
-			this->tablaCompraC->Controls->Add(this->label14, 4, 0);
-			this->tablaCompraC->Controls->Add(this->label10, 1, 0);
-			this->tablaCompraC->Controls->Add(this->label12, 2, 0);
-			this->tablaCompraC->Location = System::Drawing::Point(0, 158);
-			this->tablaCompraC->Name = L"tablaCompraC";
-			this->tablaCompraC->RowCount = 2;
-			this->tablaCompraC->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
-			this->tablaCompraC->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
-			this->tablaCompraC->Size = System::Drawing::Size(539, 208);
-			this->tablaCompraC->TabIndex = 10;
+			this->tablaTsuperado->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				100)));
+			this->tablaTsuperado->Controls->Add(this->label15, 5, 0);
+			this->tablaTsuperado->Controls->Add(this->label13, 3, 0);
+			this->tablaTsuperado->Controls->Add(this->label9, 0, 0);
+			this->tablaTsuperado->Controls->Add(this->label14, 4, 0);
+			this->tablaTsuperado->Controls->Add(this->label10, 1, 0);
+			this->tablaTsuperado->Controls->Add(this->label12, 2, 0);
+			this->tablaTsuperado->Location = System::Drawing::Point(0, 158);
+			this->tablaTsuperado->Name = L"tablaTsuperado";
+			this->tablaTsuperado->RowCount = 2;
+			this->tablaTsuperado->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+			this->tablaTsuperado->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+			this->tablaTsuperado->Size = System::Drawing::Size(539, 208);
+			this->tablaTsuperado->TabIndex = 10;
+			this->tablaTsuperado->Visible = false;
 			// 
 			// label15
 			// 
@@ -613,8 +727,8 @@ namespace HiperMod {
 			// 
 			// button_Compras
 			// 
-			this->button_Compras->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(195)),
-				static_cast<System::Int32>(static_cast<System::Byte>(240)));
+			this->button_Compras->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(246)), static_cast<System::Int32>(static_cast<System::Byte>(120)),
+				static_cast<System::Int32>(static_cast<System::Byte>(0)));
 			this->button_Compras->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button_Compras->Font = (gcnew System::Drawing::Font(L"Arial", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
@@ -625,6 +739,7 @@ namespace HiperMod {
 			this->button_Compras->TabIndex = 9;
 			this->button_Compras->Text = L"Compras";
 			this->button_Compras->UseVisualStyleBackColor = false;
+			this->button_Compras->Click += gcnew System::EventHandler(this, &Reportes::button_Compras_Click);
 			// 
 			// button_TSuperado
 			// 
@@ -640,6 +755,7 @@ namespace HiperMod {
 			this->button_TSuperado->TabIndex = 8;
 			this->button_TSuperado->Text = L"T.  Superado";
 			this->button_TSuperado->UseVisualStyleBackColor = false;
+			this->button_TSuperado->Click += gcnew System::EventHandler(this, &Reportes::button_TSuperado_Click);
 			// 
 			// panel2
 			// 
@@ -723,18 +839,20 @@ namespace HiperMod {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(800, 650);
+			this->ClientSize = System::Drawing::Size(800, 600);
 			this->Controls->Add(this->panel1);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"Reportes";
 			this->Text = L"Reportes";
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
+			this->tablaCompraC->ResumeLayout(false);
+			this->tablaCompraC->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			this->panelUltimasf->ResumeLayout(false);
 			this->panelUltimasf->PerformLayout();
-			this->tablaCompraC->ResumeLayout(false);
-			this->tablaCompraC->PerformLayout();
+			this->tablaTsuperado->ResumeLayout(false);
+			this->tablaTsuperado->PerformLayout();
 			this->panel2->ResumeLayout(false);
 			this->panel2->PerformLayout();
 			this->ResumeLayout(false);
@@ -767,5 +885,13 @@ namespace HiperMod {
 		}
 
 
+private: System::Void button_TSuperado_Click(System::Object^ sender, System::EventArgs^ e) {
+	this->tablaTsuperado->Visible = true;
+	this->tablaCompraC->Visible = false;
+}
+private: System::Void button_Compras_Click(System::Object^ sender, System::EventArgs^ e) {
+	this->tablaCompraC->Visible = true;
+	this->tablaTsuperado->Visible = false;
+}
 };
 }

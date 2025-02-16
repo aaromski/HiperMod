@@ -23,6 +23,14 @@ public:
 		this->st->Close();
 	}
 
+	void TruncateTable() {  // ELminar los datos de las ventas totales por producto en la base de datos
+			String^ query = "TRUNCATE ventasproductos";
+			MySqlCommand^ command = gcnew MySqlCommand(query, st);
+			st->Open();
+			command->ExecuteNonQuery();
+			st->Close();
+	}
+
 	void modificarCelda(int id, String^ valor, String^ modificacion, String^ nombreDeColumna, String^ nombreTabla) {
 		// Construir la consulta SQL utilizando el nombre de la tabla, la columna y el valor
 		String^ sentencia = "UPDATE " + nombreTabla + " SET " + nombreDeColumna + " = @modificacion WHERE ID = @id AND " + nombreDeColumna + " = @valor";
@@ -78,6 +86,24 @@ public:
 		DataTable^ tabla = gcnew DataTable();
 		data->Fill(tabla);
 		return tabla;
+	}
+
+	bool CheckIdExists(int id) {  //Verificar si existe un cliente con ese id
+		try {    //Manejar el error
+			String^ query = "SELECT COUNT(*) > 0 FROM cliente WHERE ID = @ID";
+			MySqlCommand^ command = gcnew MySqlCommand(query, st);
+			command->Parameters->AddWithValue("@ID", id);
+
+			st->Open();
+			Object^ result = command->ExecuteScalar();
+			st->Close();
+
+			return Convert::ToBoolean(result);
+		}
+		catch (Exception^ ex) {
+			st->Close();
+			return false;
+		}
 	}
 
 	void datos(int id, Label^ nombreA, Label^ ci, Label^ tlf) { // Metodo para buscar la informacion del cliente y guardala en label

@@ -284,7 +284,7 @@ namespace HiperMod {
 	}
 
 private: System::Void dataGridView1_CellContentClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
-	if (e->ColumnIndex == 2) {  //Seleccionar solo si es de la columna Stock
+	if (e->ColumnIndex == 2 && e->RowIndex >= 0) {  //Seleccionar solo si es de la columna Stock
 		// Obtener el valor de la celda seleccionada
 		columnIndex = e->ColumnIndex;
 		idRow = Convert::ToInt32(dataGridView1->Rows[e->RowIndex]->Cells[0]->Value->ToString());

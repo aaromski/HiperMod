@@ -1,6 +1,7 @@
 // Cliente.h
 #include <ctime>
 #include <random>
+#include <stack>
 #pragma once
 using namespace System;
 using namespace System::Windows::Forms;
@@ -12,6 +13,7 @@ public:
         IniciarTimer();
         maxCantidad = 0;
         seguir = true;
+        tardo = false;
         productoCount = 1;
         maxProdu = randomCantidad(0);
         tCompras = gcnew Timer(); tCompras->Interval = 1000; 
@@ -27,6 +29,14 @@ public:
 
     bool GetSeguir() {
         return seguir;
+    }
+
+    bool GetTardo() {
+        return tardo;
+    }
+
+    void siTardo() {
+        tardo = true;
     }
 
     int GetCountP() {
@@ -93,6 +103,7 @@ private:
     int maxCantidad;
     int tiempoComprando;
     bool seguir;
+    bool tardo;
     static int maxProdu;
 
     void AgregarProducto() {
@@ -102,9 +113,8 @@ private:
             }
         // Generar una cantidad aleatoria
         int cant = randomCantidad(1);
-        int maxProducto = randomCantidad(0);
         // Verificar que sumar `cant` no exceda `30`
-        if ((productoCount <= maxProducto && maxCantidad + cant <= 30) && seguir) {
+        if ((productoCount <= maxProdu && maxCantidad + cant <= 30) && seguir) {
             maxCantidad += cant;
             productos->Add(producto);
             cantidad->Add(cant);
@@ -117,14 +127,14 @@ private:
     }
 
     int randomCantidad( int opcion) {
-        std::srand(static_cast<unsigned>(std::time(nullptr))); // Generar un número aleatorio entre 1 y 5 
+        std::srand(static_cast<unsigned>(std::time(nullptr))); 
         if (opcion == 1) {
-            int cantidad = (std::rand() % 5) + 1;
+            int cantidad = (std::rand() % 5) + 1;// Generar un número aleatorio entre 1 y 5 
             return cantidad;
         }
         else {
             maxProdu = (std::rand() % 10) + 5;
-            return maxProdu; // Asegura que el número sea al menos 1 
+            return maxProdu;  
         }
     }
 
