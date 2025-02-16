@@ -92,6 +92,12 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ label34;
 	private: System::Windows::Forms::Label^ label35;
 	private: System::Windows::Forms::Label^ label36;
+	private: System::Windows::Forms::Panel^ panel3;
+	public: System::Windows::Forms::Label^ ventasTotales;
+	private:
+
+
+	private: System::Windows::Forms::Label^ label37;
 
 	public:
 
@@ -179,16 +185,21 @@ namespace HiperMod {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->label37 = (gcnew System::Windows::Forms::Label());
+			this->ventasTotales = (gcnew System::Windows::Forms::Label());
+			this->panel3 = (gcnew System::Windows::Forms::Panel());
 			this->panel1->SuspendLayout();
 			this->tablaCompraC->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->panelUltimasf->SuspendLayout();
 			this->tablaTsuperado->SuspendLayout();
 			this->panel2->SuspendLayout();
+			this->panel3->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// panel1
 			// 
+			this->panel1->Controls->Add(this->panel3);
 			this->panel1->Controls->Add(this->tablaCompraC);
 			this->panel1->Controls->Add(this->dataGridView1);
 			this->panel1->Controls->Add(this->panelUltimasf);
@@ -835,11 +846,43 @@ namespace HiperMod {
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"SENIAT";
 			// 
+			// label37
+			// 
+			this->label37->AutoSize = true;
+			this->label37->Font = (gcnew System::Drawing::Font(L"Arial Black", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label37->Location = System::Drawing::Point(0, 5);
+			this->label37->Name = L"label37";
+			this->label37->Size = System::Drawing::Size(138, 22);
+			this->label37->TabIndex = 18;
+			this->label37->Text = L"Ventas Totales:";
+			// 
+			// ventasTotales
+			// 
+			this->ventasTotales->AutoSize = true;
+			this->ventasTotales->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->ventasTotales->Location = System::Drawing::Point(144, 7);
+			this->ventasTotales->Name = L"ventasTotales";
+			this->ventasTotales->Size = System::Drawing::Size(19, 20);
+			this->ventasTotales->TabIndex = 19;
+			this->ventasTotales->Text = L"0";
+			// 
+			// panel3
+			// 
+			this->panel3->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->panel3->Controls->Add(this->ventasTotales);
+			this->panel3->Controls->Add(this->label37);
+			this->panel3->Location = System::Drawing::Point(552, 556);
+			this->panel3->Name = L"panel3";
+			this->panel3->Size = System::Drawing::Size(247, 32);
+			this->panel3->TabIndex = 20;
+			// 
 			// Reportes
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(800, 600);
+			this->ClientSize = System::Drawing::Size(800, 650);
 			this->Controls->Add(this->panel1);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"Reportes";
@@ -855,6 +898,8 @@ namespace HiperMod {
 			this->tablaTsuperado->PerformLayout();
 			this->panel2->ResumeLayout(false);
 			this->panel2->PerformLayout();
+			this->panel3->ResumeLayout(false);
+			this->panel3->PerformLayout();
 			this->ResumeLayout(false);
 
 		}

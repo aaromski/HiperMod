@@ -1620,10 +1620,10 @@ private: System::Void Mover_Tick(System::Object^ sender, System::EventArgs^ e) {
 		   for (int i = 0; i < count; i++) {
 			   int cod = comprasCliente->Productos[i];
 			   int cant = comprasCliente->Cantidad[i];
-			   data->guardarCompras(cod, cant);
+			   data->guardarCompras(cod, cant, reportes->ventasTotales);
 		   }
 		   data->cerrarConexion();
-}
+	   }
 
 
 private: System::Void pausar_Click(System::Object^ sender, System::EventArgs^ e) {

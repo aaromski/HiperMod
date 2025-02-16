@@ -100,7 +100,7 @@ public:
 
 			return Convert::ToBoolean(result);
 		}
-		catch (Exception^ ex) {
+		catch (Exception^) {
 			st->Close();
 			return false;
 		}
@@ -155,7 +155,8 @@ public:
 	}
 
 
-	void guardarCompras(int cod, int cantidad) {
+	void guardarCompras(int cod, int cantidad, Label^ ventasT) {
+		double ventasTotales = Convert::ToInt32(ventasT->Text);
 		String^ consulta = "SELECT * FROM ventasproductos WHERE COD = @COD";
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, this->st);
 		ejecutar->Parameters->AddWithValue("@COD", cod);
@@ -167,6 +168,7 @@ public:
 			int nuevaCantidad = cantidadActual + cantidad;
 			double precioBs = Convert::ToDouble(lector["Precio Bs"]);
 			double ventasBs = precioBs * nuevaCantidad;
+			ventasTotales += ventasBs;
 			double precioDolares = Convert::ToDouble(lector["Precio $"]);
 			double ventasDolares = precioDolares * nuevaCantidad;
 
@@ -197,6 +199,7 @@ public:
 
 			// Calcular las ventas
 			double ventasBs = precioBs * cantidad;
+			ventasTotales += ventasBs;
 			double ventasDolares = precioDolar * cantidad;
 
 			consulta = "INSERT INTO ventasproductos (COD, Descripcion, Cantidad, `Precio $`, `Precio Bs`, `Ventas $`, `Ventas Bs`) VALUES (@COD, @Descripcion, @Cantidad, @PrecioDolares, @PrecioBs, @VentasDolares, @VentasBs)";
@@ -213,6 +216,7 @@ public:
 			// Reducir el stock del producto
 			reducirStock(cod, cantidad);
 		}
+		ventasT->Text = Convert::ToString(ventasTotales);
 	}
 
 	void obtenerDescripcionPrecios(int id, String^% descripcion, double% dolar, double% bs) {
