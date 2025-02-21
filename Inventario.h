@@ -270,7 +270,7 @@ namespace HiperMod {
 #pragma endregion
 	void actualizarBaseDatos() {
 			//Modificar Stock disponible
-			conexion->modificarCelda(idRow, textBox1->Text, textBox2->Text, dataGridView1->Columns[columnIndex]->HeaderText, "productos");
+			conexion->modificarCelda(idRow, textBox2->Text, dataGridView1->Columns[columnIndex]->HeaderText, "productos");
 
 			// Actualizar el DataGridView
 			baseProducto = conexion->baseDatos("productos");

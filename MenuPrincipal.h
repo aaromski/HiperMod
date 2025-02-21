@@ -1307,11 +1307,12 @@ namespace HiperMod {
 		if (!this->hora->Visible) {
 			visibilidadInformacionFactura();
 		}
+		
 	}
 
 	// Procesar y mostrar los productos en la tabla
 	void ProcesarTabla(List<Cliente^>^ listClient, TableLayoutPanel^ tabla, int id, double& total) {
-		if (listClient->Count > 0  && id >= 0) {
+		if (listClient->Count > 0 && id >= 0) {
 			int cant = 0;
 			if (listClient[id]->Productos->Count > 0) {
 				data->abrirConexion();
@@ -1319,28 +1320,32 @@ namespace HiperMod {
 					Label^ nombre = gcnew Label();
 					Label^ precioIz = gcnew Label();
 					Label^ precioDe = gcnew Label();
-					data->mostrarProductos(listClient[id]->Productos[i], nombre, precioIz, precioDe, listClient[id]->Cantidad[i], total);
-					cant += listClient[id]->Cantidad[i];
+					bool productoEncontrado = data->mostrarProductos(listClient[id]->Productos[i], nombre, precioIz, precioDe, listClient[id]->Cantidad[i], total);
 
-					nombre->AutoSize = true;
-					precioIz->AutoSize = true;
-					precioDe->AutoSize = true;
-					precioDe->Anchor = System::Windows::Forms::AnchorStyles::Top;
-					precioIz->Anchor = System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left;
+					if (productoEncontrado) {
+						cant += listClient[id]->Cantidad[i];
 
-					int row = tabla->RowCount++;
-					tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
-					tabla->Controls->Add(nombre, 0, row);
+						nombre->AutoSize = true;
+						precioIz->AutoSize = true;
+						precioDe->AutoSize = true;
+						precioDe->Anchor = System::Windows::Forms::AnchorStyles::Top;
+						precioIz->Anchor = System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left;
 
-					row = tabla->RowCount++;
-					tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
-					tabla->Controls->Add(precioIz, 0, row);
-					tabla->Controls->Add(precioDe, 1, row);
+						int row = tabla->RowCount++;
+						tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
+						tabla->Controls->Add(nombre, 0, row);
+
+						row = tabla->RowCount++;
+						tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
+						tabla->Controls->Add(precioIz, 0, row);
+						tabla->Controls->Add(precioDe, 1, row);
+					}
 				}
 				data->cerrarConexion();
 			}
 		}
 	}
+
 
 	// Crear un nuevo cliente
 	void CrearCliente() { 
@@ -1611,9 +1616,8 @@ private: System::Void Mover_Tick(System::Object^ sender, System::EventArgs^ e) {
 		finalizo = true;
 		Mover->Stop();
 		finalizarTransferencia();
-	}
+	} 
 }
-
 	   void tablaVentasProductos(Cliente^ comprasCliente) {
 		   int count = comprasCliente->Productos->Count;
 		   data->abrirConexion();

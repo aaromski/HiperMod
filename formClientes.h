@@ -419,53 +419,53 @@ namespace HiperMod {
 
 	private: System::Void btUniversal_Click(System::Object^ sender, System::EventArgs^ e) {
 		String^ textBoton = btUniversal->Text;
-		String^ ci = textBox1->Text;
-		String^ nombre = textBox2->Text;
-		String^ apellido = textBox3->Text;
-		String^ tlf = textBox4->Text;
+		String^ tex_ci = textBox1->Text;
+		String^ tex_nombre = textBox2->Text;
+		String^ tex_apellido = textBox3->Text;
+		String^ tex_tlf = textBox4->Text;
 
 		if (textBoton == "Agregar") {
 			// Validar los datos
-			if (!Regex::IsMatch(ci, "^[0-9]+$")) {
+			if (!Regex::IsMatch(tex_ci, "^[0-9]+$")) {
 				MessageBox::Show("El campo CI debe contener solo números.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 				return;
 			}
-			if (String::IsNullOrWhiteSpace(nombre) || !Regex::IsMatch(ci, "^[0-9]+$")) {
+			if (noVacioNiDigitos(tex_nombre)) {
 				MessageBox::Show("El campo no puede estar vacío ni contener digitos.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 				return;
 			}
-			if (String::IsNullOrWhiteSpace(apellido) || !Regex::IsMatch(ci, "^[0-9]+$")) {
+			if (noVacioNiDigitos(tex_apellido)) {
 				MessageBox::Show("El campo no puede estar vacío ni contener digitos.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 				return;
 			}
-			if (!Regex::IsMatch(tlf, "^[0-9]+$")) {
+			if (!Regex::IsMatch(tex_tlf, "^[0-9]+$")) {
 				MessageBox::Show("El campo Teléfono debe contener solo números.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 				return;
 			}
 			// Llamar a la función Insertar
-			conexion->Insertar(ci, nombre, apellido, tlf);
+			conexion->Insertar(tex_ci, tex_nombre , tex_apellido, tex_tlf);
 			actualizarBaseDatos();
 		}
 
 		if (textBoton == "Modificar") {
 			switch (column)
 			{
-				case 0: if (!Regex::IsMatch(nombre, "^[0-9]+$")) {
+				case 0: if (soloNumeros(tex_nombre)) {
 					MessageBox::Show("El campo debe contener solo números.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
-					return; break;
-				}
+					return; 
+				} break;
 
-				case 1: if (String::IsNullOrWhiteSpace(nombre) || !Regex::IsMatch(ci, "^[0-9]+$")) {
+				case 1: if (noVacioNiDigitos(tex_nombre)) {
 					MessageBox::Show("El campo no puede estar vacío ni contener digitos.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 					return;
 				} break;
 
-				case 2: if (String::IsNullOrWhiteSpace(apellido) || !Regex::IsMatch(ci, "^[0-9]+$")) {
+				case 2: if (noVacioNiDigitos(tex_nombre)) {
 					MessageBox::Show("El campo no puede estar vacío ni contener digitos.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 					return;
 				} break;
 
-				case 3: if (!Regex::IsMatch(tlf, "^[0-9]+$")) {
+				case 3: if (soloNumeros(tex_nombre)) {
 					MessageBox::Show("El campo solo debe contener números.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 					return;
 				} break;
@@ -473,26 +473,44 @@ namespace HiperMod {
 			default:
 				return; break;
 			}
-			conexion->modificarCelda(idRow, dataGridView1->Columns[column]->HeaderText, textBox1->Text, textBox2->Text, "cliente");
+			conexion->modificarCelda(idRow, textBox2->Text, dataGridView1->Columns[column]->HeaderText, "cliente");
 			actualizarBaseDatos();
 		}
 
 		if (textBoton == "Eliminar") {
 
-			if (!Regex::IsMatch(ci, "^[0-9]+$") || column != 0) {
+			if (soloNumeros(tex_nombre) || column != 0) {
 				MessageBox::Show("Seleccione Solamente Cedulas", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 			}
 			else {
 				System::Windows::Forms::DialogResult resultado = MessageBox::Show("¿Estás seguro de eliminarlo?", "Confirmación",MessageBoxButtons::YesNo, MessageBoxIcon::Question);
 				if (resultado == System::Windows::Forms::DialogResult::Yes) {
 					// Aquí puedes llamar a la función que elimina el registro de la base de datos
-					conexion->Eliminar(ci);
+					conexion->Eliminar(tex_nombre);
 					actualizarBaseDatos();
 				}
 			}
 			}
 			
 	}
+
+bool noVacioNiDigitos(String^ texbox) {
+	if (String::IsNullOrWhiteSpace(texbox) || Regex::IsMatch(texbox, "^[0-9]+$")) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool soloNumeros(String^ texbox) {
+	if (!Regex::IsMatch(texbox, "^[0-9]+$")) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
 
 void actualizarBaseDatos() {
 	// Actualizar el DataGridView
@@ -566,7 +584,6 @@ private: System::Void dataGridView1_CellContentClick(System::Object^ sender, Sys
 		// Asignar el valor de la celda seleccionada al textBox1
 		textBox1->Text = cellValue;
 		idRow = Convert::ToInt32(dataGridView1->Rows[row]->Cells[4]->Value->ToString());
-		
 	}
 }
 };

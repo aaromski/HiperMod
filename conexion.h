@@ -31,14 +31,12 @@ public:
 			st->Close();
 	}
 
-	void modificarCelda(int id, String^ valor, String^ modificacion, String^ nombreDeColumna, String^ nombreTabla) {
+	void modificarCelda(int id, String^ modificacion, String^ nombreDeColumna, String^ nombreTabla) {
 		// Construir la consulta SQL utilizando el nombre de la tabla, la columna y el valor
-		String^ sentencia = "UPDATE " + nombreTabla + " SET " + nombreDeColumna + " = @modificacion WHERE ID = @id AND " + nombreDeColumna + " = @valor";
+		String^ sentencia = "UPDATE " + nombreTabla + " SET " + nombreDeColumna + " = @modificacion WHERE ID = @id" ;
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
 		ejecutar->Parameters->AddWithValue("@modificacion", modificacion);
 		ejecutar->Parameters->AddWithValue("@id", id);
-		ejecutar->Parameters->AddWithValue("@valor", valor);
-
 		this->st->Open();
 		ejecutar->ExecuteNonQuery();
 		this->st->Close();
@@ -216,7 +214,7 @@ public:
 			// Reducir el stock del producto
 			reducirStock(cod, cantidad);
 		}
-		ventasT->Text = Convert::ToString(ventasTotales);
+		ventasT->Text = ventasTotales.ToString("F2");
 	}
 
 	void obtenerDescripcionPrecios(int id, String^% descripcion, double% dolar, double% bs) {
@@ -234,15 +232,15 @@ public:
 	}
 
 
-
-	void mostrarProductos(int id, Label^ nombreP, Label^ izqui, Label^ dere, int cantidad,  double& montoTotal ) {
+	bool mostrarProductos(int id, Label^ nombreP, Label^ izqui, Label^ dere, int cantidad, double& montoTotal) {
 		String^ sentencia = "SELECT descripcion, Precio_BS FROM productos WHERE ID = @ID";
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
 		ejecutar->Parameters->AddWithValue("@ID", id);
 		MySqlDataReader^ lector = ejecutar->ExecuteReader();
 
-		if (lector->Read()) {
+		bool productoEncontrado = false; // Variable para indicar si el producto fue encontrado
 
+		if (lector->Read()) {
 			String^ producto = lector["descripcion"]->ToString();
 			nombreP->Text = producto;
 
@@ -254,13 +252,13 @@ public:
 			dere->Text = "Bs " + resultado.ToString("F2");
 
 			montoTotal += resultado;
-		}
-		else {
-			nombreP->Text = "Producto no encontrado";
+			productoEncontrado = true; // Producto encontrado
 		}
 
-		lector->Close();
+		lector->Close(); // Cerrar el lector antes de retornar
+		return productoEncontrado;
 	}
+
 
 };
 
