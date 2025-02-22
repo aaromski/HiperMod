@@ -161,7 +161,9 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ Ref;
 	private: System::Windows::Forms::Label^ refFactura;
 	private: Inventario^ inventario;
-	private: 
+private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
+
+	private:
 	bool UseImage = true;
 		/// <summary>
 		/// Variable del diseñador necesaria.
@@ -183,6 +185,7 @@ namespace HiperMod {
 			this->B_cerrar = (gcnew System::Windows::Forms::ToolStripButton());
 			this->reanudar = (gcnew System::Windows::Forms::ToolStripButton());
 			this->pausar = (gcnew System::Windows::Forms::ToolStripButton());
+			this->bt_Finalizar = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripTextBox1 = (gcnew System::Windows::Forms::ToolStripTextBox());
 			this->toolStripButton4 = (gcnew System::Windows::Forms::ToolStripLabel());
 			this->toolStripButton2 = (gcnew System::Windows::Forms::ToolStripButton());
@@ -328,9 +331,9 @@ namespace HiperMod {
 			this->toolStrip1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(33)), static_cast<System::Int32>(static_cast<System::Byte>(154)),
 				static_cast<System::Int32>(static_cast<System::Byte>(255)));
 			this->toolStrip1->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
-			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(7) {
+			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(8) {
 				this->B_cerrar, this->reanudar,
-					this->pausar, this->toolStripTextBox1, this->toolStripButton4, this->toolStripButton2, this->toolStripButton1
+					this->pausar, this->bt_Finalizar, this->toolStripTextBox1, this->toolStripButton4, this->toolStripButton2, this->toolStripButton1
 			});
 			this->toolStrip1->Location = System::Drawing::Point(0, 0);
 			this->toolStrip1->Name = L"toolStrip1";
@@ -373,6 +376,16 @@ namespace HiperMod {
 			this->pausar->Text = L"toolStripButton1";
 			this->pausar->ToolTipText = L"Pausar";
 			this->pausar->Click += gcnew System::EventHandler(this, &MenuPrincipal::pausar_Click);
+			// 
+			// bt_Finalizar
+			// 
+			this->bt_Finalizar->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->bt_Finalizar->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"bt_Finalizar.Image")));
+			this->bt_Finalizar->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->bt_Finalizar->Name = L"bt_Finalizar";
+			this->bt_Finalizar->Size = System::Drawing::Size(23, 22);
+			this->bt_Finalizar->Text = L"Finalizar";
+			this->bt_Finalizar->Click += gcnew System::EventHandler(this, &MenuPrincipal::bt_Finalizar_Click);
 			// 
 			// toolStripTextBox1
 			// 
@@ -1348,12 +1361,27 @@ namespace HiperMod {
 
 
 	// Crear un nuevo cliente
-	void CrearCliente() { 
-		static int clienteID = 1;
-		clienteID = data->CheckIdExists(clienteID) ? clienteID : clienteID + 1;  //Si no existe un cliente con ese id, se
-		Cliente^ nuevoCliente = gcnew Cliente(clienteID++); 
-		listClient->Add(nuevoCliente);
+	void CrearCliente() {
+		static int rowIndex = 0;
+		static bool siHayClientes = true;
+
+		if (!siHayClientes) {
+		// Si ya no hay clientes disponibles, no ejecutar la función
+			return;
+		}
+
+		try {
+			int clienteID = data->obtenerIDCliente(rowIndex);
+			Cliente^ nuevoCliente = gcnew Cliente(clienteID);
+			listClient->Add(nuevoCliente);
+			rowIndex++; // Incrementar la fila para el próximo cliente
+		}
+		catch (Exception^) {
+			MessageBox::Show("No hay mas clientes");
+			siHayClientes = false;
+		}
 	}
+
 
 	// Mostrar la información del cliente en caja
 	void mostrarEnCaja(List<Cliente^>^ listClient) {
@@ -1734,6 +1762,22 @@ private: System::Void toolStripButton1_Click(System::Object^ sender, System::Eve
 
 }
 
+void finalizarSimulacion() {
+	tempo->PausarTemporizador(tiempo, listClient);
+	crearClientes->Enabled = false;
+	mostrarCliente->Enabled = false;
+	tiempo->Enabled = false;
+	tiempoCC->Enabled = false;
+	splitCaja->Panel1->Controls->Clear();
+	splitCaja->Panel2->Controls->Clear();
+	splitCola->Panel1->Controls->Clear();
+	splitCola->Panel2->Controls->Clear();
+	clientesEnCola->Controls->Clear();
+}
+
+private: System::Void bt_Finalizar_Click(System::Object^ sender, System::EventArgs^ e) {
+	finalizarSimulacion();
+}
 };
 
 }

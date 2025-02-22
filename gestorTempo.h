@@ -31,9 +31,14 @@ ref class gestorTempo
         }
 
         void reanudarTemporizador(Timer^ timer1, List<Cliente^>^ listClient) {
+            if (!timer1->Enabled) {
+                // Si el temporizador está deshabilitado, no continuar
+                return;
+            }
+
             if (estaPausado) { // Ajustar el startTime para compensar el tiempo pausado 
-                timer1->Start(); 
-                estaPausado = false; 
+                timer1->Start();
+                estaPausado = false;
                 // Iterar a través de cada cliente en `listClient` y pausar sus timers
                 for each (Cliente ^ cliente in listClient) {
                     cliente->ContinuarTimer(); // Asegúrate de tener este método en la clase `Cliente`

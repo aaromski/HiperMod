@@ -479,14 +479,14 @@ namespace HiperMod {
 
 		if (textBoton == "Eliminar") {
 
-			if (soloNumeros(tex_nombre) || column != 0) {
+			if (soloNumeros(tex_ci) || column != 0) {
 				MessageBox::Show("Seleccione Solamente Cedulas", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 			}
 			else {
 				System::Windows::Forms::DialogResult resultado = MessageBox::Show("¿Estás seguro de eliminarlo?", "Confirmación",MessageBoxButtons::YesNo, MessageBoxIcon::Question);
 				if (resultado == System::Windows::Forms::DialogResult::Yes) {
 					// Aquí puedes llamar a la función que elimina el registro de la base de datos
-					conexion->Eliminar(tex_nombre);
+					conexion->Eliminar(tex_ci);
 					actualizarBaseDatos();
 				}
 			}

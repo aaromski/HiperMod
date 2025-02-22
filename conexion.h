@@ -86,23 +86,31 @@ public:
 		return tabla;
 	}
 
-	bool CheckIdExists(int id) {  //Verificar si existe un cliente con ese id
-		try {    //Manejar el error
-			String^ query = "SELECT COUNT(*) > 0 FROM cliente WHERE ID = @ID";
-			MySqlCommand^ command = gcnew MySqlCommand(query, st);
-			command->Parameters->AddWithValue("@ID", id);
+	int obtenerIDCliente(int row) {
+		try {
+			String^ sentencia = "SELECT ID FROM cliente LIMIT 1 OFFSET @row";
+			MySqlCommand^ command = gcnew MySqlCommand(sentencia, st);
+			command->Parameters->AddWithValue("@row", row);
 
 			st->Open();
-			Object^ result = command->ExecuteScalar();
-			st->Close();
+			MySqlDataReader^ reader = command->ExecuteReader();
 
-			return Convert::ToBoolean(result);
+			if (reader->Read()) {
+				int clientId = Convert::ToInt32(reader["ID"]);
+				reader->Close();
+				st->Close();
+				return clientId;
+			}
+			else {
+				reader->Close();
+				st->Close();
+			}
 		}
 		catch (Exception^) {
 			st->Close();
-			return false;
 		}
 	}
+
 
 	void datos(int id, Label^ nombreA, Label^ ci, Label^ tlf) { // Metodo para buscar la informacion del cliente y guardala en label
 		String^ sentencia = "SELECT nombre, apellido, CI, Tlf FROM cliente WHERE ID = @ID";
@@ -119,9 +127,6 @@ public:
 			String^ telefono = lector["tlf"]->ToString();
 			tlf->Text = telefono;
 			
-		}
-		else { 
-			nombreA->Text = "Cliente no encontrado"; 
 		}
 		lector->Close();
 		this->st->Close();
@@ -154,7 +159,7 @@ public:
 
 
 	void guardarCompras(int cod, int cantidad, Label^ ventasT) {
-		double ventasTotales = Convert::ToInt32(ventasT->Text);
+		double ventasTotales = Convert::ToDouble(ventasT->Text);
 		String^ consulta = "SELECT * FROM ventasproductos WHERE COD = @COD";
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, this->st);
 		ejecutar->Parameters->AddWithValue("@COD", cod);
