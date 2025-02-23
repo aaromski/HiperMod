@@ -109,6 +109,8 @@ public:
 		catch (Exception^) {
 			st->Close();
 		}
+
+		return -1; 
 	}
 
 

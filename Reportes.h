@@ -14,30 +14,13 @@ namespace HiperMod {
 	/// </summary>
 	public ref class Reportes : public System::Windows::Forms::Form
 	{
-	private:
-		static Reportes^ instance = nullptr;
+	public:
 		Reportes(void)
 		{
 			InitializeComponent();
 			//
 			//TODO: agregar código de constructor aquí
 			//
-		}
-	public:
-		static property Reportes^ Instance{
-			Reportes ^ get() {
-				if (instance == nullptr || instance->IsDisposed) {
-					instance = gcnew Reportes();
-				}
-				return instance;
-			}
-		}
-
-			static void ShowForm() {
-			if (instance == nullptr || instance->IsDisposed) {
-				instance = gcnew Reportes();
-			}
-			instance->Show();
 		}
 	protected:
 		/// <summary>

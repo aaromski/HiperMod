@@ -14,8 +14,7 @@ namespace HiperMod {
 	/// </summary>
 	public ref class Inventario : public System::Windows::Forms::Form
 	{
-	private:
-		static Inventario^ instance = nullptr;
+		public:
 		Inventario(void)
 		{
 			InitializeComponent();
@@ -23,22 +22,6 @@ namespace HiperMod {
 			//
 			//TODO: agregar código de constructor aquí
 			//
-		}
-	public:
-		static property Inventario^ Instance{
-			Inventario ^ get() {
-				if (instance == nullptr || instance->IsDisposed) {
-					instance = gcnew Inventario();
-				}
-				return instance;
-			}
-		}
-
-			static void ShowForm() {
-			if (instance == nullptr || instance->IsDisposed) {
-				instance = gcnew Inventario();
-			}
-			instance->Show();
 		}
 	protected:
 		/// <summary>
