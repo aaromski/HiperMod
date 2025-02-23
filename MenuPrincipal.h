@@ -31,13 +31,6 @@ namespace HiperMod {
 		{
 			
 			InitializeComponent();
-			reportes = gcnew Reportes();
-			reportes->Hide();
-			inventario = gcnew Inventario();
-			inventario->Hide();
-			formCliente = gcnew formClientes();
-			formCliente->Hide();
-			//
 			//TODO: agregar código de constructor aquí
 			//
 			this->startTime = DateTime::Now;
@@ -133,7 +126,6 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ Fecha_Cola;
 	private: System::Windows::Forms::Label^ label54;
 	private: System::Windows::Forms::Label^ label55;
-	private: Reportes^ reportes;
 	private: System::Windows::Forms::Label^ cantidad;
 	private: System::Windows::Forms::Panel^ panel2FacturaD;
 	private: System::Windows::Forms::Timer^ Mover; static bool finalizo = false;
@@ -143,7 +135,6 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ tlfac;
 	private: System::Windows::Forms::Label^ cedulafac;
 	private: Cliente^ clientes;
-	private: formClientes^ formCliente;
 	private: gestorTempo^ tempo;
 	private: claseReportes^ nuevoReporte;
 	private: DataTable^ BaseDatosReportes;
@@ -160,7 +151,6 @@ namespace HiperMod {
 	private: System::Windows::Forms::ToolStripButton^ toolStripButton1;
 	private: System::Windows::Forms::Label^ Ref;
 	private: System::Windows::Forms::Label^ refFactura;
-	private: Inventario^ inventario;
 private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 
 	private:
@@ -1096,6 +1086,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			// 
 			// Mover
 			// 
+			this->Mover->Interval = 200;
 			this->Mover->Tick += gcnew System::EventHandler(this, &MenuPrincipal::Mover_Tick);
 			// 
 			// tiempoCC
@@ -1175,7 +1166,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			);
 			if (Max_10 <= 11) {
 				listFacturas->Add(nuevaFactura);
-				reportes->comboUltimasF->Items->Add("Factura N " + (Max_10++));
+				HiperMod::Reportes::Instance->comboUltimasF->Items->Add("Factura N " + (Max_10++));
 			}
 			else {
 				listFacturas->RemoveAt(0);
@@ -1185,26 +1176,26 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 	// Cargar la tabla de la última factura en el panel
 	void cargarTablaUltimaFactura(int index) {
 		// Limpia el panel antes de agregar el nuevo TableLayoutPanel
-		reportes->panelTabla->Controls->Clear();
+		HiperMod::Reportes::Instance->panelTabla->Controls->Clear();
 		if (listFacturas[index] != nullptr) {
 			// Agrega el TableLayoutPanel al panel
-			reportes->panelTabla->Controls->Add(listFacturas[index]->tablaProductos);
+			HiperMod::Reportes::Instance->panelTabla->Controls->Add(listFacturas[index]->tablaProductos);
 		}
 	}
 
 	// Mostrar la factura en el reporte
 	void mostrarFactura(int index) {
-		reportes->panelUltimasf->Visible = true;
-		reportes->ultima_Nombre->Text = listFacturas[index ]->Nombre;
-		reportes->ultima_Ci->Text = listFacturas[index ]->CI;
-		reportes->ultima_Tlf->Text = listFacturas[index ]->Tlf;
-		reportes->ultima_Fecha->Text = listFacturas[index ]->Fecha;
-		reportes->ultima_Hora->Text = listFacturas[index ]->Hora;
-		reportes->Ref1->Text = listFacturas[index]->Ref;
-		reportes->Ref2->Text = listFacturas[index]->Ref;
-		reportes->ultima_MontoTotal->Text = montoTotal->Text;
+		HiperMod::Reportes::Instance->panelUltimasf->Visible = true;
+		HiperMod::Reportes::Instance->ultima_Nombre->Text = listFacturas[index ]->Nombre;
+		HiperMod::Reportes::Instance->ultima_Ci->Text = listFacturas[index ]->CI;
+		HiperMod::Reportes::Instance->ultima_Tlf->Text = listFacturas[index ]->Tlf;
+		HiperMod::Reportes::Instance->ultima_Fecha->Text = listFacturas[index ]->Fecha;
+		HiperMod::Reportes::Instance->ultima_Hora->Text = listFacturas[index ]->Hora;
+		HiperMod::Reportes::Instance->Ref1->Text = listFacturas[index]->Ref;
+		HiperMod::Reportes::Instance->Ref2->Text = listFacturas[index]->Ref;
+		HiperMod::Reportes::Instance->ultima_MontoTotal->Text = montoTotal->Text;
 		cargarTablaUltimaFactura(index);
-		reportes->panelUltimasf->Refresh();
+		HiperMod::Reportes::Instance->panelUltimasf->Refresh();
 }
 
 	// Agregar un reporte de compra a la tabla de reportes
@@ -1221,19 +1212,17 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 
 	// Generar reportes de compras y agregar la factura a la lista
 	void reportesCompras() {
-		
-
 		claseReportes^ nuevoReporte = gcnew claseReportes(
 			cedulafac->Text, nombrefac->Text, tlf->Text, fecha->Text, hora->Text, Ref->Text);
 		if (listClient[0]->GetTardo()) {                // Si el cliente tardo mas de 10 min lo agrega en la tabla de tiempo superado
-			int fila = reportes->tablaTsuperado->RowCount;
-			reportes->tablaTsuperado->RowCount++;
-			agregarReporteACompra(fila - 1, nuevoReporte, reportes->tablaTsuperado);
+			int fila = HiperMod::Reportes::Instance->tablaTsuperado->RowCount;
+			HiperMod::Reportes::Instance->tablaTsuperado->RowCount++;
+			agregarReporteACompra(fila - 1, nuevoReporte, HiperMod::Reportes::Instance->tablaTsuperado);
 		}
 		else {
-			int fila = reportes->tablaCompraC->RowCount;
-			reportes->tablaCompraC->RowCount++;
-			agregarReporteACompra(fila - 1, nuevoReporte, reportes->tablaCompraC);
+			int fila = HiperMod::Reportes::Instance->tablaCompraC->RowCount;
+			HiperMod::Reportes::Instance->tablaCompraC->RowCount++;
+			agregarReporteACompra(fila - 1, nuevoReporte, HiperMod::Reportes::Instance->tablaCompraC);
 			
 		}
 		
@@ -1268,11 +1257,11 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 	}
 	// Finalizar la transferencia y actualizar la cola de clientes
 	void finalizarTransferencia() {
+		Cliente^ eliminar = listClient[0];
 		int index = clientesEnCola->SelectedIndex;
 		// Remover el primer cliente de `listClient` y la primera persona en la cola
 		if (listClient->Count > 0) {
 			reportesCompras();
-			tablaVentasProductos(listClient[0]);
 			listClient->RemoveAt(0);
 			if (clientesEnCola->Items->Count > 0) {
 				clientesEnCola->Items->RemoveAt(0);
@@ -1300,7 +1289,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 		if (listClient->Count > 0) {            // Mostrar en caja solo si la cola no esta vacia
 			mostrarEnCaja(listClient);
 		}
-	
+		tablaVentasProductos(eliminar);
 	}
 
 	// Pasar los productos a la factura y generar la referencia
@@ -1478,9 +1467,9 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 void OcultarPaneles()
 {
 	this->panel1->Visible = false;
-	this->reportes->panel1->Visible = false;
-	this->inventario->panel1->Visible = false;
-	this->formCliente->panel1->Visible = false;
+	HiperMod::Reportes::Instance->panel1->Visible = false;
+	HiperMod::Inventario::Instance->panel1->Visible = false;
+	HiperMod::formClientes::Instance->panel1->Visible = false;
 }
 
 private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
@@ -1492,7 +1481,7 @@ private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
 	if (botonClick == button_Fac || botonClick == button_Inv || botonClick == button_Rep || botonClick == button_Cli)
 	{
 		BaseDatosReportes = data->getData("ventasproductos");
-		reportes->dataGridView1->DataSource = BaseDatosReportes;
+		HiperMod::Reportes::Instance->dataGridView1->DataSource = BaseDatosReportes;
 		
 		// Restablecer los colores de todos los botones principales
 		AsignarColoresABotones();
@@ -1503,24 +1492,24 @@ private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
 		// Cambiar el panel según el botón clickeado
 		if (botonClick == button_Rep)
 		{
-			this->reportes->panel1->Visible = true;
+			HiperMod::Reportes::Instance->panel1->Visible = true;
 		}
 		else if (botonClick == button_Fac)
 		{
 			this->panel1->Visible = true;
 		}
 		else if (botonClick == button_Inv) {
-			this->inventario->panel1->Visible = true;
+			HiperMod::Inventario::Instance->panel1->Visible = true;
 		}
 		else {
-			this->formCliente->panel1->Visible = true;
+			HiperMod::formClientes::Instance->panel1->Visible = true;
 		}
 	}
 	// Si el botón clickeado está en el formulario de reportes
-	else if (botonClick == reportes->button_Compras || botonClick == reportes->button_TSuperado)
+	else if (botonClick == HiperMod::Reportes::Instance->button_Compras || botonClick == HiperMod::Reportes::Instance->button_TSuperado)
 	{
 		// Restablecer solo los colores de los botones dentro del panel de reportes
-		array<Button^>^ botonesReportes = { reportes->button_Compras, reportes->button_TSuperado };
+		array<Button^>^ botonesReportes = { HiperMod::Reportes::Instance->button_Compras, HiperMod::Reportes::Instance->button_TSuperado };
 		for each (Button ^ boton in botonesReportes)
 		{
 			boton->BackColor = Normal;
@@ -1568,23 +1557,23 @@ void InicializarComponentes()
 void InicializarPaneles()
 {
 	// Agregar todos los paneles al formulario y establecer su visibilidad inicial
-	this->Controls->Add(reportes->panel1);
-	reportes->panel1->Location = System::Drawing::Point(0, 58);
-	reportes->panel1->Visible = false;
+	this->Controls->Add(HiperMod::Reportes::Instance->panel1);
+	HiperMod::Reportes::Instance->panel1->Location = System::Drawing::Point(0, 58);
+	HiperMod::Reportes::Instance->panel1->Visible = false;
 
-	this->Controls->Add(inventario->panel1);
-	inventario->panel1->Location = System::Drawing::Point(0, 58);
-	inventario->panel1->Visible = false;
+	this->Controls->Add(HiperMod::Inventario::Instance->panel1);
+	HiperMod::Inventario::Instance->panel1->Location = System::Drawing::Point(0, 58);
+	HiperMod::Inventario::Instance->panel1->Visible = false;
 	BaseDatosInventario = data->baseDatos("productos");
-	inventario->dataGridView1->DataSource = BaseDatosInventario;
+	HiperMod::Inventario::Instance->dataGridView1->DataSource = BaseDatosInventario;
 
-	this->Controls->Add(formCliente->panel1);
-	formCliente->panel1->Location = System::Drawing::Point(0, 58);
-	formCliente->panel1->Visible = false;
+	this->Controls->Add(HiperMod::formClientes::Instance->panel1);
+	HiperMod::formClientes::Instance->panel1->Location = System::Drawing::Point(0, 58);
+	HiperMod::formClientes::Instance->panel1->Visible = false;
 	BaseDatosCliente = data->baseDatos("cliente");
-	formCliente->dataGridView1->DataSource = BaseDatosCliente;
+	HiperMod::formClientes::Instance->dataGridView1->DataSource = BaseDatosCliente;
 	// Ocultar la quinta columna
-	formCliente->dataGridView1->Columns[4]->Visible = false;
+	HiperMod::formClientes::Instance->dataGridView1->Columns[4]->Visible = false;
 }
 
 	   // Método para asignar eventos a los botones
@@ -1594,9 +1583,9 @@ void AsignarEventos()
 	this->button_Inv->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
 	this->button_Rep->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
 	this->button_Cli->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
-	this->reportes->button_Compras->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
-	this->reportes->button_TSuperado->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
-	this->reportes->comboUltimasF->SelectedIndexChanged += gcnew System::EventHandler(this, &MenuPrincipal::comboBox_SelectedIndexChanged);
+	HiperMod::Reportes::Instance->button_Compras->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
+	HiperMod::Reportes::Instance->button_TSuperado->Click += gcnew System::EventHandler(this, &MenuPrincipal::Boton_Click);
+	HiperMod::Reportes::Instance->comboUltimasF->SelectedIndexChanged += gcnew System::EventHandler(this, &MenuPrincipal::comboBox_SelectedIndexChanged);
 }
 
 	   // Evento de carga del formulario
@@ -1652,7 +1641,7 @@ private: System::Void Mover_Tick(System::Object^ sender, System::EventArgs^ e) {
 		   for (int i = 0; i < count; i++) {
 			   int cod = comprasCliente->Productos[i];
 			   int cant = comprasCliente->Cantidad[i];
-			   data->guardarCompras(cod, cant, reportes->ventasTotales);
+			   data->guardarCompras(cod, cant, HiperMod::Reportes::Instance->ventasTotales);
 		   }
 		   data->cerrarConexion();
 	   }
@@ -1701,7 +1690,7 @@ private: System::Void comboBox_SelectedIndexChanged(System::Object^ sender, Syst
 	int index = comboBox->SelectedIndex;
 	if (index >= 0) {
 		mostrarFactura(index);
-		reportes->comboUltimasF->Refresh(); // Forzar refresco del ComboBox
+		HiperMod::Reportes::Instance->comboUltimasF->Refresh(); // Forzar refresco del ComboBox
 	}
 }
 private: System::Void crearClientes_Tick(System::Object^ sender, System::EventArgs^ e) {

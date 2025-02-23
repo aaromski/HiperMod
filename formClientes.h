@@ -16,7 +16,8 @@ namespace HiperMod {
 	/// </summary>
 	public ref class formClientes : public System::Windows::Forms::Form
 	{
-	public:
+	private:
+		static formClientes^ instance = nullptr;
 		formClientes(void)
 		{
 			InitializeComponent();
@@ -25,7 +26,22 @@ namespace HiperMod {
 			//TODO: agregar código de constructor aquí
 			//
 		}
+	public:
+		static property formClientes^ Instance{
+			formClientes ^ get() {
+				if (instance == nullptr || instance->IsDisposed) {
+					instance = gcnew formClientes();
+				}
+				return instance;
+			}
+		}
 
+			static void ShowForm() {
+			if (instance == nullptr || instance->IsDisposed) {
+				instance = gcnew formClientes();
+			}
+			instance->Show();
+		}
 	protected:
 		/// <summary>
 		/// Limpiar los recursos que se estén usando.
