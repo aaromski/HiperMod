@@ -11,7 +11,7 @@ ref class Conexion
 	MySqlConnection^ st;
 public:
 	Conexion() {
-		this->cn = "datasource=localhost; username=root; password=123456; database=hipermod;";
+		this->cn = "datasource=bukg4jrlxiqgc8y4hk8m-mysql.services.clever-cloud.com; username=ucxdkhcpecvfvvi7; password=SeOGUfOv8pDvCM5ROZC2; database=bukg4jrlxiqgc8y4hk8m;";
 		this->st = gcnew MySqlConnection(this->cn);
 	}
 

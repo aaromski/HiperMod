@@ -110,6 +110,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies />
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
