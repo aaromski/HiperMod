@@ -18,7 +18,7 @@ ref class gestorTempo
             estaPausado = false;
             tiempo = 0;
         }
-        void PausarTemporizador(Timer^ timer1, List<Cliente^>^ listClient) {
+        void PausarTemporizador(System::Windows::Forms::Timer^ timer1, List<Cliente^>^ listClient) {
             if (timer1->Enabled) {
                 timer1->Stop();
                 // Iterar a través de cada cliente en `listClient` y pausar sus timers
@@ -30,7 +30,7 @@ ref class gestorTempo
             }
         }
 
-        void reanudarTemporizador(Timer^ timer1, List<Cliente^>^ listClient) {
+        void reanudarTemporizador(System::Windows::Forms::Timer^ timer1, List<Cliente^>^ listClient) {
             if (!timer1->Enabled) {
                 // Si el temporizador está deshabilitado, no continuar
                 return;
@@ -69,7 +69,7 @@ ref class gestorTempo
             return String::Format("{0:D2}:{1:D2}", minutos, segundos); 
         }
 
-        void dobleVelocidad(Timer^ crearCliente, Timer^ mostrarCliente, List<Cliente^>^ listClient) {
+        void dobleVelocidad(System::Windows::Forms::Timer^ crearCliente, System::Windows::Forms::Timer^ mostrarCliente, List<Cliente^>^ listClient) {
             crearCliente->Interval = 90000;
             mostrarCliente->Interval = 35000;
             for each(Cliente ^ cliente in listClient) {
@@ -77,7 +77,7 @@ ref class gestorTempo
             }
         }
 
-        void veloInicial(Timer^ crearCliente, Timer^ mostrarCliente, List<Cliente^>^ listClient) {
+        void veloInicial(System::Windows::Forms::Timer^ crearCliente, System::Windows::Forms::Timer^ mostrarCliente, List<Cliente^>^ listClient) {
             crearCliente->Interval = 180000;
             mostrarCliente->Interval = 65000;
             for each(Cliente ^ cliente in listClient) {

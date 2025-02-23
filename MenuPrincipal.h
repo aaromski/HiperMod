@@ -11,7 +11,9 @@
 #include "ultimasFacturas.h"
 #include "claseReportes.h"
 #include "Cliente.h"
+#include <thread>
 namespace HiperMod {
+	using namespace System::Threading;
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections::Generic;
@@ -39,7 +41,7 @@ namespace HiperMod {
 			this->startTime = DateTime::Now;
 			this->data = gcnew Conexion();
 			this->tempo = gcnew gestorTempo();
-			this->sonidobeeb = gcnew SoundPlayer("sonidos//preview.wav");
+			this->sonidobeeb = gcnew SoundPlayer("preview.wav");
 
 		}
 
@@ -1269,13 +1271,13 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 		// Remover el primer cliente de `listClient` y la primera persona en la cola
 		if (listClient->Count > 0) {
 			reportesCompras();
-			tablaVentasProductos(listClient[0]);
+			Thread^ hiloVentas = gcnew Thread(gcnew ParameterizedThreadStart(this, &MenuPrincipal::tablaVentasProductosThread));
+			hiloVentas->Start(listClient[0]);
 			listClient->RemoveAt(0);
 			if (clientesEnCola->Items->Count > 0) {
 				clientesEnCola->Items->RemoveAt(0);
 			}
 		}
-
 		// Manejar eliminación del primer item
 		if (index == 0 && clientesEnCola->Items->Count > 0) {
 			// Seleccionar el nuevo primer item si hay más elementos
@@ -1300,6 +1302,25 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 	
 	}
 
+	void tablaVentasProductosThread(Object^ comprasClienteObj) {
+		Cliente^ comprasCliente = dynamic_cast<Cliente^>(comprasClienteObj);
+		if (comprasCliente != nullptr) {
+			tablaVentasProductos(comprasCliente);
+		}
+	}
+
+	void tablaVentasProductos(Cliente^ comprasCliente) {
+		int count = comprasCliente->Productos->Count;
+		data->abrirConexion();
+		for (int i = 0; i < count; i++) {
+			int cod = comprasCliente->Productos[i];
+			int cant = comprasCliente->Cantidad[i];
+			data->guardarCompras(BaseDatosInventario, cod, cant, reportes->ventasTotales);
+		}
+		data->cerrarConexion();
+	}
+
+
 	// Pasar los productos a la factura y generar la referencia
 	void pasarAFactura(double totalMonto) {
 		if (panel2FacturaD->Controls->Count == 0) {
@@ -1320,71 +1341,73 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 		
 	}
 
-	// Procesar y mostrar los productos en la tabla
-	void ProcesarTabla(List<Cliente^>^ listClient, TableLayoutPanel^ tabla, int id, double& total) {
-		if (listClient->Count > 0 && id >= 0) {
-			int cant = 0;
-			if (listClient[id]->Productos->Count > 0) {
-				data->abrirConexion();
-				for (int i = 0; i < listClient[id]->Productos->Count; i++) {
-					Label^ nombre = gcnew Label();
-					Label^ precioIz = gcnew Label();
-					Label^ precioDe = gcnew Label();
-					bool productoEncontrado = data->mostrarProductos(listClient[id]->Productos[i], nombre, precioIz, precioDe, listClient[id]->Cantidad[i], total);
+	
 
-					if (productoEncontrado) {
-						cant += listClient[id]->Cantidad[i];
 
-						nombre->AutoSize = true;
-						precioIz->AutoSize = true;
-						precioDe->AutoSize = true;
-						precioDe->Anchor = System::Windows::Forms::AnchorStyles::Top;
-						precioIz->Anchor = System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left;
+	void ProcesarTabla(List<Cliente^>^ listClient, TableLayoutPanel^ tabla, int id, double& total, DataTable^ inventario) {
+    if (listClient->Count > 0 && id >= 0) {
+        int cant = 0;
+        if (listClient[id]->Productos->Count > 0) {
+            for (int i = 0; i < listClient[id]->Productos->Count; i++) {
+                Label^ nombre = gcnew Label();
+                Label^ precioIz = gcnew Label();
+                Label^ precioDe = gcnew Label();
+                bool productoEncontrado = data->mostrarProductos(inventario, listClient[id]->Productos[i], nombre, precioIz, precioDe, listClient[id]->Cantidad[i], total);
 
-						int row = tabla->RowCount++;
-						tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
-						tabla->Controls->Add(nombre, 0, row);
+                if (productoEncontrado) {
+                    cant += listClient[id]->Cantidad[i];
 
-						row = tabla->RowCount++;
-						tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
-						tabla->Controls->Add(precioIz, 0, row);
-						tabla->Controls->Add(precioDe, 1, row);
-					}
-				}
-				data->cerrarConexion();
-			}
-		}
-	}
+                    nombre->AutoSize = true;
+                    precioIz->AutoSize = true;
+                    precioDe->AutoSize = true;
+                    precioDe->Anchor = System::Windows::Forms::AnchorStyles::Top;
+                    precioIz->Anchor = System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left;
+
+                    int row = tabla->RowCount++;
+                    tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
+                    tabla->Controls->Add(nombre, 0, row);
+
+                    row = tabla->RowCount++;
+                    tabla->RowStyles->Add(gcnew RowStyle(SizeType::AutoSize));
+                    tabla->Controls->Add(precioIz, 0, row);
+                    tabla->Controls->Add(precioDe, 1, row);
+                }
+            }
+        }
+    }
+}
+
 
 
 	// Crear un nuevo cliente
-	void CrearCliente() {
+	void CrearCliente(DataTable^ clientes) {
 		static int rowIndex = 0;
 		static bool siHayClientes = true;
 
 		if (!siHayClientes) {
-		// Si ya no hay clientes disponibles, no ejecutar la función
+			// Si ya no hay clientes disponibles, no ejecutar la función
 			return;
 		}
 
 		try {
-			int clienteID = data->obtenerIDCliente(rowIndex);
+			int clienteID = data->obtenerIDCliente(clientes, rowIndex);
 			Cliente^ nuevoCliente = gcnew Cliente(clienteID);
 			listClient->Add(nuevoCliente);
 			rowIndex++; // Incrementar la fila para el próximo cliente
 		}
 		catch (Exception^) {
-			MessageBox::Show("No hay mas clientes");
+			MessageBox::Show("No hay más clientes");
 			siHayClientes = false;
 		}
 	}
+
 
 
 	// Mostrar la información del cliente en caja
 	void mostrarEnCaja(List<Cliente^>^ listClient) {
 		double totalMonto = 0.0;
 		int id = listClient[0]->GetId();
-		data->datos(id, nombreA, cedula, tlf);
+		data->datos(BaseDatosCliente, id, nombreA, cedula, tlf);
 		MostrarInformacionCliente(nombreA, cedula, tlf);
 		if (EsNuevaTabla(splitCaja->Panel2)) {
 			tablaCaja = AgregarTabla(splitCaja->Panel2);
@@ -1393,7 +1416,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			LimpiarYPreparaTabla(tablaCaja);
 		}
 
-		ProcesarTabla(listClient, tablaCaja, 0, totalMonto);
+		ProcesarTabla(listClient, tablaCaja, 0, totalMonto, BaseDatosInventario);
 		if (!listClient[0]->GetSeguir()) {
 			pasarAFactura(totalMonto);
 		}
@@ -1409,7 +1432,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			LimpiarYPreparaTabla(tableCola);
 		}
 		double totalCola = 0;
-		ProcesarTabla(listClient, tableCola, posCola, totalCola);
+		ProcesarTabla(listClient, tableCola, posCola, totalCola, BaseDatosInventario);
 		PrepararInformacionCola(posCola);
 
 		if (!Fecha_Cola->Visible) {
@@ -1440,7 +1463,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 	void PrepararInformacionCola(int posCola) {
 		if (posCola > 0) {
 			int number = listClient[posCola]->GetId();
-			data->datos(number, nombre_Cola, cedula_Cola, tlf_Cola);
+			data->datos(BaseDatosCliente, number, nombre_Cola, cedula_Cola, tlf_Cola);
 			MostrarInformacionCliente(nombre_Cola, cedula_Cola, tlf_Cola);
 		}
 	}
@@ -1480,6 +1503,18 @@ void OcultarPaneles()
 	formCliente->panel1->Visible = false;
 }
 
+void ObtenerBaseDatosEnHilo(Object^ state) {
+	DataTable^ datosTemp = data->getData("ventasproductos");
+
+	// Volver al hilo de la UI para actualizar los controles
+	this->Invoke(gcnew Action<DataTable^>(this, &MenuPrincipal::ActualizarDataGridView), datosTemp);
+}
+
+private: void ActualizarDataGridView(DataTable^ BaseDatosReportesTemp) {
+	BaseDatosReportes = BaseDatosReportesTemp;
+	reportes->dataGridView1->DataSource = BaseDatosReportes;
+}
+
 private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
 {
 	// Obtener el botón que fue clickeado
@@ -1488,8 +1523,7 @@ private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
 	// Si el botón clickeado está en el formulario principal
 	if (botonClick == button_Fac || botonClick == button_Inv || botonClick == button_Rep || botonClick == button_Cli)
 	{
-		BaseDatosReportes = data->getData("ventasproductos");
-		reportes->dataGridView1->DataSource = BaseDatosReportes;
+		
 		
 		// Restablecer los colores de todos los botones principales
 		AsignarColoresABotones();
@@ -1501,9 +1535,12 @@ private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
 		if (botonClick == button_Rep)
 		{
 			reportes->panel1->Visible = true;
+			Thread^ hiloDatos = gcnew Thread(gcnew ParameterizedThreadStart(this, &MenuPrincipal::ObtenerBaseDatosEnHilo));
+			hiloDatos->Start();
 		}
 		else if (botonClick == button_Fac)
 		{
+			
 			this->panel1->Visible = true;
 		}
 		else if (botonClick == button_Inv) {
@@ -1615,8 +1652,9 @@ private: System::Void toolStripButton2_Click(System::Object^ sender, System::Eve
 	}
 }
 
-void InicializarMoverTimer() {
-	Mover = gcnew Timer(); Mover->Interval = 500; // Intervalo de 0.5 segundo 
+void InicializarMoverTimer() { 
+	Mover = gcnew System::Windows::Forms::Timer();
+	Mover->Interval = 500; // Intervalo de 0.5 segundo 
 	Mover->Tick += gcnew EventHandler(this, &MenuPrincipal::Mover_Tick);
 	Mover->Start(); // Iniciar el Timer 
 }
@@ -1643,16 +1681,7 @@ private: System::Void Mover_Tick(System::Object^ sender, System::EventArgs^ e) {
 		finalizarTransferencia();
 	} 
 }
-	   void tablaVentasProductos(Cliente^ comprasCliente) {
-		   int count = comprasCliente->Productos->Count;
-		   data->abrirConexion();
-		   for (int i = 0; i < count; i++) {
-			   int cod = comprasCliente->Productos[i];
-			   int cant = comprasCliente->Cantidad[i];
-			   data->guardarCompras(cod, cant, reportes->ventasTotales);
-		   }
-		   data->cerrarConexion();
-	   }
+	 
 
 
 private: System::Void pausar_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -1703,7 +1732,7 @@ private: System::Void comboBox_SelectedIndexChanged(System::Object^ sender, Syst
 }
 private: System::Void crearClientes_Tick(System::Object^ sender, System::EventArgs^ e) {
 	int generarClientes = tempo->generarClientes;
-		CrearCliente();
+		CrearCliente(BaseDatosCliente);
 		if (generarClientes > 1) {
 			clientesEnCola->Items->Add("Cliente " + generarClientes);
 		}

@@ -9,10 +9,12 @@ ref class Conexion
 {
 	String^ cn;
 	MySqlConnection^ st;
+	MySqlConnection^ lectura;
 public:
 	Conexion() {
 		this->cn = "datasource=bukg4jrlxiqgc8y4hk8m-mysql.services.clever-cloud.com; username=ucxdkhcpecvfvvi7; password=SeOGUfOv8pDvCM5ROZC2; database=bukg4jrlxiqgc8y4hk8m;";
 		this->st = gcnew MySqlConnection(this->cn);
+		this->lectura = gcnew MySqlConnection(this->cn);
 	}
 
 public:
@@ -69,7 +71,7 @@ public:
 	{
 		// Construir la consulta SQL utilizando el parámetro tableName
 		String^ sql = "SELECT * FROM " + tableName + " ORDER BY `Ventas Bs` DESC"; //ORDENAR DE MAYOR A MENOR LAS VENTAS BS
-		MySqlCommand^ cursor = gcnew MySqlCommand(sql, this->st);
+		MySqlCommand^ cursor = gcnew MySqlCommand(sql, this->lectura);
 		MySqlDataAdapter^ data = gcnew MySqlDataAdapter(cursor);
 		DataTable^ tabla = gcnew DataTable();
 		data->Fill(tabla);
@@ -79,60 +81,66 @@ public:
 	DataTable^ baseDatos(String^ tableName) 
 	{
 		String^ sql = "select *from " + tableName;
-		MySqlCommand^ cursor = gcnew MySqlCommand(sql, this->st);
+		MySqlCommand^ cursor = gcnew MySqlCommand(sql, this->lectura);
 		MySqlDataAdapter^ data = gcnew MySqlDataAdapter(cursor);
 		DataTable^ tabla = gcnew DataTable();
 		data->Fill(tabla);
 		return tabla;
 	}
 
-	int obtenerIDCliente(int row) {
-		try {
-			String^ sentencia = "SELECT ID FROM cliente LIMIT 1 OFFSET @row";
-			MySqlCommand^ command = gcnew MySqlCommand(sentencia, st);
-			command->Parameters->AddWithValue("@row", row);
-
-			st->Open();
-			MySqlDataReader^ reader = command->ExecuteReader();
-
-			if (reader->Read()) {
-				int clientId = Convert::ToInt32(reader["ID"]);
-				reader->Close();
-				st->Close();
-				return clientId;
-			}
-			else {
-				reader->Close();
-				st->Close();
-			}
+	int obtenerIDCliente(DataTable^ clientes, int row) {
+		if (row < clientes->Rows->Count) {
+			DataRow^ fila = clientes->Rows[row];
+			return Convert::ToInt32(fila["ID"]);
 		}
-		catch (Exception^) {
-			st->Close();
+		else {
+			throw gcnew Exception("No hay más clientes");
 		}
-
-		return -1; 
 	}
 
 
-	void datos(int id, Label^ nombreA, Label^ ci, Label^ tlf) { // Metodo para buscar la informacion del cliente y guardala en label
-		String^ sentencia = "SELECT nombre, apellido, CI, Tlf FROM cliente WHERE ID = @ID";
-		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
-		ejecutar->Parameters->AddWithValue("@ID", id);
-		this->st->Open();
-		MySqlDataReader^ lector = ejecutar->ExecuteReader();
-		if (lector->Read()) {
-			String^ nombre = lector["nombre"]->ToString();
-			String^ apellido = lector["apellido"]->ToString();
+
+	void datos(DataTable^ clientes, int id, Label^ nombreA, Label^ ci, Label^ tlf) {
+		String^ filtro = "ID = " + id.ToString();
+		array<DataRow^>^ filasFiltradas = clientes->Select(filtro);
+
+		if (filasFiltradas->Length > 0) {
+			DataRow^ fila = filasFiltradas[0];
+			String^ nombre = fila["nombre"]->ToString();
+			String^ apellido = fila["apellido"]->ToString();
 			nombreA->Text = nombre + " " + apellido;
-			String^ cedula = lector["CI"]->ToString();
+			String^ cedula = fila["CI"]->ToString();
 			ci->Text = cedula;
-			String^ telefono = lector["tlf"]->ToString();
+			String^ telefono = fila["Tlf"]->ToString();
 			tlf->Text = telefono;
-			
 		}
-		lector->Close();
-		this->st->Close();
 	}
+
+	bool mostrarProductos(DataTable^ inventario, int id, Label^ nombreP, Label^ izqui, Label^ dere, int cantidad, double& montoTotal) {
+		String^ filtro = "ID = " + id.ToString();
+		array<DataRow^>^ filasFiltradas = inventario->Select(filtro);
+
+		bool productoEncontrado = false; // Variable para indicar si el producto fue encontrado
+
+		if (filasFiltradas->Length > 0) {
+			DataRow^ fila = filasFiltradas[0];
+			String^ producto = fila["descripcion"]->ToString();
+			nombreP->Text = producto;
+
+			String^ precioP = fila["Precio_BS"]->ToString();
+			izqui->Text = cantidad + "x" + precioP;
+
+			double precioNumerico = Double::Parse(precioP);
+			double resultado = cantidad * precioNumerico;
+			dere->Text = "Bs " + resultado.ToString("F2");
+
+			montoTotal += resultado;
+			productoEncontrado = true; // Producto encontrado
+		}
+
+		return productoEncontrado;
+	}
+
 
 	void reducirStock(int cod, int cantidadVendida) {     //REDUCE EL STOCK CUANDO EL CLIENTE COMPRA ALGUN PRODUCTO
 		String^ consulta = "SELECT Stock FROM productos WHERE ID = @ID";
@@ -160,7 +168,7 @@ public:
 	}
 
 
-	void guardarCompras(int cod, int cantidad, Label^ ventasT) {
+	void guardarCompras(DataTable^ baseDatosInventario, int cod, int cantidad, Label^ ventasT) {
 		double ventasTotales = Convert::ToDouble(ventasT->Text);
 		String^ consulta = "SELECT * FROM ventasproductos WHERE COD = @COD";
 		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, this->st);
@@ -200,7 +208,7 @@ public:
 			double precioBs = 0;
 
 			// Obtener descripción y precios desde la tabla productos
-			obtenerDescripcionPrecios(cod, descripcion, precioDolar, precioBs);
+			obtenerDescripcionPrecios(baseDatosInventario, cod, descripcion, precioDolar, precioBs);
 
 			// Calcular las ventas
 			double ventasBs = precioBs * cantidad;
@@ -221,50 +229,34 @@ public:
 			// Reducir el stock del producto
 			reducirStock(cod, cantidad);
 		}
-		ventasT->Text = ventasTotales.ToString("F2");
+		ventasT->Invoke(gcnew Action<Label^, double>(this, &Conexion::ActualizarVentasTotales), ventasT, ventasTotales);
 	}
 
-	void obtenerDescripcionPrecios(int id, String^% descripcion, double% dolar, double% bs) {
-		String^ consulta = "SELECT descripcion, Precio_$, Precio_BS FROM productos WHERE ID = @ID";
-		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, this->st);
-		ejecutar->Parameters->AddWithValue("@ID", id);
-		MySqlDataReader^ lector = ejecutar->ExecuteReader();
-
-		if (lector->Read()) {
-			descripcion = lector["descripcion"]->ToString();
-			dolar = Convert::ToDouble(lector["Precio_$"]);
-			bs = Convert::ToDouble(lector["Precio_BS"]);
+	void ActualizarVentasTotales(Label^ ventasT, double ventasTotales) {
+		if (ventasT->InvokeRequired) {
+			ventasT->Invoke(gcnew Action<Label^, double>(this, &Conexion::ActualizarVentasTotales), ventasT, ventasTotales);
 		}
-		lector->Close();
-	}
-
-
-	bool mostrarProductos(int id, Label^ nombreP, Label^ izqui, Label^ dere, int cantidad, double& montoTotal) {
-		String^ sentencia = "SELECT descripcion, Precio_BS FROM productos WHERE ID = @ID";
-		MySqlCommand^ ejecutar = gcnew MySqlCommand(sentencia, this->st);
-		ejecutar->Parameters->AddWithValue("@ID", id);
-		MySqlDataReader^ lector = ejecutar->ExecuteReader();
-
-		bool productoEncontrado = false; // Variable para indicar si el producto fue encontrado
-
-		if (lector->Read()) {
-			String^ producto = lector["descripcion"]->ToString();
-			nombreP->Text = producto;
-
-			String^ precioP = lector["Precio_BS"]->ToString();
-			izqui->Text = cantidad + "x" + precioP;
-
-			double precioNumerico = Double::Parse(precioP);
-			double resultado = cantidad * precioNumerico;
-			dere->Text = "Bs " + resultado.ToString("F2");
-
-			montoTotal += resultado;
-			productoEncontrado = true; // Producto encontrado
+		else {
+			ventasT->Text = ventasTotales.ToString("F2");
 		}
-
-		lector->Close(); // Cerrar el lector antes de retornar
-		return productoEncontrado;
 	}
+
+	void obtenerDescripcionPrecios(DataTable^ inventario, int id, String^% descripcion, double% dolar, double% bs) {
+		String^ filtro = "ID = " + id.ToString();
+		array<DataRow^>^ filasFiltradas = inventario->Select(filtro);
+
+		if (filasFiltradas->Length > 0) {
+			DataRow^ fila = filasFiltradas[0];
+			descripcion = fila["descripcion"]->ToString();
+			dolar = Convert::ToDouble(fila["Precio_$"]);
+			bs = Convert::ToDouble(fila["Precio_BS"]);
+		}
+		else {
+			throw gcnew Exception("Producto no encontrado en el inventario.");
+		}
+	}
+
+
 
 
 };
