@@ -45,6 +45,15 @@ namespace HiperMod {
 
 		}
 
+		ref class ObtenerBaseDatosEnHiloArgs {
+		public:
+			int op;
+
+			ObtenerBaseDatosEnHiloArgs(int op) {
+				this->op = op;
+			}
+		};
+
 	protected:
 		/// <summary>
 		/// Limpiar los recursos que se estén usando.
@@ -1297,8 +1306,10 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			sinClientes();
 		}
 		if (listClient->Count > 0) {            // Mostrar en caja solo si la cola no esta vacia
+			Thread::Sleep(1000);
 			mostrarEnCaja(listClient);
 		}
+		
 	
 	}
 
@@ -1310,14 +1321,15 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 	}
 
 	void tablaVentasProductos(Cliente^ comprasCliente) {
+		MySqlConnection^ conexion = data->ObtenerConexionDisponible();
 		int count = comprasCliente->Productos->Count;
-		data->abrirConexion();
+		data->abrirConexion(conexion);
 		for (int i = 0; i < count; i++) {
 			int cod = comprasCliente->Productos[i];
 			int cant = comprasCliente->Cantidad[i];
-			data->guardarCompras(BaseDatosInventario, cod, cant, reportes->ventasTotales);
+			data->guardarCompras(BaseDatosInventario, cod, cant, reportes->ventasTotales, conexion);
 		}
-		data->cerrarConexion();
+		data->cerrarConexion(conexion);
 	}
 
 
@@ -1438,6 +1450,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 		if (!Fecha_Cola->Visible) {
 			Fecha_Cola->Text = DateTime::Now.ToString("dd/MM/yyyy");
 			Fecha_Cola->Visible = true;
+			tiempoCola->Visible = true;
 		}
 	}
 
@@ -1501,70 +1514,83 @@ void OcultarPaneles()
 	reportes->panel1->Visible = false;
 	inventario->panel1->Visible = false;
 	formCliente->panel1->Visible = false;
+	
 }
 
 void ObtenerBaseDatosEnHilo(Object^ state) {
-	DataTable^ datosTemp = data->getData("ventasproductos");
+	ObtenerBaseDatosEnHiloArgs^ args = dynamic_cast<ObtenerBaseDatosEnHiloArgs^>(state);
+	if (args == nullptr) return;
 
+	DataTable^ datosTemp;
+	if (args->op == 1) {
+		datosTemp = data->baseDatos("productos");
+	}
+	else {
+		datosTemp = data->getData("ventasproductos");
+	}
+	
 	// Volver al hilo de la UI para actualizar los controles
-	this->Invoke(gcnew Action<DataTable^>(this, &MenuPrincipal::ActualizarDataGridView), datosTemp);
+	this->Invoke(gcnew Action<DataTable^, int>(this, &MenuPrincipal::ActualizarDataGridView), datosTemp, args->op);
 }
 
-private: void ActualizarDataGridView(DataTable^ BaseDatosReportesTemp) {
-	BaseDatosReportes = BaseDatosReportesTemp;
-	reportes->dataGridView1->DataSource = BaseDatosReportes;
+
+private: void ActualizarDataGridView(DataTable^ BaseDatos, int op) {
+	if (op == 1) {
+		BaseDatosInventario = BaseDatos;
+		inventario->dataGridView1->DataSource = BaseDatosInventario;
+	}
+	else {
+		BaseDatosReportes = BaseDatos;
+		reportes->dataGridView1->DataSource = BaseDatosReportes;
+	}
+	
 }
 
-private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e)
-{
+
+private: System::Void Boton_Click(System::Object^ sender, System::EventArgs^ e) {
 	// Obtener el botón que fue clickeado
 	Button^ botonClick = dynamic_cast<Button^>(sender);
 
 	// Si el botón clickeado está en el formulario principal
-	if (botonClick == button_Fac || botonClick == button_Inv || botonClick == button_Rep || botonClick == button_Cli)
-	{
-		
-		
+	if (botonClick == button_Fac || botonClick == button_Inv || botonClick == button_Rep || botonClick == button_Cli) {
 		// Restablecer los colores de todos los botones principales
 		AsignarColoresABotones();
 		botonClick->BackColor = botonClickeado; // Cambiar el color del botón clickeado
 
-		OcultarPaneles(); 
+		OcultarPaneles();
 
 		// Cambiar el panel según el botón clickeado
-		if (botonClick == button_Rep)
-		{
+		if (botonClick == button_Rep) {
 			reportes->panel1->Visible = true;
+			ObtenerBaseDatosEnHiloArgs^ args = gcnew ObtenerBaseDatosEnHiloArgs(2);
 			Thread^ hiloDatos = gcnew Thread(gcnew ParameterizedThreadStart(this, &MenuPrincipal::ObtenerBaseDatosEnHilo));
-			hiloDatos->Start();
+			hiloDatos->Start(args);
 		}
-		else if (botonClick == button_Fac)
-		{
-			
+		else if (botonClick == button_Fac) {
 			this->panel1->Visible = true;
 		}
 		else if (botonClick == button_Inv) {
 			inventario->panel1->Visible = true;
+			ObtenerBaseDatosEnHiloArgs^ args = gcnew ObtenerBaseDatosEnHiloArgs(1);
+			Thread^ hiloDatos = gcnew Thread(gcnew ParameterizedThreadStart(this, &MenuPrincipal::ObtenerBaseDatosEnHilo));
+			hiloDatos->Start(args);
 		}
 		else {
 			formCliente->panel1->Visible = true;
 		}
 	}
 	// Si el botón clickeado está en el formulario de reportes
-	else if (botonClick == reportes->button_Compras || botonClick == reportes->button_TSuperado)
-	{
+	else if (botonClick == reportes->button_Compras || botonClick == reportes->button_TSuperado) {
 		// Restablecer solo los colores de los botones dentro del panel de reportes
 		array<Button^>^ botonesReportes = { reportes->button_Compras, reportes->button_TSuperado };
-		for each (Button ^ boton in botonesReportes)
-		{
+		for each (Button ^ boton in botonesReportes) {
 			boton->BackColor = Normal;
 		}
 
 		botonClick->BackColor = botonClickeado; // Cambiar el color del botón clickeado
 	}
-
-	
 }
+
 
 TableLayoutPanel^ AgregarTabla(Panel^ panel) {
 		// Crear una instancia de TableLayoutPanel
@@ -1601,6 +1627,7 @@ void InicializarComponentes()
 	   // Método para inicializar paneles
 void InicializarPaneles()
 {
+	
 	// Agregar todos los paneles al formulario y establecer su visibilidad inicial
 	this->Controls->Add(reportes->panel1);
 	reportes->panel1->Location = System::Drawing::Point(0, 58);
@@ -1702,6 +1729,7 @@ private: System::Void clientesEnCola_SelectedIndexChanged(System::Object^ sender
 		splitCola->Panel2->Controls->Remove(tableCola); 
 	}
 	mostrarEnCola(listClient, selectedIndex+1);
+	
 }
 
 
@@ -1710,7 +1738,7 @@ private: System::Void tiempoCC_Tick(System::Object^ sender, System::EventArgs^ e
 		int id = 0;
 		if (clientesEnCola->SelectedIndex >= 0) {
 			id = clientesEnCola->SelectedIndex;
-			tiempoCola->Visible = true;
+			
 		}
 		tempo->tiemposClientes(listClient, tiempoCaja, tiempoCola,id);
 	}

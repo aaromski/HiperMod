@@ -9,21 +9,56 @@ ref class Conexion
 {
 	String^ cn;
 	MySqlConnection^ st;
+	MySqlConnection^ baseVentas;
 	MySqlConnection^ lectura;
+	MySqlConnection^ escritura;
+	MySqlConnection^ escritura2;
 public:
 	Conexion() {
 		this->cn = "datasource=bukg4jrlxiqgc8y4hk8m-mysql.services.clever-cloud.com; username=ucxdkhcpecvfvvi7; password=SeOGUfOv8pDvCM5ROZC2; database=bukg4jrlxiqgc8y4hk8m;";
 		this->st = gcnew MySqlConnection(this->cn);
 		this->lectura = gcnew MySqlConnection(this->cn);
+		this->escritura = gcnew MySqlConnection(this->cn);
+		this->escritura2 = gcnew MySqlConnection(this->cn);
+		this->baseVentas = gcnew MySqlConnection(this->cn);
 	}
 
 public:
-	void  abrirConexion() {
-		this->st->Open();
+
+	void abrirConexion(MySqlConnection^ conexion) {
+		if (conexion->State != System::Data::ConnectionState::Open) {
+			conexion->Open();
+		}
 	}
-	void  cerrarConexion() {
-		this->st->Close();
+
+	void cerrarConexion(MySqlConnection^ conexion) {
+		if (conexion->State == System::Data::ConnectionState::Open) {
+			escritura->Close();
+		}
 	}
+
+	MySqlConnection^ conexionDisponibleLectura() {
+		if (lectura->State == System::Data::ConnectionState::Open) {
+			return baseVentas;
+		}
+		else if (baseVentas->State == System::Data::ConnectionState::Open) {
+			return st;
+		}
+			return lectura;
+	}
+
+	MySqlConnection^ ObtenerConexionDisponible() {
+		if (escritura->State == System::Data::ConnectionState::Open) {
+			return escritura2;
+		}
+		else if (escritura2->State == System::Data::ConnectionState::Open) {
+			return st;
+		}
+		return escritura;
+	}
+
+
+
 
 	void TruncateTable() {  // ELminar los datos de las ventas totales por producto en la base de datos
 			String^ query = "TRUNCATE ventasproductos";
@@ -69,22 +104,29 @@ public:
 
 	DataTable^ getData(String^ tableName)
 	{
+		MySqlConnection^ conexion = conexionDisponibleLectura();
 		// Construir la consulta SQL utilizando el parámetro tableName
+		conexion->Open();
 		String^ sql = "SELECT * FROM " + tableName + " ORDER BY `Ventas Bs` DESC"; //ORDENAR DE MAYOR A MENOR LAS VENTAS BS
-		MySqlCommand^ cursor = gcnew MySqlCommand(sql, this->lectura);
+		MySqlCommand^ cursor = gcnew MySqlCommand(sql, conexion);
 		MySqlDataAdapter^ data = gcnew MySqlDataAdapter(cursor);
 		DataTable^ tabla = gcnew DataTable();
 		data->Fill(tabla);
+		conexion->Close();
 		return tabla;
 	}
 
 	DataTable^ baseDatos(String^ tableName) 
 	{
+		MySqlConnection^ conexion = conexionDisponibleLectura();
+		// Construir la consulta SQL utilizando el parámetro tableName
+		conexion->Open();
 		String^ sql = "select *from " + tableName;
-		MySqlCommand^ cursor = gcnew MySqlCommand(sql, this->lectura);
+		MySqlCommand^ cursor = gcnew MySqlCommand(sql, conexion);
 		MySqlDataAdapter^ data = gcnew MySqlDataAdapter(cursor);
 		DataTable^ tabla = gcnew DataTable();
 		data->Fill(tabla);
+		conexion->Close();
 		return tabla;
 	}
 
@@ -142,9 +184,9 @@ public:
 	}
 
 
-	void reducirStock(int cod, int cantidadVendida) {     //REDUCE EL STOCK CUANDO EL CLIENTE COMPRA ALGUN PRODUCTO
+	void reducirStock(int cod, int cantidadVendida, MySqlConnection^ Conexion) {     //REDUCE EL STOCK CUANDO EL CLIENTE COMPRA ALGUN PRODUCTO
 		String^ consulta = "SELECT Stock FROM productos WHERE ID = @ID";
-		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, this->st);
+		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, Conexion);
 		ejecutar->Parameters->AddWithValue("@ID", cod);
 
 		MySqlDataReader^ lector = ejecutar->ExecuteReader();
@@ -157,7 +199,7 @@ public:
 
 			// Actualizar el stock en la tabla productos
 			consulta = "UPDATE productos SET Stock = @nuevoStock WHERE ID = @ID";
-			ejecutar = gcnew MySqlCommand(consulta, this->st);
+			ejecutar = gcnew MySqlCommand(consulta, Conexion);
 			ejecutar->Parameters->AddWithValue("@nuevoStock", nuevoStock);
 			ejecutar->Parameters->AddWithValue("@ID", cod);
 			ejecutar->ExecuteNonQuery(); // Ejecutar la consulta de actualización
@@ -168,10 +210,10 @@ public:
 	}
 
 
-	void guardarCompras(DataTable^ baseDatosInventario, int cod, int cantidad, Label^ ventasT) {
+	void guardarCompras(DataTable^ baseDatosInventario, int cod, int cantidad, Label^ ventasT, MySqlConnection^ Conexion) {
 		double ventasTotales = Convert::ToDouble(ventasT->Text);
 		String^ consulta = "SELECT * FROM ventasproductos WHERE COD = @COD";
-		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, this->st);
+		MySqlCommand^ ejecutar = gcnew MySqlCommand(consulta, Conexion);
 		ejecutar->Parameters->AddWithValue("@COD", cod);
 
 		MySqlDataReader^ lector = ejecutar->ExecuteReader();
@@ -189,7 +231,7 @@ public:
 
 			// Actualizar la cantidad y ventas
 			consulta = "UPDATE ventasproductos SET Cantidad = @nuevaCantidad, `Ventas $` = @ventasDolares, `Ventas Bs` = @ventasBs WHERE Cod = @COD";
-			ejecutar = gcnew MySqlCommand(consulta, this->st);
+			ejecutar = gcnew MySqlCommand(consulta, Conexion);
 			ejecutar->Parameters->AddWithValue("@nuevaCantidad", nuevaCantidad);
 			ejecutar->Parameters->AddWithValue("@ventasDolares", ventasDolares);
 			ejecutar->Parameters->AddWithValue("@ventasBs", ventasBs);
@@ -197,7 +239,7 @@ public:
 			ejecutar->ExecuteNonQuery(); // Ejecutar la consulta de actualización
 
 			// Reducir el stock del producto
-			reducirStock(cod, cantidad);
+			reducirStock(cod, cantidad, Conexion);
 		}
 		else {
 			lector->Close(); // Cerrar el lector antes de ejecutar otra consulta
@@ -216,7 +258,7 @@ public:
 			double ventasDolares = precioDolar * cantidad;
 
 			consulta = "INSERT INTO ventasproductos (COD, Descripcion, Cantidad, `Precio $`, `Precio Bs`, `Ventas $`, `Ventas Bs`) VALUES (@COD, @Descripcion, @Cantidad, @PrecioDolares, @PrecioBs, @VentasDolares, @VentasBs)";
-			ejecutar = gcnew MySqlCommand(consulta, this->st);
+			ejecutar = gcnew MySqlCommand(consulta, Conexion);
 			ejecutar->Parameters->AddWithValue("@COD", cod);
 			ejecutar->Parameters->AddWithValue("@Descripcion", descripcion);
 			ejecutar->Parameters->AddWithValue("@Cantidad", cantidad);
@@ -227,7 +269,7 @@ public:
 			ejecutar->ExecuteNonQuery(); // Ejecutar la consulta de inserción
 
 			// Reducir el stock del producto
-			reducirStock(cod, cantidad);
+			reducirStock(cod, cantidad, Conexion);
 		}
 		ventasT->Invoke(gcnew Action<Label^, double>(this, &Conexion::ActualizarVentasTotales), ventasT, ventasTotales);
 	}

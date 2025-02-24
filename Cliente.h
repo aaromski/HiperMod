@@ -16,7 +16,7 @@ public:
         tardo = false;
         productoCount = 1;
         maxProdu = randomCantidad(0);
-        tCompras = gcnew Timer(); tCompras->Interval = 1000; 
+        tCompras = gcnew System::Windows::Forms::Timer(); tCompras->Interval = 1000; 
         // Cada segundo 
         tCompras->Tick += gcnew EventHandler(this, &Cliente::OnCreacionTimerTick); 
         tCompras->Start(); 
@@ -52,7 +52,7 @@ public:
     }
 
     void IniciarTimer() {
-        productoTimer = gcnew Timer();
+        productoTimer = gcnew System::Windows::Forms::Timer();
         productoTimer->Interval = 60000; // Cada 60 segundos
         productoTimer->Tick += gcnew EventHandler(this, &Cliente::OnProductoTimerTick);
         productoTimer->Start();
@@ -97,14 +97,15 @@ private:
     int id_;
     List<int>^ cantidad = gcnew List<int>();
     List<int>^ productos = gcnew List<int>();
-    Timer^ tCompras;
-    Timer^ productoTimer;
+    System::Windows::Forms::Timer^ tCompras;
+    System::Windows::Forms::Timer^ productoTimer;
     int productoCount = 0; // Contador de productos
     int maxCantidad;
     int tiempoComprando;
     bool seguir;
     bool tardo;
     static int maxProdu;
+
 
     void AgregarProducto() {
             int producto = randomProducto(); 
