@@ -127,21 +127,22 @@ private:
         }
     }
 
-    int randomCantidad( int opcion) {
-        std::srand(static_cast<unsigned>(std::time(nullptr))); 
+    int randomCantidad(int opcion) {
+        std::srand(static_cast<unsigned>(std::time(nullptr)));
         if (opcion == 1) {
-            int cantidad = (std::rand() % 5) + 1;// Generar un número aleatorio entre 1 y 5 
+            int cantidad = (std::rand() % 5) + 1; // Generar un número aleatorio entre 1 y 5
             return cantidad;
         }
         else {
-            maxProdu = (std::rand() % 10) + 5;
-            return maxProdu;  
+            int maxProdu = (std::rand() % 5) + 6; // Generar un número aleatorio entre 5 y 10
+            return maxProdu;
         }
     }
 
+
     int randomProducto() {
         std::srand(static_cast<unsigned>(std::time(nullptr))); 
-        return (std::rand() % 16) + 1; // Números del 1 al 10 
+        return (std::rand() % 52) + 1; // Números del 1 al 10 
     }
 
     void OnProductoTimerTick(Object^ sender, EventArgs^ e) {

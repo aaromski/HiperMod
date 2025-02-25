@@ -169,6 +169,8 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ Ref;
 	private: System::Windows::Forms::Label^ refFactura;
 private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
+private: System::Windows::Forms::Label^ probar;
+
 
 	private:
 	bool UseImage = true;
@@ -262,6 +264,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			this->tiempo = (gcnew System::Windows::Forms::Timer(this->components));
 			this->crearClientes = (gcnew System::Windows::Forms::Timer(this->components));
 			this->mostrarCliente = (gcnew System::Windows::Forms::Timer(this->components));
+			this->probar = (gcnew System::Windows::Forms::Label());
 			this->toolStrip1->SuspendLayout();
 			this->panelFacturaD->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitCaja))->BeginInit();
@@ -451,6 +454,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			// panelFacturaD
 			// 
 			this->panelFacturaD->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->panelFacturaD->Controls->Add(this->probar);
 			this->panelFacturaD->Controls->Add(this->Ref);
 			this->panelFacturaD->Controls->Add(this->refFactura);
 			this->panelFacturaD->Controls->Add(this->tlfac);
@@ -508,7 +512,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			this->tlfac->AutoSize = true;
 			this->tlfac->Font = (gcnew System::Drawing::Font(L"Arial", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->tlfac->Location = System::Drawing::Point(30, 144);
+			this->tlfac->Location = System::Drawing::Point(40, 144);
 			this->tlfac->Name = L"tlfac";
 			this->tlfac->Size = System::Drawing::Size(41, 15);
 			this->tlfac->TabIndex = 23;
@@ -520,7 +524,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			this->cedulafac->AutoSize = true;
 			this->cedulafac->Font = (gcnew System::Drawing::Font(L"Arial", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->cedulafac->Location = System::Drawing::Point(62, 131);
+			this->cedulafac->Location = System::Drawing::Point(68, 131);
 			this->cedulafac->Name = L"cedulafac";
 			this->cedulafac->Size = System::Drawing::Size(41, 15);
 			this->cedulafac->TabIndex = 22;
@@ -532,7 +536,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			this->nombrefac->AutoSize = true;
 			this->nombrefac->Font = (gcnew System::Drawing::Font(L"Arial", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->nombrefac->Location = System::Drawing::Point(64, 118);
+			this->nombrefac->Location = System::Drawing::Point(68, 118);
 			this->nombrefac->Name = L"nombrefac";
 			this->nombrefac->Size = System::Drawing::Size(41, 15);
 			this->nombrefac->TabIndex = 21;
@@ -823,7 +827,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			// tlf
 			// 
 			this->tlf->AutoSize = true;
-			this->tlf->Location = System::Drawing::Point(34, 29);
+			this->tlf->Location = System::Drawing::Point(50, 29);
 			this->tlf->Name = L"tlf";
 			this->tlf->Size = System::Drawing::Size(53, 13);
 			this->tlf->TabIndex = 27;
@@ -842,7 +846,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			// cedula
 			// 
 			this->cedula->AutoSize = true;
-			this->cedula->Location = System::Drawing::Point(59, 16);
+			this->cedula->Location = System::Drawing::Point(68, 17);
 			this->cedula->Name = L"cedula";
 			this->cedula->Size = System::Drawing::Size(53, 13);
 			this->cedula->TabIndex = 26;
@@ -861,7 +865,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			// nombreA
 			// 
 			this->nombreA->AutoSize = true;
-			this->nombreA->Location = System::Drawing::Point(60, 3);
+			this->nombreA->Location = System::Drawing::Point(68, 3);
 			this->nombreA->Name = L"nombreA";
 			this->nombreA->Size = System::Drawing::Size(119, 13);
 			this->nombreA->TabIndex = 25;
@@ -998,7 +1002,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			// tlf_Cola
 			// 
 			this->tlf_Cola->AutoSize = true;
-			this->tlf_Cola->Location = System::Drawing::Point(33, 29);
+			this->tlf_Cola->Location = System::Drawing::Point(43, 29);
 			this->tlf_Cola->Name = L"tlf_Cola";
 			this->tlf_Cola->Size = System::Drawing::Size(53, 13);
 			this->tlf_Cola->TabIndex = 27;
@@ -1017,7 +1021,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			// cedula_Cola
 			// 
 			this->cedula_Cola->AutoSize = true;
-			this->cedula_Cola->Location = System::Drawing::Point(58, 16);
+			this->cedula_Cola->Location = System::Drawing::Point(69, 16);
 			this->cedula_Cola->Name = L"cedula_Cola";
 			this->cedula_Cola->Size = System::Drawing::Size(53, 13);
 			this->cedula_Cola->TabIndex = 26;
@@ -1036,7 +1040,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			// nombre_Cola
 			// 
 			this->nombre_Cola->AutoSize = true;
-			this->nombre_Cola->Location = System::Drawing::Point(59, 3);
+			this->nombre_Cola->Location = System::Drawing::Point(67, 3);
 			this->nombre_Cola->Name = L"nombre_Cola";
 			this->nombre_Cola->Size = System::Drawing::Size(119, 13);
 			this->nombre_Cola->TabIndex = 25;
@@ -1128,6 +1132,15 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			this->mostrarCliente->Interval = 60000;
 			this->mostrarCliente->Tick += gcnew System::EventHandler(this, &MenuPrincipal::mostrarCliente_Tick_1);
 			// 
+			// probar
+			// 
+			this->probar->AutoSize = true;
+			this->probar->Location = System::Drawing::Point(199, 14);
+			this->probar->Name = L"probar";
+			this->probar->Size = System::Drawing::Size(41, 15);
+			this->probar->TabIndex = 26;
+			this->probar->Text = L"label8";
+			// 
 			// MenuPrincipal
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
@@ -1179,7 +1192,8 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 				tablaFactura,
 				fecha->Text,
 				hora->Text,
-				Ref->Text
+				Ref->Text,
+				montoTotal->Text
 			);
 			if (Max_10 <= 11) {
 				listFacturas->Add(nuevaFactura);
@@ -1210,7 +1224,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 		reportes->ultima_Hora->Text = listFacturas[index ]->Hora;
 		reportes->Ref1->Text = listFacturas[index]->Ref;
 		reportes->Ref2->Text = listFacturas[index]->Ref;
-		reportes->ultima_MontoTotal->Text = montoTotal->Text;
+		reportes->ultima_MontoTotal->Text = listFacturas[index]->totalMonto;
 		cargarTablaUltimaFactura(index);
 		reportes->panelUltimasf->Refresh();
 }
@@ -1306,7 +1320,7 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 			sinClientes();
 		}
 		if (listClient->Count > 0) {            // Mostrar en caja solo si la cola no esta vacia
-			Thread::Sleep(1000);
+			
 			mostrarEnCaja(listClient);
 		}
 		
@@ -1322,15 +1336,25 @@ private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
 
 	void tablaVentasProductos(Cliente^ comprasCliente) {
 		MySqlConnection^ conexion = data->ObtenerConexionDisponible();
-		int count = comprasCliente->Productos->Count;
-		data->abrirConexion(conexion);
-		for (int i = 0; i < count; i++) {
-			int cod = comprasCliente->Productos[i];
-			int cant = comprasCliente->Cantidad[i];
-			data->guardarCompras(BaseDatosInventario, cod, cant, reportes->ventasTotales, conexion);
+		// Bloque de sincronización
+		Monitor::Enter(reportes->ventasTotales);
+		try {
+			data->abrirConexion(conexion);
+
+			int count = comprasCliente->Productos->Count;
+			for (int i = 0; i < count; i++) {
+				int cod = comprasCliente->Productos[i];
+				int cant = comprasCliente->Cantidad[i];
+				data->guardarCompras(BaseDatosInventario, cod, cant, reportes->ventasTotales, conexion);
+			}
+
+			data->cerrarConexion(conexion);
 		}
-		data->cerrarConexion(conexion);
+		finally {
+			Monitor::Exit(reportes->ventasTotales);
+		}
 	}
+
 
 
 	// Pasar los productos a la factura y generar la referencia
@@ -1714,7 +1738,7 @@ private: System::Void Mover_Tick(System::Object^ sender, System::EventArgs^ e) {
 private: System::Void pausar_Click(System::Object^ sender, System::EventArgs^ e) {
 	mostrarCliente->Stop();
 	crearClientes->Stop();
-	tempo->PausarTemporizador(tiempo, listClient);
+	tempo->PausarTemporizador(tiempo, listClient, 2);
 }
 
 private: System::Void reanudar_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -1777,39 +1801,49 @@ private: System::Void crearClientes_Tick(System::Object^ sender, System::EventAr
 		}
 	}
 private: System::Void mostrarCliente_Tick_1(System::Object^ sender, System::EventArgs^ e) {
-	if (listClient[0]->GetTiempo() > 600) {
+	bool ultimo = false;
+	if (listClient->Count > 0 && listClient[0]->GetTiempo() > 600) {
 		enviarUltimo(listClient[0]);
+		ultimo = true;
+	}
+	else if (listClient->Count > 0) {
 		mostrarEnCaja(listClient);
 	}
-	else {
-		mostrarEnCaja(listClient);
-	}
-	if (splitCola->Panel2->Controls->Count > 0) {
-		if (clientesEnCola->SelectedIndex != -1) {
-			mostrarEnCola(listClient, clientesEnCola->SelectedIndex + 1);
-		}
+	
+
+	// Mostrar en cola solo si hay elementos en Panel2 y un elemento seleccionado
+	if (splitCola->Panel2->Controls->Count > 0 && clientesEnCola->SelectedIndex != -1) {
+		mostrarEnCola(listClient, clientesEnCola->SelectedIndex + 1);
 	}
 	
 }
-
 	   void enviarUltimo(Cliente^ cliente) {
 		   Cliente^ ultimo = cliente;
 		   listClient->RemoveAt(0);
 		   listClient->Add(ultimo);
 		   ultimo->reiniciar();
 		   ultimo->siTardo();
-		   // Obtener el nombre del primer elemento
+
+		   // Guardar el primer elemento de clientesEnCola
 		   String^ firstItemName = clientesEnCola->Items[0]->ToString();
-		   // Encontrar el índice del primer dígito en el nombre del cliente
-		   int digitIndex = firstItemName->IndexOf(" ") + 1;
-		   // Extraer el número del nombre del primer cliente
-		   int number = Convert::ToInt32(firstItemName->Substring(digitIndex));
-		   // Crear el nuevo nombre con el número reducido en 1
-		   String^ newItemName = "Cliente " + (number - 1).ToString();
-		   // Agregar el nuevo elemento al ComboBox
-		   clientesEnCola->Items->Add(newItemName);
-		   clientesEnCola->Items->RemoveAt(0);
-} 
+
+		   // Extraer el número del string "Cliente X"
+		   System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex("\\d+");
+		   System::Text::RegularExpressions::Match^ match = regex->Match(firstItemName);
+		   if (match->Success) {
+			   int numero = Convert::ToInt32(match->Value);
+			   int nuevoNumero = numero - 1; // Restar 1 al número
+			   String^ nuevoItemName = "Cliente " + nuevoNumero;
+
+			   // Eliminar el primer elemento
+			   clientesEnCola->Items->RemoveAt(0);
+			   // Agregar el nuevo elemento al final de la lista
+			   clientesEnCola->Items->Add(nuevoItemName);
+			   clientesEnCola->SelectedIndex = 0;
+		   }
+	   }
+
+
 
 private: System::Void toolStripButton1_Click(System::Object^ sender, System::EventArgs^ e) {
 	this->WindowState = FormWindowState::Minimized;
@@ -1817,7 +1851,7 @@ private: System::Void toolStripButton1_Click(System::Object^ sender, System::Eve
 }
 
 void finalizarSimulacion() {
-	tempo->PausarTemporizador(tiempo, listClient);
+	tempo->PausarTemporizador(tiempo, listClient, 1);
 	crearClientes->Enabled = false;
 	mostrarCliente->Enabled = false;
 	tiempo->Enabled = false;

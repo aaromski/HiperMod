@@ -9,7 +9,8 @@ ref class gestorTempo
 {
     public:
         static int generarClientes;
-        bool estaPausado;
+        static bool estaPausado;
+        static bool finalizar;
         int tiempo;
 
         gestorTempo() {
@@ -17,21 +18,26 @@ ref class gestorTempo
             generarClientes = 1;
             estaPausado = false;
             tiempo = 0;
+            finalizar = false;
         }
-        void PausarTemporizador(System::Windows::Forms::Timer^ timer1, List<Cliente^>^ listClient) {
+        void PausarTemporizador(System::Windows::Forms::Timer^ timer1, List<Cliente^>^ listClient, int op) {
             if (timer1->Enabled) {
                 timer1->Stop();
                 // Iterar a través de cada cliente en `listClient` y pausar sus timers
                 for each (Cliente ^ cliente in listClient) {
                     cliente->PausarTimer(); // Asegúrate de tener este método en la clase `Cliente`
                 }
-                // Guardar el tiempo transcurrido
-                estaPausado = true;
+                if (op == 1) {
+                    finalizar = true;
+                }
+                else {
+                    estaPausado = true;
+                }
             }
         }
 
         void reanudarTemporizador(System::Windows::Forms::Timer^ timer1, List<Cliente^>^ listClient) {
-            if (!timer1->Enabled) {
+            if (finalizar) {
                 // Si el temporizador está deshabilitado, no continuar
                 return;
             }
@@ -45,6 +51,9 @@ ref class gestorTempo
                 }
             }
         }
+
+       
+
 
         void tiempoTranscurrido(ToolStripTextBox^ text) {
             tiempo++; // Incrementa tiempo en cada Tick

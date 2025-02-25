@@ -2,7 +2,7 @@
 ref class ultimasFacturas
 {
 public:
-    ultimasFacturas(System::String^ nombre, System::String^ ci, System::String^ tlf, System::Windows::Forms::TableLayoutPanel^ tproductos, System::String^ fecha, System::String^ hora, System::String^ ref) {
+    ultimasFacturas(System::String^ nombre, System::String^ ci, System::String^ tlf, System::Windows::Forms::TableLayoutPanel^ tproductos, System::String^ fecha, System::String^ hora, System::String^ ref, System::String^ totalmonto) {
         this->Nombre = nombre;
         this->CI = ci;
         this->Tlf = tlf;
@@ -10,6 +10,7 @@ public:
         this->Fecha = fecha;
         this->Hora = hora;
         this->Ref = ref;
+        this->totalMonto = totalmonto;
     }
 
     property System::String^ Nombre;
@@ -19,6 +20,7 @@ public:
     property System::String^ Fecha;
     property System::String^ Hora;
     property System::String^ Ref;
+    property System::String^ totalMonto;
 };
 
 
