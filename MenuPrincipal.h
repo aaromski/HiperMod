@@ -169,7 +169,7 @@ namespace HiperMod {
 	private: System::Windows::Forms::Label^ Ref;
 	private: System::Windows::Forms::Label^ refFactura;
 private: System::Windows::Forms::ToolStripButton^ bt_Finalizar;
-private: System::Windows::Forms::Label^ probar;
+
 
 
 	private:
@@ -264,7 +264,6 @@ private: System::Windows::Forms::Label^ probar;
 			this->tiempo = (gcnew System::Windows::Forms::Timer(this->components));
 			this->crearClientes = (gcnew System::Windows::Forms::Timer(this->components));
 			this->mostrarCliente = (gcnew System::Windows::Forms::Timer(this->components));
-			this->probar = (gcnew System::Windows::Forms::Label());
 			this->toolStrip1->SuspendLayout();
 			this->panelFacturaD->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitCaja))->BeginInit();
@@ -454,7 +453,6 @@ private: System::Windows::Forms::Label^ probar;
 			// panelFacturaD
 			// 
 			this->panelFacturaD->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->panelFacturaD->Controls->Add(this->probar);
 			this->panelFacturaD->Controls->Add(this->Ref);
 			this->panelFacturaD->Controls->Add(this->refFactura);
 			this->panelFacturaD->Controls->Add(this->tlfac);
@@ -1131,15 +1129,6 @@ private: System::Windows::Forms::Label^ probar;
 			// 
 			this->mostrarCliente->Interval = 60000;
 			this->mostrarCliente->Tick += gcnew System::EventHandler(this, &MenuPrincipal::mostrarCliente_Tick_1);
-			// 
-			// probar
-			// 
-			this->probar->AutoSize = true;
-			this->probar->Location = System::Drawing::Point(199, 14);
-			this->probar->Name = L"probar";
-			this->probar->Size = System::Drawing::Size(41, 15);
-			this->probar->TabIndex = 26;
-			this->probar->Text = L"label8";
 			// 
 			// MenuPrincipal
 			// 

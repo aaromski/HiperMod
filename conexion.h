@@ -266,6 +266,10 @@ public:
 		while (intentos > 0 && !exito) {
 			MySqlDataReader^ lector = nullptr;
 			try {
+				if (Conexion->State != ConnectionState::Open) {
+					Conexion->Open();
+				}
+
 				lector = ejecutar->ExecuteReader();
 				if (lector->Read()) {
 					// El producto existe, actualizar la cantidad
@@ -331,6 +335,9 @@ public:
 				if (lector != nullptr) {
 					lector->Close();
 				}
+				if (Conexion->State == ConnectionState::Open) {
+					Conexion->Close();
+				}
 			}
 		}
 
@@ -340,6 +347,7 @@ public:
 
 		ventasT->Invoke(gcnew Action<Label^, double>(this, &Conexion::ActualizarVentasTotales), ventasT, ventasTotales);
 	}
+
 
 
 	void ActualizarVentasTotales(Label^ ventasT, double ventasTotales) {
